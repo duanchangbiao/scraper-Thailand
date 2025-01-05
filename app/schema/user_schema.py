@@ -22,10 +22,10 @@ class UserRoleSchema(ma.Schema):
 
 
 class RoleSchema(ma.Schema):
-    id = fields.Int(dump_only=True, attribute='id')
+    id = fields.Int(dump_only=True, attribute='role_id')
     roleName = fields.Str(required=True, attribute='role_name')
     roleCode = fields.Str(required=True, attribute='role_code')
-    status = fields.Int(required=True, attribute='status')
+    status = fields.Str(required=True, attribute='status')
     remark = fields.Str(attribute='remark')
     createTime = fields.Str(required=True, attribute='ctime')
     updateTime = fields.Str(required=True, attribute='mtime')
