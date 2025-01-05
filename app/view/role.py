@@ -21,7 +21,7 @@ def getRoleList():
     if roleName:
         mf.like("role_name", roleName)
 
-    role = (Role.filter(mf.get_filter(Role))
+    role = (Role.query.filter(mf.get_filter(Role))
             .order_by(Role.role_id.asc())
             .paginates(page=current,pageSize=pageSize))
     total = role.total
@@ -37,3 +37,50 @@ def getRoleAll():
 
     data = curd.model_to_dicts(schema=RoleSchema, data=role)
     return success_api(data=data)
+
+
+@app_router.route("/saveRole", methods=['POST'])
+def saveRoleInfo():
+    try:
+        roleName = request.get_json().get("roleName")
+        roleCode = request.get_json().get("roleCode")
+        status = request.get_json().get("status")
+        remark = request.get_json().get("remark")
+        role = Role(role_code=roleCode, role_name=roleName, status=status, remark=remark, ctime=datetime.datetime.now())
+        if not bool(role.query.filter_by(role_code=roleCode).count()):
+            db.session.add(role)
+            db.session.commit()
+        print(roleCode, roleName, status, remark)
+    except Exception as e:
+        return fail_api(msg=f"角色信息保存失败,请检查表单是否填写正确：{e}")
+    return success_api(msg="添加成功!")
+
+
+@app_router.route("/updateRole", methods=["POST"])
+def updateRoleInfo():
+    roleId = request.get_json().get("id")
+    roleName = request.get_json().get("roleName")
+    roleCode = request.get_json().get("roleCode")
+    status = request.get_json().get("status")
+    remark = request.get_json().get("remark")
+    role = Role(role_id=roleId, role_code=roleCode, role_name=roleName, status=status, remark=remark,
+                mtime=datetime.datetime.now())
+    print(role.__str__(), status)
+    Role.query.filter_by(role_id=roleId).update({
+        "role_name": role.role_name,
+        "status": role.status,
+        "role_code": role.role_code,
+        "remark": role.remark,
+        "mtime": datetime.datetime.now()
+    })
+    db.session.commit()
+    return success_api(msg='更新成功!')
+
+
+@app_router.route('/deleteRole', methods=['GET'])
+def deleteRole():
+    roleId = request.args.get("id")
+    Role.query.filter_by(role_id=roleId).delete()
+    db.session.commit()
+    return success_api(msg="删除成功")
+
