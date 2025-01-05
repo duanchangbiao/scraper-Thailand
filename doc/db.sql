@@ -53,3 +53,37 @@ CREATE TABLE `sys_user_role`
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uk_role_employee` (`role_id`, `user_id`) USING BTREE
 ) ENGINE = InnoDB;
+
+create table sys_menu
+(
+    id          bigint not null auto_increment comment '主键',
+    menu_name   varchar(255) comment '菜单名称:',
+    menu_type   int comment '菜单类型:1:目录,2:菜单,3:按钮',
+    parent_id   bigint comment '父级Id',
+    router_key  varchar(255) comment '路由模块',
+    router_name varchar(255) comment '路由名称',
+    router_path varchar(255) comment '路由路径',
+    status      int comment '菜单状态',
+    component   varchar(255) comment '路由组件',
+    icon        varchar(255) comment '图标名称',
+    icon_tye    int comment 'icon类型',
+    order       int comment '排序',
+    permit_name varchar(255) comment '权限名称',
+    ctime       datetime comment '创建时间',
+    mtime       datetime comment '修改时间',
+    remark      varchar(500) comment '备注',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `uk_role_employee` (`id`, `parent_id`) USING BTREE
+) engine = InnoDB;
+
+
+create table sys_role_menu
+(
+    `id`          bigint   NOT NULL AUTO_INCREMENT,
+    `role_id`     bigint   NOT NULL COMMENT '角色id',
+    `menu_id`     bigint   NOT NULL COMMENT '菜单id',
+    `update_time` datetime NOT NULL COMMENT '更新时间',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `uk_role_menu` (`role_id`, `menu_id`) USING BTREE
+)
