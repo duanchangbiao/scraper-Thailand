@@ -36,9 +36,6 @@ function batchDelete() {
 function refresh() {
   emit('refresh');
 }
-function batchUpdate() {
-  emit('batchUpdate');
-}
 </script>
 
 <template>
@@ -57,12 +54,6 @@ function batchUpdate() {
             <icon-ic-round-delete class="align-sub text-icon" />
           </template>
           <span class="ml-8px">{{ $t('common.batchDelete') }}</span>
-        </AButton>
-        <AButton size="small" @click="batchUpdate">
-          <template #icon>
-            <icon-mdi-refresh class="align-sub text-icon" :class="{ 'animate-spin': loading }" />
-          </template>
-          <span class="ml-8px">{{ $t('common.batchUpdate') }}</span>
         </AButton>
       </APopconfirm>
     </slot>

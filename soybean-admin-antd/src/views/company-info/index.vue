@@ -157,11 +157,10 @@ function details(item: Api.Company.CompanyInfo) {
       class="flex-col-stretch sm:flex-1-hidden card-wrapper"
     >
       <template #extra>
-        <TableHeaderOperation
+        <TableHeaderCommon
           v-model:columns="columnChecks"
-          :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
-          @batch-update="handleBatchDelete"
+          :disabled-update="checkedRowKeys.length === 0"
           @refresh="getData"
         />
       </template>
