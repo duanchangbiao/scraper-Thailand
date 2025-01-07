@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from sqlalchemy import or_
 
 from app.common import curd
@@ -44,7 +44,7 @@ def getMenuList():
             'i18nKey': category.router_key,
             'routePath': category.router_path,
             'routeName': category.router_key,
-            'status': category.status,
+            'status': str(category.status),
             'icon': category.icon,
             'iconType': str(category.icon_type),
             'order': category.order,
@@ -58,7 +58,31 @@ def getMenuList():
 
 @app_router.post("/saveMenu")
 def saveMenuInfo():
-    pass
+    activeMenu = request.get_json().get('activeMenu')
+    component = request.get_json().get('component')
+    routeKey = request.get_json().get('i18nKey')
+    icon = request.get_json().get('icon')
+    menu_type = request.get_json().get('menuType')
+    menu_name = request.get_json().get('menuName')
+    parentId = request.get_json().get('parentId')
+    permit_name = request.get_json().get('permitName')
+    remark = request.get_json().get('remark')
+    order = request.get_json().get('order')
+    constant = request.get_json().get('constant')
+    routeName = request.get_json().get('routeName')
+    routePath = request.get_json().get('routePath')
+    status = request.get_json().get('status')
+    print(activeMenu, component, routeKey, icon, menu_type, menu_name, parentId, permit_name, remark, order, constant,
+          routeName, routePath, status)
+    menu = Menu(component=component, icon=icon, icon_type=icon, menu_name=menu_name, menu_type=menu_type,
+                parentId=parentId,
+                permit_name=permit_name, remark=remark, order=order, routeKey=routeName, routeName=menu_name,
+                status=status)
+    if bool(Menu.query.filter_by(component=component).count()):
+        return success_api("路由已存在")
+    db.session.add(menu)
+    db.session.commit()
+    return success_api(msg="保存成功")
 
 
 @app_router.get("/getAllPages")
