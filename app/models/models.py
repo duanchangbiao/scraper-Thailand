@@ -105,3 +105,44 @@ class UserRole(db.Model):
                 f"{self.ctime}, "
                 f"{self.mtime}"
                 )
+
+
+class Menu(db.Model):
+    __tablename__ = 'sys_menu'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    menu_name = db.Column(db.String(500), comment='菜单名')
+    menu_type = db.Column(db.String(500), comment='菜单类型:1:目录,2:菜单,3:按钮')
+    parent_id = db.Column(db.Integer, comment='父级id')
+    router_key = db.Column(db.String(500), comment='路由模块')
+    router_name = db.Column(db.String(500), comment='路由名称')
+    router_path = db.Column(db.String(500), comment='路由地址')
+    status = db.Column(db.Integer, default=1, comment='菜单状态,1:启用,2:禁用')
+    component = db.Column(db.String(500), comment='路由组件')
+    icon = db.Column(db.String(500), comment='icon图标')
+    icon_type = db.Column(db.String(500), comment='icon类型')
+    permit_name = db.Column(db.String(500), comment='权限名称')
+    order = db.Column(db.Integer, comment='排序')
+    ctime = db.Column(db.DateTime, comment='创建时间')
+    mtime = db.Column(db.DateTime, comment='修改时间')
+    remark = db.Column(db.String(500), comment='备注')
+    __table_args__ = (
+        db.UniqueConstraint('menu_name', name='menu_name_unique'),
+    )
+
+    def __str__(self):
+        return (f"{self.id}, "
+                f"{self.menu_name}, "
+                f"{self.menu_type}, "
+                f"{self.parent_id}, "
+                f"{self.router_key}, "
+                f"{self.router_name}, "
+                f"{self.router_path}, "
+                f"{self.status}, "
+                f"{self.component}, "
+                f"{self.icon}, "
+                f"{self.icon_type}, "
+                f"{self.order}, "
+                f"{self.ctime}, "
+                f"{self.mtime}, "
+                f"{self.remark}"
+                )
