@@ -119,7 +119,7 @@ export function updateMenuInfo(data: Api.SystemManage.Menu) {
 }
 
 
-export function getCheckMenuInfo(data: Api.SystemManage.RoleUpdateParams) {
+export function getCheckMenuInfo(data: { roleId: number }) {
   return request<number[]>({
     url: '/systemManage/getCheckMenuInfo',
     method: 'post',
