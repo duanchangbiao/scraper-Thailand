@@ -1,13 +1,95 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
+from sqlalchemy import or_
+
+from app.common import curd
+from app.common.helper import ModelFilter
+from app.extensions import db
+from app.models.models import Menu
+from app.schema.menu_schema import ButtonSchema
+from app.utils.response import success_api, table_api
 
 app_router = Blueprint('menu', __name__, url_prefix="/systemManage")
 
 
-@app_router.get("/list")
+def build_category_tree(menus: list[Menu]):
+    menus_map = {category.id: category for category in menus}
+    tree = []
+
+    for category in menus:
+        if category.parent_id:
+            parent = menus_map.get(category.parent_id)
+            if parent:
+                if not hasattr(parent, 'children'):
+                    parent.children = []
+                parent.children.append(category)
+        else:
+            tree.append(category)
+
+    return tree
+
+
+@app_router.get("/getMenuList")
 def getMenuList():
-    pass
+    menuList = Menu.query.order_by(Menu.order.asc()).all()
+    tree_list = build_category_tree(menuList)
+
+    def category_to_dict(category):
+        return {
+            'id': category.id,
+            'menuName': category.menu_name,
+            'menuType': str(category.menu_type),
+            'parentId': category.parent_id,
+            'permitName': category.permit_name,
+            'remark': category.remark,
+            'i18nKey': category.router_key,
+            'routePath': category.router_path,
+            'routeName': category.router_key,
+            'status': category.status,
+            'icon': category.icon,
+            'iconType': str(category.icon_type),
+            'order': category.order,
+            'component': category.component,
+            'children': [category_to_dict(child) for child in getattr(category, 'children', [])]
+        }
+
+    tree_dict = [category_to_dict(root) for root in tree_list]
+    return table_api(data=tree_dict, total=len(tree_dict), current=1, size=10)
 
 
 @app_router.post("/saveMenu")
 def saveMenuInfo():
     pass
+
+
+@app_router.get("/getAllPages")
+def getAllPage():
+    menuList = db.session.query(Menu.router_key).filter(or_(Menu.menu_type == 1, Menu.menu_type == 2)).all()
+    menus = []
+    for menu in menuList:
+        menus.append(menu.router_key)
+    return success_api(data=menus)
+
+
+@app_router.get("/getAllButtons")
+def getAllButtons():
+    menuList = db.session.query(Menu.router_key, Menu.id, Menu.menu_name, Menu.permit_name).filter_by(menu_type=3).all()
+    data = curd.model_to_dicts(schema=ButtonSchema, data=menuList)
+    return success_api(data=data)
+
+
+@app_router.get("/getMenuTree")
+def getMenuTree():
+    menuList = Menu.query.all()
+    tree_list = build_category_tree(menuList)
+
+    def category_to_dict(category):
+        return {
+            'id': category.id,
+            'label': category.menu_name,
+            'pId': category.parent_id,
+            'children': [category_to_dict(child) for child in getattr(category, 'children', [])]
+        }
+
+    tree_dict = [category_to_dict(root) for root in tree_list]
+
+    return success_api(data=tree_dict)
