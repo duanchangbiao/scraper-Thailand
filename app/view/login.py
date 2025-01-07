@@ -18,7 +18,7 @@ def login_required():
     return success_api(data=data)
 
 
-@app_router.route('/getUserInfo', methods=['POST'])
+@app_router.route('/getUserInfo', methods=['GET'])
 def getUserInfo():
     data = {
         "userId": "0",
