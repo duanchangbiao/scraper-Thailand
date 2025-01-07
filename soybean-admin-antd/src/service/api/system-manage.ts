@@ -94,3 +94,19 @@ export function deleteRoleInfo(params: Api.SystemManage.RoleDeleteParams) {
     params
   })
 }
+
+export function insertSaveMenuInfo(data: Api.SystemManage.Menu) {
+  return request<Api.SystemManage.Menu>({
+    url: '/systemManage/saveMenu',
+    method: 'post',
+    data
+  })
+}
+
+export function updateMenuInfo(data: Api.SystemManage.Menu) {
+  return request<Api.SystemManage.Menu>({
+    url: '/systemManage/updateMenu',
+    method: 'post',
+    data
+  })
+}
