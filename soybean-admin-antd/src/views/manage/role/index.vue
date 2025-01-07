@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import {Button, Popconfirm, Tag} from 'ant-design-vue';
+import {Button, Tag} from 'ant-design-vue';
 import {deleteRoleInfo, fetchGetRoleList} from '@/service/api';
 import {useTable, useTableOperate, useTableScroll} from '@/hooks/common/table';
 import {$t} from '@/locales';

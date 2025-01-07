@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, shallowRef, watch } from 'vue';
-import type { SelectProps } from 'ant-design-vue';
-import type { DataNode } from 'ant-design-vue/es/tree';
-import { $t } from '@/locales';
-import { fetchGetAllPages, fetchGetMenuTree } from '@/service/api';
+import {computed, shallowRef, watch} from 'vue';
+import type {SelectProps} from 'ant-design-vue';
+import type {DataNode} from 'ant-design-vue/es/tree';
+import {$t} from '@/locales';
+import {fetchGetAllPages, fetchGetMenuTree} from '@/service/api';
 
 defineOptions({
   name: 'MenuAuthModal'
@@ -41,10 +41,8 @@ async function updateHome(val: SelectProps['value']) {
 }
 
 const pages = shallowRef<string[]>([]);
-
 async function getPages() {
-  const { error, data } = await fetchGetAllPages();
-
+  const {error, data} = await fetchGetAllPages();
   if (!error) {
     pages.value = data;
   }
@@ -62,7 +60,7 @@ const pageSelectOptions = computed(() => {
 const tree = shallowRef<DataNode[]>([]);
 
 async function getTree() {
-  const { error, data } = await fetchGetMenuTree();
+  const {error, data} = await fetchGetMenuTree();
 
   if (!error) {
     tree.value = recursiveTransform(data);
@@ -71,7 +69,7 @@ async function getTree() {
 
 function recursiveTransform(data: Api.SystemManage.MenuTree[]): DataNode[] {
   return data.map(item => {
-    const { id: key, label } = item;
+    const {id: key, label} = item;
 
     if (item.children) {
       return {
@@ -123,9 +121,9 @@ watch(visible, val => {
   <AModal v-model:open="visible" :title="title" class="w-480px">
     <div class="flex-y-center gap-16px pb-12px">
       <div>{{ $t('page.manage.menu.home') }}</div>
-      <ASelect :value="home" :options="pageSelectOptions" class="w-240px" @update:value="updateHome" />
+      <ASelect :value="home" :options="pageSelectOptions" class="w-240px" @update:value="updateHome"/>
     </div>
-    <ATree v-model:checked-keys="checks" :tree-data="tree" checkable :height="280" class="h-280px" />
+    <ATree v-model:checked-keys="checks" :tree-data="tree" checkable :height="280" class="h-280px"/>
     <template #footer>
       <AButton size="small" class="mt-16px" @click="closeModal">
         {{ $t('common.cancel') }}

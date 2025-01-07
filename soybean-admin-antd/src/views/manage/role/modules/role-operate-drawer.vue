@@ -131,8 +131,8 @@ watch(visible, () => {
     <ASpace v-if="isEdit">
       <AButton @click="openMenuAuthModal">{{ $t('page.manage.role.menuAuth') }}</AButton>
       <MenuAuthModal v-model:visible="menuAuthVisible" :role-id="roleId"/>
-      <AButton @click="openButtonAuthModal">{{ $t('page.manage.role.buttonAuth') }}</AButton>
-      <ButtonAuthModal v-model:visible="buttonAuthVisible" :role-id="roleId"/>
+<!--      <AButton @click="openButtonAuthModal">{{ $t('page.manage.role.buttonAuth') }}</AButton>-->
+      <!--      <ButtonAuthModal v-model:visible="buttonAuthVisible" :role-id="roleId"/>-->
     </ASpace>
     <template #footer>
       <div class="flex-y-center justify-end gap-12px">

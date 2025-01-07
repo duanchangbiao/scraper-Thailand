@@ -66,7 +66,7 @@ create table sys_menu
     status      int comment '菜单状态',
     component   varchar(255) comment '路由组件',
     icon        varchar(255) comment '图标名称',
-    icon_tye    int comment 'icon类型',
+    icon_type   int comment 'icon类型',
     order       int comment '排序',
     permit_name varchar(255) comment '权限名称',
     ctime       datetime comment '创建时间',
@@ -75,6 +75,21 @@ create table sys_menu
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uk_role_employee` (`id`, `parent_id`) USING BTREE
 ) engine = InnoDB;
+
+insert into sys_menu(menu_name, menu_type, parent_id, router_key, router_name, router_path, status, component, icon,
+                     icon_type, order, permit_name, ctime, remark)
+values ('首页', 2, 0, 'home', 'home', '/home', 1, 'layout.base$view.home', 'mdi:monitor-dashboard', 1, 1,
+        'user:common:home', '2021-01-01 00:00:00', '首页'),
+       ('许可证管理', 2, 0, 'company-info', 'company-info', '/company-info', 1, 'layout.base$view.company-info',
+        'prime:align-center', 1, 1, 'user:common:company', '2021-01-01 00:00:00', '许可证管理')
+       ('系统管理', 1, 0, 'system', 'manage', '/system', 1, 'layout.base', 'carbon:cloud-service-management', 1, 2,
+        'user:common:system', '2021-01-01 00:00:00', '系统管理');
+insert into sys_menu(menu_name, menu_type, parent_id, router_key, router_name, router_path, status, component, icon,
+                     icon_type, order, permit_name, ctime, remark)
+values ('用户管理', 2, 3, 'manage_user', '用户管理', '/manage/user', 1,
+        'view.manage_user', 'ic:round-manage-accounts', 1, 1, 'user:user:list', '2021-01-01 00:00:00','用户管理'),
+    ('角色管理', 2, 3, 'manage_role', '角色管理', '/manage/role', 1,'view.manage_role', 'carbon:user-role', 1, 2, 'user:role:list', '2021-01-01 00:00:00','角色管理'),
+    ('菜单管理', 2, 3, 'manage_menu', '菜单管理', '/manage/menu', 1, 'view.manage_menu', 'material-symbols:route', 1, 3, 'user:menu:list', '2021-01-01 00:00:00','菜单管理');
 
 
 create table sys_role_menu
@@ -104,3 +119,4 @@ create table sys_jobs
     next_execute_time datetime comment '下次执行时间',
     remark            varchar(500) comment '备注'
 ) engine = InnoDB;
+

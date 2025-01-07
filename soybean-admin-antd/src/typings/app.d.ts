@@ -512,8 +512,6 @@ declare namespace App {
             sex: string;
             status: string;
             isActive: string;
-            createTime: string;
-            updateTime: string;
             userRole: {
               roleId: string;
               roleName: string;

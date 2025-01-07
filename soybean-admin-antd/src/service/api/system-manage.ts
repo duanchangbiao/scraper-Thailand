@@ -33,7 +33,7 @@ export function fetchGetUserList(params?: Api.SystemManage.UserSearchParams) {
 /** get menu list */
 export function fetchGetMenuList() {
   return request<Api.SystemManage.MenuList>({
-    url: '/systemManage/getMenuList/v2',
+    url: '/systemManage/getMenuList',
     method: 'get'
   });
 }
@@ -42,6 +42,13 @@ export function fetchGetMenuList() {
 export function fetchGetAllPages() {
   return request<string[]>({
     url: '/systemManage/getAllPages',
+    method: 'get'
+  });
+}
+
+export function fetchGetAllButtons(){
+  return request<string[]>({
+    url: '/systemManage/getAllButtons',
     method: 'get'
   });
 }

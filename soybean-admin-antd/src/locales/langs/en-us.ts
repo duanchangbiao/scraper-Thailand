@@ -270,15 +270,15 @@ const local: App.I18n.Schema = {
         title: 'Role List',
         roleName: 'Role Name',
         roleCode: 'Role Code',
-        roleStatus: 'Role Status',
-        roleDesc: 'Role Description',
+        status: 'Role Status',
+        remark: 'Role Description',
         menuAuth: 'Menu Auth',
         buttonAuth: 'Button Auth',
         form: {
           roleName: 'Please enter role name',
           roleCode: 'Please enter role code',
-          roleStatus: 'Please select role status',
-          roleDesc: 'Please enter role description'
+          status: 'Please select role status',
+          remark: 'Please enter role description'
         },
         addRole: 'Add Role',
         editRole: 'Edit Role'
@@ -291,16 +291,25 @@ const local: App.I18n.Schema = {
         phone: 'Phone Number',
         email: 'Email',
         status: 'User Status',
-        userRole: 'User Role',
+        userRole: {
+          roleId: 'Role Id',
+          roleName: 'Role Name',
+          roleCode: 'Role Code',
+        },
         form: {
           username: 'Please enter user name',
+          password: 'Please enter password',
           sex: 'Please select gender',
           nickname: 'Please enter nick name',
           phone: 'Please enter phone number',
           email: 'Please enter email',
           status: 'Please select user status',
           isActive: 'Please select user active',
-          userRole: 'Please select user role'
+          userRole: {
+            roleId: 'Please enter Role Id',
+            roleName: 'Please enter Role Name',
+            roleCode: 'Please enter Role Code',
+          },
         },
         addUser: 'Add User',
         editUser: 'Edit User',

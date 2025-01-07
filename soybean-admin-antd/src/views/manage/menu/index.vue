@@ -1,20 +1,20 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
-import { Button, Popconfirm, Tag } from 'ant-design-vue';
-import type { Ref } from 'vue';
-import { useBoolean } from '@sa/hooks';
-import { fetchGetAllPages, fetchGetMenuList } from '@/service/api';
-import { useTable, useTableOperate, useTableScroll } from '@/hooks/common/table';
-import { $t } from '@/locales';
-import { yesOrNoRecord } from '@/constants/common';
-import { enableStatusRecord, menuTypeRecord } from '@/constants/business';
+import {ref} from 'vue';
+import {Button, Popconfirm, Tag} from 'ant-design-vue';
+import type {Ref} from 'vue';
+import {useBoolean} from '@sa/hooks';
+import {fetchGetAllPages, fetchGetMenuList} from '@/service/api';
+import {useTable, useTableOperate, useTableScroll} from '@/hooks/common/table';
+import {$t} from '@/locales';
+import {yesOrNoRecord} from '@/constants/common';
+import {enableStatusRecord, menuTypeRecord} from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
-import MenuOperateModal, { type OperateType } from './modules/menu-operate-modal.vue';
+import MenuOperateModal, {type OperateType} from './modules/menu-operate-modal.vue';
 
-const { bool: visible, setTrue: openModal } = useBoolean();
-const { tableWrapperRef, scrollConfig } = useTableScroll();
+const {bool: visible, setTrue: openModal} = useBoolean();
+const {tableWrapperRef, scrollConfig} = useTableScroll();
 
-const { columns, columnChecks, data, loading, pagination, getData, getDataByPage } = useTable({
+const {columns, columnChecks, data, loading, pagination, getData, getDataByPage} = useTable({
   apiFn: fetchGetMenuList,
   columns: () => [
     {
@@ -28,14 +28,12 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       title: $t('page.manage.menu.menuType'),
       align: 'center',
       width: 80,
-      customRender: ({ record }) => {
+      customRender: ({record}) => {
         const tagMap: Record<Api.SystemManage.MenuType, string> = {
           1: 'default',
           2: 'processing'
-        };
-
+        }
         const label = $t(menuTypeRecord[record.menuType]);
-
         return <Tag color={tagMap[record.menuType]}>{label}</Tag>;
       }
     },
@@ -44,11 +42,9 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       title: $t('page.manage.menu.menuName'),
       align: 'center',
       minWidth: 120,
-      customRender: ({ record }) => {
-        const { i18nKey, menuName } = record;
-
+      customRender: ({record}) => {
+        const {i18nKey, menuName} = record;
         const label = i18nKey ? $t(i18nKey) : menuName;
-
         return <span>{label}</span>;
       }
     },
@@ -57,14 +53,14 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       title: $t('page.manage.menu.icon'),
       align: 'center',
       width: 60,
-      customRender: ({ record }) => {
+      customRender: ({record}) => {
         const icon = record.iconType === '1' ? record.icon : undefined;
 
         const localIcon = record.iconType === '2' ? record.icon : undefined;
 
         return (
           <div class="flex-center">
-            <SvgIcon icon={icon} localIcon={localIcon} class="text-icon" />
+            <SvgIcon icon={icon} localIcon={localIcon} class="text-icon"/>
           </div>
         );
       }
@@ -88,7 +84,7 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       title: $t('page.manage.menu.menuStatus'),
       align: 'center',
       width: 80,
-      customRender: ({ record }) => {
+      customRender: ({record}) => {
         if (record.status === null) {
           return null;
         }
@@ -109,7 +105,7 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       dataIndex: 'hideInMenu',
       align: 'center',
       width: 80,
-      customRender: ({ record }) => {
+      customRender: ({record}) => {
         const hide: CommonType.YesOrNo = record.hideInMenu ? 'Y' : 'N';
 
         const tagMap: Record<CommonType.YesOrNo, string> = {
@@ -141,7 +137,7 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       title: $t('common.operate'),
       align: 'center',
       width: 230,
-      customRender: ({ record }) => (
+      customRender: ({record}) => (
         <div class="flex-center justify-end gap-8px">
           {record.menuType === '1' && (
             <Button type="primary" ghost size="small" onClick={() => handleAddChildMenu(record)}>
@@ -162,7 +158,7 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
   ]
 });
 
-const { checkedRowKeys, rowSelection, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
+const {checkedRowKeys, rowSelection, onBatchDeleted, onDeleted} = useTableOperate(data, getData);
 
 const operateType = ref<OperateType>('add');
 
@@ -182,19 +178,20 @@ function handleDelete(id: number) {
 
   onDeleted();
 }
+
 /** the edit menu data or the parent menu data when adding a child menu */
 const editingData: Ref<Api.SystemManage.Menu | null> = ref(null);
 
 function handleEdit(item: Api.SystemManage.Menu) {
   operateType.value = 'edit';
-  editingData.value = { ...item };
+  editingData.value = {...item};
   openModal();
 }
 
 function handleAddChildMenu(item: Api.SystemManage.Menu) {
   operateType.value = 'addChild';
 
-  editingData.value = { ...item };
+  editingData.value = {...item};
 
   openModal();
 }
@@ -202,7 +199,7 @@ function handleAddChildMenu(item: Api.SystemManage.Menu) {
 const allPages = ref<string[]>([]);
 
 async function getAllPages() {
-  const { data: pages } = await fetchGetAllPages();
+  const {data: pages} = await fetchGetAllPages();
   allPages.value = pages || [];
 }
 
