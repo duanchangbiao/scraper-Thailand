@@ -86,4 +86,21 @@ create table sys_role_menu
     `create_time` datetime NOT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uk_role_menu` (`role_id`, `menu_id`) USING BTREE
-)
+) engine = InnoDB;
+
+create table sys_jobs
+(
+    id                bigint not null auto_increment PRIMARY KEY comment '主键',
+    job_name          varchar(255) comment '任务名称',
+    job_group         varchar(255) comment '任务分组',
+    job_function      varchar(255) comment '任务函数',
+    trigger_type      varchar(255) comment '触发器类型',
+    trigger_value     varchar(255) comment '任务表达式',
+    status            int comment '任务状态',
+    ctime             datetime comment '创建时间',
+    mtime             datetime comment '修改时间',
+    last_execute_time datetime comment '最后一次执行时间',
+    last_execute_id   int comment '最后一次执行id',
+    next_execute_time datetime comment '下次执行时间',
+    remark            varchar(500) comment '备注'
+) engine = InnoDB;

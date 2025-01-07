@@ -63,7 +63,7 @@ class scraper_license:
     """
 
     def get_license_detail(self, data: dict) -> LicenseReport:
-        response = requests.post('https://a.tisi.go.th/l/', headers=self.headers, data=data)
+        response = requests.post('https://a.tisi.go.th/l/', headers=self.headers, data=data, timeout=5)
         if response.status_code != 200:
             return LicenseReport()
         tree = etree.HTML(response.text, etree.HTMLParser())
@@ -80,13 +80,16 @@ class scraper_license:
                 if i.find("\t") == -1:
                     text.append(i.replace("\r\n", " ").replace("\r", " "))
         licenses_detail = "\n".join(text)
-        print(f"类别:{license_category},税号:{tax_identification_number},公司名称:{company_name},公司地址:{company_address},注册地址：{factory_registration_number},工厂地址:{factory_address}")
+        print(
+            f"类别:{license_category},税号:{tax_identification_number},公司名称:{company_name},公司地址:{company_address},注册地址：{factory_registration_number},工厂地址:{factory_address}")
         return LicenseReport(license_category=license_category if len(license_category) != 0 else None,
-                             tax_identification_number=tax_identification_number if len(tax_identification_number) != 0 else None,
+                             tax_identification_number=tax_identification_number if len(
+                                 tax_identification_number) != 0 else None,
                              company_name=company_name if len(company_name) != 0 else None,
                              company_address=company_address if len(company_address) != 0 else None,
                              factory_address=factory_address[0] if len(factory_address) != 0 else None,
-                             factory_registration_number=factory_registration_number[0] if len(factory_registration_number) != 0 else None,
+                             factory_registration_number=factory_registration_number[0] if len(
+                                 factory_registration_number) != 0 else None,
                              details=licenses_detail if licenses_detail is not None else None
                              )
 

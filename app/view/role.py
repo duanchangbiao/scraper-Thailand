@@ -7,7 +7,7 @@ from app.common.helper import ModelFilter
 from app.extensions import db
 from app.models.models import Role
 from app.schema.user_schema import RoleSchema
-from app.utils.response import table_api, success_api
+from app.utils.response import table_api, success_api, fail_api
 
 app_router = Blueprint('role', __name__, url_prefix="/systemManage")
 
@@ -68,7 +68,6 @@ def updateRoleInfo():
     remark = request.get_json().get("remark")
     role = Role(role_id=roleId, role_code=roleCode, role_name=roleName, status=status, remark=remark,
                 mtime=datetime.datetime.now())
-    print(role.__str__(), status)
     Role.query.filter_by(role_id=roleId).update({
         "role_name": role.role_name,
         "status": role.status,
