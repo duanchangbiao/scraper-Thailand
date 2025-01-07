@@ -278,14 +278,14 @@ async function handleSubmit() {
     const {error, data} = await insertSaveMenuInfo(params)
     if (!error) {
       console.log(data)
+      window.$message?.success($t('common.addSuccess'));
     }
-    window.$message?.success($t('common.addSuccess'));
   } else {
     const {error, data} = await updateMenuInfo(params)
     if (!error) {
       console.log(data)
+      window.$message?.success($t('common.updateSuccess'));
     }
-    window.$message?.success($t('common.updateSuccess'));
   }
   closeDrawer();
   emit('submitted');

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, jsonify, request
 from sqlalchemy import or_
 
@@ -62,6 +64,7 @@ def saveMenuInfo():
     component = request.get_json().get('component')
     routeKey = request.get_json().get('i18nKey')
     icon = request.get_json().get('icon')
+    icon_type = request.get_json().get('iconType')
     menu_type = request.get_json().get('menuType')
     menu_name = request.get_json().get('menuName')
     parentId = request.get_json().get('parentId')
@@ -72,12 +75,10 @@ def saveMenuInfo():
     routeName = request.get_json().get('routeName')
     routePath = request.get_json().get('routePath')
     status = request.get_json().get('status')
-    print(activeMenu, component, routeKey, icon, menu_type, menu_name, parentId, permit_name, remark, order, constant,
-          routeName, routePath, status)
-    menu = Menu(component=component, icon=icon, icon_type=icon, menu_name=menu_name, menu_type=menu_type,
-                parentId=parentId,
-                permit_name=permit_name, remark=remark, order=order, routeKey=routeName, routeName=menu_name,
-                status=status)
+    menu = Menu(component=component, icon=icon, icon_type=icon_type, menu_name=menu_name, menu_type=menu_type,
+                parent_id=parentId,
+                permit_name=permit_name, remark=remark, order=order, router_key=routeName, router_name=menu_name,
+                status=status, ctime=datetime.now())
     if bool(Menu.query.filter_by(component=component).count()):
         return success_api("路由已存在")
     db.session.add(menu)
