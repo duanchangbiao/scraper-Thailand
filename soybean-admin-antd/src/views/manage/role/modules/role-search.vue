@@ -39,8 +39,8 @@ function search() {
           </AFormItem>
         </ACol>
         <ACol :span="24" :md="12" :lg="6">
-          <AFormItem :label="$t('page.manage.role.roleStatus')" name="status" class="m-0">
-            <ASelect v-model:value="model.status" :placeholder="$t('page.manage.role.form.roleStatus')" allow-clear>
+          <AFormItem :label="$t('page.manage.role.status')" name="status" class="m-0">
+            <ASelect v-model:value="model.status" :placeholder="$t('page.manage.role.form.status')" allow-clear>
               <ASelectOption v-for="option in enableStatusOptions" :key="option.value" :value="option.value">
                 {{ $t(option.label) }}
               </ASelectOption>

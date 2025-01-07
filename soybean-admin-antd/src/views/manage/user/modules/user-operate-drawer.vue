@@ -107,18 +107,9 @@ async function getRoleOptions() {
       label: item.roleName,
       value: item.roleId
     }));
-
-    // the mock data does not have the roleCode, so fill it
-    // if the real request, remove the following code
-    const userRoleOptions = [
-      {
-        label: model.value.userRole.roleName,
-        value: model.value.userRole.roleId
-    }]
-
     // end
 
-    roleOptions.value = [...userRoleOptions, ...options];
+    roleOptions.value = options;
   }
 }
 
@@ -136,7 +127,7 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-  if (props.operateType==='add') {
+  if (props.operateType === 'add') {
     const {error, data} = await insertSaveUserInfo(model.value)
     if (!error) {
       console.log(data)
@@ -208,7 +199,7 @@ watch(visible, () => {
           </AFormItem>
           <AFormItem :label="$t('page.manage.user.userRole.roleName')" name="userRole">
             <ASelect
-              v-model:value="model.userRole.roleName"
+              v-model:value="model.userRole.roleId"
               :options="roleOptions"
               :placeholder="$t('page.manage.user.form.userRole')"
             />
