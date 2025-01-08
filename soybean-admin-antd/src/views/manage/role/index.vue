@@ -115,11 +115,15 @@ async function handleBatchDelete() {
 }
 
 async function handleDelete(id: number) {
-  const {error, data} = await deleteRoleInfo({id})
+  const {error, response} = await deleteRoleInfo({id})
   if (!error) {
-    console.log(data)
+    if (response.data.success) {
+      await onDeleted()
+    } else {
+      window.$message?.error($t(response.data.msg));
+    }
   }
-  onDeleted()
+
 }
 
 function edit(id: number) {

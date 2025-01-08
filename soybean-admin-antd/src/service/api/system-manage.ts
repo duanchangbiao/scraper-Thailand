@@ -135,3 +135,12 @@ export function updateRoleMenuInfo(data: { roleId: number, menuIdList: number[] 
     data
   })
 }
+
+
+export function deleteMenuInfo(params: { id: number }) {
+  return request<Api.SystemManage.Menu>({
+    url: '/systemManage/deleteMenu',
+    method: 'get',
+    params
+  })
+}

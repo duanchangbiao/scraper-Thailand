@@ -218,6 +218,7 @@ declare namespace Api {
       icon: string;
       /** icon type */
       iconType: IconType;
+      menuStatus: string;
       /** buttons */
       buttons?: MenuButton[] | null;
       /** children menu */

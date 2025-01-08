@@ -5,7 +5,7 @@ from flask import Blueprint, request
 from app.common import curd
 from app.common.helper import ModelFilter
 from app.extensions import db
-from app.models.models import Role, RoleMenu
+from app.models.models import Role, RoleMenu, UserRole
 from app.schema.user_schema import RoleSchema
 from app.utils.response import table_api, success_api, fail_api
 
@@ -82,6 +82,12 @@ def updateRoleInfo():
 @app_router.route('/deleteRole', methods=['GET'])
 def deleteRole():
     roleId = request.args.get("id")
+    if roleId == "1":
+        return fail_api(msg="该角色为超级管理员角色，无法删除")
+    if bool(UserRole.query.filter_by(role_id=roleId).count()):
+        return fail_api(msg="该角色已绑定用户,无法删除，请先解绑用户")
+    if bool(RoleMenu.query.filter_by(role_id=roleId).count()):
+        return fail_api(msg="该角色已绑定菜单,无法删除，请先解绑菜单")
     Role.query.filter_by(role_id=roleId).delete()
     db.session.commit()
     return success_api(msg="删除成功")

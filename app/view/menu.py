@@ -6,9 +6,9 @@ from sqlalchemy import or_
 from app.common import curd
 from app.common.helper import ModelFilter
 from app.extensions import db
-from app.models.models import Menu
+from app.models.models import Menu, RoleMenu
 from app.schema.menu_schema import ButtonSchema
-from app.utils.response import success_api, table_api
+from app.utils.response import success_api, table_api, fail_api
 
 app_router = Blueprint('menu', __name__, url_prefix="/systemManage")
 
@@ -46,7 +46,8 @@ def getMenuList():
             'i18nKey': category.router_key,
             'routePath': category.router_path,
             'routeName': category.router_key,
-            'status': str(category.status),
+            'menuStatus': str(category.status),
+            'hideInMenu': str(category.hide_menu),
             'icon': category.icon,
             'iconType': str(category.icon_type),
             'order': category.order,
@@ -60,9 +61,7 @@ def getMenuList():
 
 @app_router.post("/saveMenu")
 def saveMenuInfo():
-    activeMenu = request.get_json().get('activeMenu')
     component = request.get_json().get('component')
-    routeKey = request.get_json().get('i18nKey')
     icon = request.get_json().get('icon')
     icon_type = request.get_json().get('iconType')
     menu_type = request.get_json().get('menuType')
@@ -70,17 +69,16 @@ def saveMenuInfo():
     parentId = request.get_json().get('parentId')
     permit_name = request.get_json().get('permitName')
     remark = request.get_json().get('remark')
+    hideInMenu = request.get_json().get('hideInMenu')
     order = request.get_json().get('order')
-    constant = request.get_json().get('constant')
     routeName = request.get_json().get('routeName')
     routePath = request.get_json().get('routePath')
     status = request.get_json().get('status')
     menu = Menu(component=component, icon=icon, icon_type=icon_type, menu_name=menu_name, menu_type=menu_type,
-                parent_id=parentId,
-                permit_name=permit_name, remark=remark, order=order, router_key=routeName, router_name=menu_name,
-                status=status, ctime=datetime.now())
-    if bool(Menu.query.filter_by(component=component).count()):
-        return success_api("路由已存在")
+                parent_id=parentId, permit_name=permit_name, remark=remark, order=order, router_key=routeName,
+                router_name=menu_name, router_path=routePath, hide_menu=hideInMenu, status=status, ctime=datetime.now())
+    # if bool(Menu.query.filter_by(component=component).count()):
+    #     return fail_api("路由已存在")
     db.session.add(menu)
     db.session.commit()
     return success_api(msg="保存成功")
@@ -118,3 +116,51 @@ def getMenuTree():
     tree_dict = [category_to_dict(root) for root in tree_list]
 
     return success_api(data=tree_dict)
+
+
+@app_router.get("/deleteMenu")
+def deleteMenuInfo():
+    menuId = request.args.get('id')
+    if bool(RoleMenu.query.filter_by(menu_id=menuId).count()):
+        return fail_api(msg="该路由菜单绑定角色信息,无法删除，请先解绑角色信息")
+    Menu.query.filter_by(id=menuId).delete()
+    db.session.commit()
+    return success_api(msg="删除成功")
+
+
+@app_router.post("/updateMenu")
+def updateMenuInfo():
+    menuId = request.get_json().get('id')
+    component = request.get_json().get('component')
+    icon = request.get_json().get('icon')
+    icon_type = request.get_json().get('iconType')
+    menu_type = request.get_json().get('menuType')
+    menu_name = request.get_json().get('menuName')
+    parentId = request.get_json().get('parentId')
+    permit_name = request.get_json().get('permitName')
+    remark = request.get_json().get('remark')
+    hideInMenu = request.get_json().get('hideInMenu')
+    order = request.get_json().get('order')
+    routeName = request.get_json().get('routeName')
+    routePath = request.get_json().get('routePath')
+    status = request.get_json().get('status')
+    Menu.query.filter_by(id=menuId).update(
+        {
+            "component": component,
+            "icon": icon,
+            "icon_type": icon_type,
+            "menu_name": menu_name,
+            "menu_type": menu_type,
+            "parent_id": parentId,
+            "permit_name": permit_name,
+            "remark": remark,
+            "order": order,
+            "router_key": routeName,
+            "router_name": menu_name,
+            "router_path": routePath,
+            "hide_menu": hideInMenu,
+            "status": status
+        }
+    )
+    db.session.commit()
+    return success_api(msg="修改成功")

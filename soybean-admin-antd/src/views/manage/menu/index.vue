@@ -3,7 +3,7 @@ import {ref} from 'vue';
 import {Button, Popconfirm, Tag} from 'ant-design-vue';
 import type {Ref} from 'vue';
 import {useBoolean} from '@sa/hooks';
-import {fetchGetAllPages, fetchGetMenuList} from '@/service/api';
+import {deleteMenuInfo, fetchGetAllPages, fetchGetMenuList} from '@/service/api';
 import {useTable, useTableOperate, useTableScroll} from '@/hooks/common/table';
 import {$t} from '@/locales';
 import {yesOrNoRecord} from '@/constants/common';
@@ -80,23 +80,21 @@ const {columns, columnChecks, data, loading, pagination, getData, getDataByPage}
       minWidth: 120
     },
     {
-      key: 'status',
+      key: 'menuStatus',
       title: $t('page.manage.menu.menuStatus'),
       align: 'center',
       width: 80,
       customRender: ({record}) => {
-        if (record.status === null) {
+        if (record.menuStatus === null) {
           return null;
         }
-
         const tagMap: Record<Api.Common.EnableStatus, string> = {
           1: 'success',
           2: 'warning'
         };
+        const label = $t(enableStatusRecord[record.menuStatus]);
 
-        const label = $t(enableStatusRecord[record.status]);
-
-        return <Tag color={tagMap[record.status]}>{label}</Tag>;
+        return <Tag color={tagMap[record.menuStatus]}>{label}</Tag>;
       }
     },
     {
@@ -106,16 +104,14 @@ const {columns, columnChecks, data, loading, pagination, getData, getDataByPage}
       align: 'center',
       width: 80,
       customRender: ({record}) => {
-        const hide: CommonType.YesOrNo = record.hideInMenu ? 'Y' : 'N';
+        // const hide: CommonType.YesOrNo = record.hideInMenu ? 1 : 0;
 
         const tagMap: Record<CommonType.YesOrNo, string> = {
-          Y: 'error',
-          N: 'default'
+          '1': 'error',
+          '0': 'default'
         };
-
-        const label = $t(yesOrNoRecord[hide]);
-
-        return <Tag color={tagMap[hide]}>{label}</Tag>;
+        const label = $t(yesOrNoRecord[record.hideInMenu]);
+        return <Tag color={tagMap[record.hideInMenu]}>{label}</Tag>;
       }
     },
     {
@@ -147,11 +143,9 @@ const {columns, columnChecks, data, loading, pagination, getData, getDataByPage}
           <Button type="primary" ghost size="small" onClick={() => handleEdit(record)}>
             {$t('common.edit')}
           </Button>
-          <Popconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(record.id)}>
-            <Button danger ghost size="small">
-              {$t('common.delete')}
-            </Button>
-          </Popconfirm>
+          <Button danger ghost size="small" onClick={() => handleDelete(record.id)}>
+            {$t('common.delete')}
+          </Button>
         </div>
       )
     }
@@ -172,11 +166,15 @@ async function handleBatchDelete() {
   onBatchDeleted();
 }
 
-function handleDelete(id: number) {
-  // request
-  console.log(id);
-
-  onDeleted();
+async function handleDelete(id: number) {
+  const {error, response} = await deleteMenuInfo({id})
+  if (!error) {
+    if (response.data.success) {
+      await onDeleted()
+    } else {
+      window.$message?.error($t(response.data.msg));
+    }
+  }
 }
 
 /** the edit menu data or the parent menu data when adding a child menu */

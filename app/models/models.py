@@ -119,6 +119,7 @@ class Menu(db.Model):
     status = db.Column(db.Integer, default=1, comment='菜单状态,1:启用,2:禁用')
     component = db.Column(db.String(500), comment='路由组件')
     icon = db.Column(db.String(500), comment='icon图标')
+    hide_menu = db.Column(db.Integer, default=0, comment='是否隐藏菜单,0:否,1:是', )
     icon_type = db.Column(db.String(500), comment='icon类型')
     permit_name = db.Column(db.String(500), comment='权限名称')
     order = db.Column(db.Integer, comment='排序')
