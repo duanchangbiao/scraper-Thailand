@@ -3,7 +3,7 @@ import {computed, shallowRef, watch} from 'vue';
 import type {SelectProps} from 'ant-design-vue';
 import type {DataNode} from 'ant-design-vue/es/tree';
 import {$t} from '@/locales';
-import {fetchGetAllPages, fetchGetMenuTree} from '@/service/api';
+import {fetchGetAllPages, fetchGetMenuTree, getCheckMenuInfo, updateRoleMenuInfo} from '@/service/api';
 
 defineOptions({
   name: 'MenuAuthModal'
@@ -41,6 +41,7 @@ async function updateHome(val: SelectProps['value']) {
 }
 
 const pages = shallowRef<string[]>([]);
+
 async function getPages() {
   const {error, data} = await fetchGetAllPages();
   if (!error) {
@@ -89,15 +90,18 @@ function recursiveTransform(data: Api.SystemManage.MenuTree[]): DataNode[] {
 const checks = shallowRef<number[]>([]);
 
 async function getChecks() {
-  console.log(props.roleId);
-  // request
-  checks.value = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21];
+  const roleId = props.roleId
+  const {error, data} = await getCheckMenuInfo({roleId})
+  if (!error) {
+    checks.value = data;
+  }
 }
 
-function handleSubmit() {
-  console.log(checks.value, props.roleId);
-  // request
 
+async function handleSubmit() {
+  const roleId = props.roleId
+  const menuIdList = checks.value
+  await updateRoleMenuInfo({roleId, menuIdList})
   window.$message?.success?.($t('common.modifySuccess'));
 
   closeModal();
@@ -128,7 +132,7 @@ watch(visible, val => {
       <AButton size="small" class="mt-16px" @click="closeModal">
         {{ $t('common.cancel') }}
       </AButton>
-      <AButton type="primary" size="small" class="mt-16px" @click="handleSubmit">
+      <AButton type="primary" size="small" class="mt-16px" @click="handleSubmit()">
         {{ $t('common.confirm') }}
       </AButton>
     </template>

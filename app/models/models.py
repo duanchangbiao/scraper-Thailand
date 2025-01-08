@@ -146,3 +146,20 @@ class Menu(db.Model):
                 f"{self.mtime}, "
                 f"{self.remark}"
                 )
+
+
+class RoleMenu(db.Model):
+    __tablename__ = 'sys_role_menu'
+    id = db.Column(db.Integer, primary_key=True)
+    menu_id = db.Column(db.Integer, comment='菜单id')
+    role_id = db.Column(db.Integer, comment='角色id')
+    ctime = db.Column(db.DateTime, comment='创建时间')
+    mtime = db.Column(db.DateTime, comment='修改时间')
+
+    def __str__(self):
+        return (f"{self.id}, "
+                f"{self.user_id}, "
+                f"{self.role_id}, "
+                f"{self.ctime}, "
+                f"{self.mtime}"
+                )

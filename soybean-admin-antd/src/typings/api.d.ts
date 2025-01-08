@@ -105,7 +105,7 @@ declare namespace Api {
       /** role description */
       remark: string;
       status: string
-      roleId: string;
+      roleId: number;
     }>;
 
     /** role search params */

@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue';
 import {useAntdForm, useFormRules} from '@/hooks/common/form';
-import {fetchGetAllRoles, fetchSaveUser} from '@/service/api';
+import {
+  fetchGetAllRoles,
+  fetchSaveUser,
+  insertSaveRoleInfo,
+  insertSaveUser,
+  insertSaveUserInfo,
+  updateRoleInfo, updateUserInfo
+} from '@/service/api';
 import {$t} from '@/locales';
 import {enableStatusOptions, userGenderOptions} from '@/constants/business';
 import SimpleScrollbar from '~/packages/materials/src/libs/simple-scrollbar/index.vue';
@@ -100,18 +107,9 @@ async function getRoleOptions() {
       label: item.roleName,
       value: item.roleId
     }));
-
-    // the mock data does not have the roleCode, so fill it
-    // if the real request, remove the following code
-    const userRoleOptions = [
-      {
-        label: model.value.userRole.roleName,
-        value: model.value.userRole.roleId
-    }]
-
     // end
 
-    roleOptions.value = [...userRoleOptions, ...options];
+    roleOptions.value = options;
   }
 }
 
@@ -129,9 +127,22 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
+  if (props.operateType === 'add') {
+    const {error, data} = await insertSaveUserInfo(model.value)
+    if (!error) {
+      console.log(data)
+      window.$message?.success($t('common.addSuccess'));
+    }
+  } else {
+    const {error, data} = await updateUserInfo(model.value)
+    if (!error) {
+      console.log(data)
+      window.$message?.success($t('common.updateSuccess'));
+    }
+  }
   // request
-  const {error, data} = await fetchSaveUser(model.value)
-  window.$message?.success($t('common.updateSuccess'));
+  closeDrawer();
+  emit('submitted');
   closeDrawer();
   emit('submitted');
 }
@@ -188,7 +199,7 @@ watch(visible, () => {
           </AFormItem>
           <AFormItem :label="$t('page.manage.user.userRole.roleName')" name="userRole">
             <ASelect
-              v-model:value="model.userRole.roleName"
+              v-model:value="model.userRole.roleId"
               :options="roleOptions"
               :placeholder="$t('page.manage.user.form.userRole')"
             />

@@ -65,7 +65,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   status: defaultRequiredRule
 };
 
-const roleId = computed(() => props.rowData?.roleId || -1);
+const roleId = computed(() => props.rowData?.id || -1);
 
 const isEdit = computed(() => props.operateType === 'edit');
 
@@ -81,6 +81,7 @@ function closeDrawer() {
 }
 
 async function handleSubmit() {
+  console.log(roleId)
   await validate();
   if (props.operateType==='add') {
     const {error, data} = await insertSaveRoleInfo(model.value)

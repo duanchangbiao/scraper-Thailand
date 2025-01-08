@@ -5,7 +5,7 @@ from flask import Blueprint, request
 from app.common import curd
 from app.common.helper import ModelFilter
 from app.extensions import db
-from app.models.models import Role
+from app.models.models import Role, RoleMenu
 from app.schema.user_schema import RoleSchema
 from app.utils.response import table_api, success_api, fail_api
 
@@ -26,7 +26,7 @@ def getRoleList():
 
     role = (Role.query.filter(mf.get_filter(Role))
             .order_by(Role.role_id.asc())
-            .paginates(page=current,pageSize=pageSize))
+            .paginates(page=current, pageSize=pageSize))
     total = role.total
     data = curd.model_to_dicts(schema=RoleSchema, data=role.items)
     return table_api(data=data, total=total, current=current, size=pageSize)
@@ -86,3 +86,26 @@ def deleteRole():
     db.session.commit()
     return success_api(msg="删除成功")
 
+
+@app_router.post('/getCheckMenuInfo')
+def getCheckMenuInfo():
+    roleId = request.get_json().get('roleId')
+    roleMenu = RoleMenu.query.filter_by(role_id=roleId).all()
+    data = []
+    for item in roleMenu:
+        data.append(item.menu_id)
+    return success_api(msg='查询成功', data=data)
+
+
+@app_router.post('/updateRoleMenuInfo')
+def updateRoleMenuInfo():
+    menuList = request.get_json().get("menuIdList")
+    roleId = request.get_json().get('roleId')
+    if bool(RoleMenu.query.filter_by(role_id=roleId).count()):
+        RoleMenu.query.filter_by(role_id=roleId).delete()
+        db.session.commit()
+    for menuId in menuList:
+        roleMenu = RoleMenu(menu_id=menuId, role_id=roleId, ctime=datetime.datetime.now())
+        db.session.add(roleMenu)
+        db.session.commit()
+    return success_api(msg='添加成功!')

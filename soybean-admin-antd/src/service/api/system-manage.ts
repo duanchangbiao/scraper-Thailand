@@ -46,7 +46,7 @@ export function fetchGetAllPages() {
   });
 }
 
-export function fetchGetAllButtons(){
+export function fetchGetAllButtons() {
   return request<string[]>({
     url: '/systemManage/getAllButtons',
     method: 'get'
@@ -62,7 +62,7 @@ export function fetchGetMenuTree() {
 }
 
 /** 保存用户信息 */
-export function fetchSaveUser(data: Api.SystemManage.User) {
+export function insertSaveUserInfo(data: Api.SystemManage.User) {
   return request<Api.SystemManage.User>({
     url: '/systemManage/saveUser',
     method: 'post',
@@ -70,6 +70,13 @@ export function fetchSaveUser(data: Api.SystemManage.User) {
   });
 }
 
+export function updateUserInfo(data: Api.SystemManage.User) {
+  return request<Api.SystemManage.User>({
+    url: '/systemManage/updateUser',
+    method: 'post',
+    data
+  })
+}
 
 export function insertSaveRoleInfo(data: Api.SystemManage.Role) {
   return request<Api.SystemManage.Role>({
@@ -106,6 +113,24 @@ export function insertSaveMenuInfo(data: Api.SystemManage.Menu) {
 export function updateMenuInfo(data: Api.SystemManage.Menu) {
   return request<Api.SystemManage.Menu>({
     url: '/systemManage/updateMenu',
+    method: 'post',
+    data
+  })
+}
+
+
+export function getCheckMenuInfo(data: { roleId: number }) {
+  return request<number[]>({
+    url: '/systemManage/getCheckMenuInfo',
+    method: 'post',
+    data
+  })
+}
+
+
+export function updateRoleMenuInfo(data: { roleId: number, menuIdList: number[] }) {
+  return request<string>({
+    url: '/systemManage/updateRoleMenuInfo',
     method: 'post',
     data
   })
