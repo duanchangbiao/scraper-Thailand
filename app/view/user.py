@@ -35,18 +35,18 @@ def getUserList():
             .paginates(page=page, pageSize=size))
     total = user.total
     return table_api(data=[{
-        "username": user.username if user.username is not None else None,
-        "nickname": user.nickname if user.nickname is not None else None,
-        "email": user.email if user.email is not None else None,
-        "sex": user.sex if user.sex is not None else None,
-        "phone": user.phone if user.phone is not None else None,
-        "remark": user.remark if user.remark is not None else None,
-        "status": user.status if user.status is not None else None,
+        "username": user.username,
+        "nickname": user.nickname,
+        "email": user.email,
+        "sex": user.sex,
+        "phone": user.phone,
+        "remark": user.remark,
+        "status": user.status,
         "isActive": int(user.is_active),
         "userRole": {
-            "roleName": role.role_name if role.role_name is not None else None,
-            "roleCode": role.role_code if role.role_code is not None else None,
-            "roleId": role.role_id if role.role_id is not None else None,
+            "roleName": role.role_name,
+            "roleCode": role.role_code,
+            "roleId": role.role_id,
         },
         "createTime": user.ctime.strftime("%Y-%m-%d %H:%M:%S") if user.ctime is not None else None,
         "updateTime": user.mtime.strftime("%Y-%m-%d %H:%M:%S") if user.mtime is not None else None
@@ -65,5 +65,3 @@ def saveUser():
     userRole = request.get_json().get("userRole")
     print(userRole, username, password, nickname, email, phone, isActive, status)
     return success_api()
-
-

@@ -12,6 +12,7 @@ import {
 import {$t} from '@/locales';
 import {enableStatusOptions, userGenderOptions} from '@/constants/business';
 import SimpleScrollbar from '~/packages/materials/src/libs/simple-scrollbar/index.vue';
+import {SelectProps} from "ant-design-vue";
 
 defineOptions({
   name: 'UserOperateDrawer'
@@ -63,10 +64,7 @@ function createDefaultModel(): {
   email: string;
   username: string;
   status: string;
-  userRole: {
-    roleId: string,
-    roleName: string
-  }
+  userRole: []
 } {
   return {
     username: '',
@@ -77,10 +75,7 @@ function createDefaultModel(): {
     email: '',
     isActive: 1,
     status: '1',
-    userRole: {
-      roleId: '',
-      roleName: ''
-    }
+    userRole: [],
   };
 }
 
@@ -97,7 +92,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 /** the enabled role options */
-const roleOptions = ref<CommonType.Option<string>[]>([]);
+let roleOptions = ref<CommonType.Option<string>[]>([]);
 
 async function getRoleOptions() {
   const {error, data} = await fetchGetAllRoles();
@@ -105,11 +100,9 @@ async function getRoleOptions() {
   if (!error) {
     const options = data.map(item => ({
       label: item.roleName,
-      value: item.roleId
+      value: item.id
     }));
-    // end
-
-    roleOptions.value = options;
+    roleOptions.value = options
   }
 }
 
@@ -128,17 +121,19 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
   if (props.operateType === 'add') {
-    const {error, data} = await insertSaveUserInfo(model.value)
-    if (!error) {
-      console.log(data)
-      window.$message?.success($t('common.addSuccess'));
-    }
+    console.log(model.value)
+    // const {error, data} = await insertSaveUserInfo(model.value)
+    // if (!error) {
+    //   console.log(data)
+    //   window.$message?.success($t('common.addSuccess'));
+    // }
   } else {
-    const {error, data} = await updateUserInfo(model.value)
-    if (!error) {
-      console.log(data)
-      window.$message?.success($t('common.updateSuccess'));
-    }
+    console.log(model.value)
+    // const {error, data} = await updateUserInfo(model.value)
+    // if (!error) {
+    //   console.log(data)
+    //   window.$message?.success($t('common.updateSuccess'));
+    // }
   }
   // request
   closeDrawer();
@@ -198,11 +193,17 @@ watch(visible, () => {
             </ARadioGroup>
           </AFormItem>
           <AFormItem :label="$t('page.manage.user.userRole.roleName')" name="userRole">
-            <ASelect
+            <a-select
+              ref="select"
               v-model:value="model.userRole.roleId"
+              style="width: 120px"
               :options="roleOptions"
-              :placeholder="$t('page.manage.user.form.userRole')"
-            />
+            ></a-select>
+            <!--            <ASelect-->
+            <!--              v-model:value="model.userRole.roleId"-->
+            <!--              :options="roleOptions"-->
+            <!--              :placeholder="$t('page.manage.user.form.userRole')"-->
+            <!--            />-->
           </AFormItem>
         </AForm>
       </SimpleScrollbar>
