@@ -264,7 +264,11 @@ const local: App.I18n.Schema = {
         active: {
           enable: '监控中',
           disable: '等待监控'
-        }
+        },
+        userType: {
+          admin: '管理员',
+          common: '业务账号'
+        },
       },
       role: {
         title: '角色列表',
@@ -293,8 +297,10 @@ const local: App.I18n.Schema = {
         password: '密码',
         email: '邮箱',
         status: '用户状态',
+        userType: '账号类型',
         createTime: '创建时间',
         isActive: '监控',
+        businessType:'业务类型',
         updateTime: '更新时间',
         userRole: {
           roleId: '角色Id',
@@ -308,6 +314,7 @@ const local: App.I18n.Schema = {
           nickname: '请输入昵称',
           phone: '请输入手机号',
           email: '请输入邮箱',
+          userType: '请选择账号类型',
           status: '请选择用户状态',
           isActive: '请选择监控状态',
           userRole: {
