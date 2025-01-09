@@ -1,4 +1,5 @@
 import time
+from lxml import etree
 
 from selenium import webdriver
 from selenium.webdriver import ActionChains
@@ -15,7 +16,7 @@ class ScraperPassport:
         self.url = "https://sso.tisi.go.th/login"
         self.action_type = action_type
         self.chrome_options = webdriver.ChromeOptions()
-        # self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--headless")
         self.chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 1080))
         self.chrome_options.add_experimental_option("useAutomationExtension", 'False')
@@ -46,10 +47,9 @@ class ScraperPassport:
         license_locator = (By.XPATH, "//*[@id='top']/div//ul[@class='nav menu nav-pills']/li[7]")
         WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(license_locator))
         for action in self.action_type:
-            if action == 1:
-                self.parse_model_one()
-            elif action == 5:
-                self.parse_model_five()
+            if action == "AFT":
+                data = self.parse_model_five()
+                print(data)
 
     """
      解析模板M.5
@@ -66,13 +66,32 @@ class ScraperPassport:
         # 等待表格加载完成
         table_locator = (By.XPATH, '//*[@id="moao5List"]')
         WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(table_locator))
-        #
         page_result = self.driver.page_source
-        time.sleep(10)
-        with open("page_result.html", "w", encoding="utf-8") as fp:
-            fp.write(page_result)
-            fp.close()
-        print("保存成功")
+        tree = etree.HTML(page_result, etree.HTMLParser())
+        tr_list = tree.xpath("//*[@id='moao5List']/tbody/tr")
+        data = []
+        for tr in tr_list:
+            item = {}
+            if tr.xpath("./td[2]/text()"):
+                item["id"] = tr.xpath("./td[2]/text()")[0].strip()
+            if tr.xpath("./td[3]/text()"):
+                item["applicant"] = tr.xpath("./td[3]/text()")[0].strip()
+            if tr.xpath("./td[4]/text()"):
+                item["taxNumber"] = tr.xpath("./td[4]/text()")[0].strip()
+            if tr.xpath("./td[5]/text()"):
+                item["mokId"] = tr.xpath("./td[5]/text()")[0].strip()
+            if tr.xpath("./td[6]/text()"):
+                item["standardName"] = tr.xpath("./td[6]/text()")[0].strip()
+            if tr.xpath("./td[7]/text()"):
+                item["applicationDate"] = tr.xpath("./td[7]/text()")[0].strip()
+            if tr.xpath("./td[8]//span[@class='show_status']"):
+                str_list = "".join(tr.xpath("./td[8]//span[@class='show_status']//text()"))
+                item["sataus"] = str_list.strip()
+            if tr.xpath("./td[9]"):
+                str_list = "".join(tr.xpath("./td[9]/text()"))
+                item["companyName"] = str_list.strip().replace("\r", "").replace("\n", "").replace("    ", "")
+            data.append(item)
+        return data
 
     def parse_model_one(self):
         model_locator = self.driver.find_element(by=By.XPATH,
@@ -98,7 +117,7 @@ class ScraperPassport:
 
 
 if __name__ == '__main__':
-    scraper = ScraperPassport("0115566026132", "daican866@qq", [1, 5])
+    scraper = ScraperPassport("0115566026132", "daican866@qq", ['AFT'])
     scraper.login()
 
     scraper.close()

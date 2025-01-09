@@ -164,6 +164,7 @@ const local: App.I18n.Schema = {
     home: '首页',
     document: '文档',
     document_project: '项目文档',
+    'document_project-link': '项目链接',
     document_vue: 'Vue文档',
     document_vite: 'Vite文档',
     document_unocss: 'UnoCSS文档',
@@ -300,7 +301,7 @@ const local: App.I18n.Schema = {
         userType: '账号类型',
         createTime: '创建时间',
         isActive: '监控',
-        businessType:'业务类型',
+        businessType: '业务类型',
         updateTime: '更新时间',
         userRole: {
           roleId: '角色Id',

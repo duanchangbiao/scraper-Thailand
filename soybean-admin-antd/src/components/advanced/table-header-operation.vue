@@ -49,14 +49,14 @@ function refresh() {
         </template>
         <span class="ml-8px">{{ $t('common.add') }}</span>
       </AButton>
-      <APopconfirm :title="$t('common.confirmDelete')" :disabled="disabledDelete" @confirm="batchDelete">
-        <AButton size="small" danger :disabled="disabledDelete">
-          <template #icon>
-            <icon-ic-round-delete class="align-sub text-icon" />
-          </template>
-          <span class="ml-8px">{{ $t('common.batchDelete') }}</span>
-        </AButton>
-      </APopconfirm>
+<!--      <APopconfirm :title="$t('common.confirmDelete')" :disabled="disabledDelete" @confirm="batchDelete">-->
+<!--        <AButton size="small" danger :disabled="disabledDelete">-->
+<!--          <template #icon>-->
+<!--            <icon-ic-round-delete class="align-sub text-icon" />-->
+<!--          </template>-->
+<!--          <span class="ml-8px">{{ $t('common.batchDelete') }}</span>-->
+<!--        </AButton>-->
+<!--      </APopconfirm>-->
     </slot>
     <AButton size="small" @click="refresh">
       <template #icon>

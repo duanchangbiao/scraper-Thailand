@@ -202,10 +202,6 @@ const {
   // closeDrawer
 } = useTableOperate(data, getData);
 
-async function handleBatchDelete() {
-
-}
-
 async function handleDelete(id: number) {
   const {error, response} = await deleteUserInfo({id})
   if (!error) {
@@ -239,7 +235,6 @@ function edit(id: number) {
           :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
           @add="handleAdd"
-          @delete="handleBatchDelete"
           @refresh="getData"
         />
       </template>
