@@ -23,6 +23,7 @@ create table sys_user
     nickname  varchar(500) comment '昵称',
     email     varchar(500) comment '邮箱',
     phone     varchar(500) comment '手机号',
+    user_type int(2) comment '用户类型1:系统用户,2:业务账号',
     sex       varchar(500) comment '性别',
     is_active tinyint(1) comment '是否激活',
     status    char(1) comment '状态',
@@ -87,9 +88,11 @@ values ('首页', 2, 0, 'home', 'home', '/home', 1, 'layout.base$view.home', 'md
 insert into sys_menu(menu_name, menu_type, parent_id, router_key, router_name, router_path, status, component, icon,
                      icon_type, order, permit_name, ctime, remark)
 values ('用户管理', 2, 3, 'manage_user', '用户管理', '/manage/user', 1,
-        'view.manage_user', 'ic:round-manage-accounts', 1, 1, 'user:user:list', '2021-01-01 00:00:00','用户管理'),
-    ('角色管理', 2, 3, 'manage_role', '角色管理', '/manage/role', 1,'view.manage_role', 'carbon:user-role', 1, 2, 'user:role:list', '2021-01-01 00:00:00','角色管理'),
-    ('菜单管理', 2, 3, 'manage_menu', '菜单管理', '/manage/menu', 1, 'view.manage_menu', 'material-symbols:route', 1, 3, 'user:menu:list', '2021-01-01 00:00:00','菜单管理');
+        'view.manage_user', 'ic:round-manage-accounts', 1, 1, 'user:user:list', '2021-01-01 00:00:00', '用户管理'),
+       ('角色管理', 2, 3, 'manage_role', '角色管理', '/manage/role', 1, 'view.manage_role', 'carbon:user-role', 1, 2,
+        'user:role:list', '2021-01-01 00:00:00', '角色管理'),
+       ('菜单管理', 2, 3, 'manage_menu', '菜单管理', '/manage/menu', 1, 'view.manage_menu', 'material-symbols:route', 1,
+        3, 'user:menu:list', '2021-01-01 00:00:00', '菜单管理');
 
 
 create table sys_role_menu
@@ -118,5 +121,47 @@ create table sys_jobs
     last_execute_id   int comment '最后一次执行id',
     next_execute_time datetime comment '下次执行时间',
     remark            varchar(500) comment '备注'
+) engine = InnoDB;
+
+
+create table sys_job_log
+(
+    id            bigint not null auto_increment PRIMARY KEY comment '主键',
+    job_id        bigint comment '任务id',
+    job_name      varchar(255) comment '任务名称',
+    job_group     varchar(255) comment '任务分组',
+    job_function  varchar(255) comment '任务函数',
+    trigger_type  varchar(255) comment '触发器类型',
+    trigger_value varchar(255) comment '任务表达式',
+) engine = InnoDB;
+
+create table sys_dict_type
+(
+    id        bigint not null auto_increment PRIMARY KEY comment '主键',
+    dict_type varchar(255) comment '字典类型',
+    dict_name varchar(255) comment '字典名称',
+    dict_desc varchar(255) comment '字典描述',
+    ctime     datetime comment '创建时间',
+    mtime     datetime comment '修改时间',
+    remark    varchar(500) comment '备注'
+) engine = InnoDB;
+
+insert into sys_dict_type(dict_type, dict_name, dict_desc, ctime)
+values ('business_user', 'AFT', 'AFT模块采集', '2021-01-01 00:00:00'),
+       ('business_user', 'AFFA', 'AFFA模块采集', '2021-01-01 00:00:00'),
+       ('business_user', 'Mor5', 'Mor5模块采集', '2021-01-01 00:00:00'),
+       ('business_user', 'Mor9', 'Mor9模块采集', '2021-01-01 00:00:00'),
+       ('business_user', 'NSW', 'NSW模块采集', '2021-01-01 00:00:00');
+
+
+
+create table sys_user_business
+(
+    id          bigint not null auto_increment PRIMARY KEY comment '主键',
+    user_id     bigint comment '用户id',
+    business_id bigint comment '业务id',
+    ctime       datetime comment '创建时间',
+    mtime       datetime comment '修改时间',
+    remark      varchar(500) comment '备注'
 ) engine = InnoDB;
 

@@ -53,7 +53,6 @@ def saveRoleInfo():
         if not bool(role.query.filter_by(role_code=roleCode).count()):
             db.session.add(role)
             db.session.commit()
-        print(roleCode, roleName, status, remark)
     except Exception as e:
         return fail_api(msg=f"角色信息保存失败,请检查表单是否填写正确：{e}")
     return success_api(msg="添加成功!")

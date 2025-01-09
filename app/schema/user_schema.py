@@ -29,3 +29,8 @@ class RoleSchema(ma.Schema):
     remark = fields.Str(attribute='remark')
     createTime = fields.Str(required=True, attribute='ctime')
     updateTime = fields.Str(required=True, attribute='mtime')
+
+
+class DictTypeSchema(ma.Schema):
+    id = fields.Int(dump_only=True, attribute='id')
+    dictName = fields.Str(required=True, attribute='dict_name')

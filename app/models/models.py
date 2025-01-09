@@ -49,6 +49,7 @@ class User(db.Model):
     email = db.Column(db.String(500), comment='邮箱')
     phone = db.Column(db.String(500), comment='手机号')
     sex = db.Column(db.String(500), comment='性别')
+    user_type = db.Column(db.Integer, comment='用户类型1:系统用户,2:业务账号')
     is_active = db.Column(db.Boolean, comment='是否监控', default=True)
     status = db.Column(db.Integer, default=1, comment='账号状态')
     ctime = db.Column(db.DateTime, comment='创建时间')
@@ -163,4 +164,40 @@ class RoleMenu(db.Model):
                 f"{self.role_id}, "
                 f"{self.ctime}, "
                 f"{self.mtime}"
+                )
+
+
+class UserBusiness(db.Model):
+    __tablename__ = 'sys_user_business'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, comment='用户id')
+    business_id = db.Column(db.Integer, comment='业务id')
+    ctime = db.Column(db.DateTime, comment='创建时间')
+    mtime = db.Column(db.DateTime, comment='修改时间')
+
+    def __str__(self):
+        return (f"{self.id}, "
+                f"{self.user_id}, "
+                f"{self.business_id}, "
+                f"{self.ctime}, "
+                f"{self.mtime}"
+                )
+
+
+class DictType(db.Model):
+    __tablename__ = 'sys_dict_type'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    dict_type = db.Column(db.String(500), comment='字典类型')
+    dict_name = db.Column(db.String(500), comment='字典名称')
+    ctime = db.Column(db.DateTime, comment='创建时间')
+    mtime = db.Column(db.DateTime, comment='修改时间')
+    remark = db.Column(db.String(500), comment='备注')
+
+    def __str__(self):
+        return (f"{self.id}, "
+                f"{self.dict_type}, "
+                f"{self.dict_name}, "
+                f"{self.ctime}, "
+                f"{self.mtime}, "
+                f"{self.remark}"
                 )
