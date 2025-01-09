@@ -29,7 +29,6 @@ function refresh() {
 }
 
 function batchUpdate() {
-  console.log()
   emit('batchUpdate');
 }
 </script>
@@ -43,9 +42,8 @@ function batchUpdate() {
       </template>
       <span class="ml-8px">{{ $t('common.refresh') }}</span>
     </AButton>
-    <AButton size="small" danger :disabled="disabledUpdate">
+    <AButton size="small" danger :disabled="disabledUpdate" @click="batchUpdate">
       <template #icon>
-<!--        <icon-mdi-refresh class="align-sub text-icon"/>-->
         <icon-ant-design-plus-square-outlined class="align-sub text-icon"/>
       </template>
       <span class="ml-8px">{{ $t('common.batchUpdate') }}</span>

@@ -2,17 +2,15 @@
 import {computed, ref, watch} from 'vue';
 import {useAntdForm, useFormRules} from '@/hooks/common/form';
 import {
+  fetchDictOptions,
   fetchGetAllRoles,
-  fetchSaveUser,
   insertSaveRoleInfo,
-  insertSaveUser,
   insertSaveUserInfo,
   updateRoleInfo, updateUserInfo
 } from '@/service/api';
 import {$t} from '@/locales';
-import {enableStatusOptions, userGenderOptions} from '@/constants/business';
+import {enableStatusOptions, userGenderOptions, userTypeOptions} from '@/constants/business';
 import SimpleScrollbar from '~/packages/materials/src/libs/simple-scrollbar/index.vue';
-import {SelectProps} from "ant-design-vue";
 
 defineOptions({
   name: 'UserOperateDrawer'
@@ -50,7 +48,7 @@ const title = computed(() => {
 
 type Model = Pick<
   Api.SystemManage.User,
-  'username' | 'sex' | 'nickname' | 'phone' | 'email' | 'status' | 'password' | 'isActive'
+  'username' | 'sex' | 'nickname' | 'phone' | 'email' | 'status' | 'password' | 'isActive' | 'userType' | 'userBusiness'
 >;
 
 const model = ref(createDefaultModel());
@@ -63,8 +61,13 @@ function createDefaultModel(): {
   isActive: number;
   email: string;
   username: string;
+  userType: string;
   status: string;
-  userRole: []
+  userBusiness: [];
+  userRole: {
+    roleId: string;
+    roleName: string
+  }
 } {
   return {
     username: '',
@@ -73,13 +76,18 @@ function createDefaultModel(): {
     nickname: '',
     phone: '',
     email: '',
+    userType: '2',
     isActive: 1,
     status: '1',
-    userRole: [],
+    userBusiness: [],
+    userRole: {
+      roleId: '',
+      roleName: ''
+    },
   };
 }
 
-type RuleKey = Extract<keyof Model, 'username' | 'status' | 'password' | 'nickname' | 'isActive' | 'phone' | 'email' | 'roleId'>;
+type RuleKey = Extract<keyof Model, 'userType' | 'username' | 'status' | 'password' | 'nickname' | 'isActive' | 'phone' | 'email' | 'roleId'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   username: defaultRequiredRule,
@@ -89,20 +97,33 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   isActive: defaultRequiredRule,
   phone: defaultRequiredRule,
   email: defaultRequiredRule,
+  userType: defaultRequiredRule
 };
 
 /** the enabled role options */
-let roleOptions = ref<CommonType.Option<string>[]>([]);
+const roleOptions = ref<CommonType.Option<string>[]>([]);
+
+let dictOptions = ref<CommonType.Option<string>[]>([]);
+
+async function getDictOptions() {
+  const {error, data} = await fetchDictOptions();
+  if (!error) {
+    dictOptions.value = data.map(item => ({
+      label: item.dictName,
+      value: item.id
+    }));
+  }
+
+}
 
 async function getRoleOptions() {
   const {error, data} = await fetchGetAllRoles();
 
   if (!error) {
-    const options = data.map(item => ({
+    roleOptions.value = data.map(item => ({
       label: item.roleName,
       value: item.id
     }));
-    roleOptions.value = options
   }
 }
 
@@ -121,19 +142,17 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
   if (props.operateType === 'add') {
-    console.log(model.value)
-    // const {error, data} = await insertSaveUserInfo(model.value)
-    // if (!error) {
-    //   console.log(data)
-    //   window.$message?.success($t('common.addSuccess'));
-    // }
+    const {error, data} = await insertSaveUserInfo(model.value)
+    if (!error) {
+      console.log(data)
+      window.$message?.success($t('common.addSuccess'));
+    }
   } else {
-    console.log(model.value)
-    // const {error, data} = await updateUserInfo(model.value)
-    // if (!error) {
-    //   console.log(data)
-    //   window.$message?.success($t('common.updateSuccess'));
-    // }
+    const {error, data} = await updateUserInfo(model.value)
+    if (!error) {
+      console.log(data)
+      window.$message?.success($t('common.updateSuccess'));
+    }
   }
   // request
   closeDrawer();
@@ -147,6 +166,7 @@ watch(visible, () => {
     handleInitModel();
     resetFields();
     getRoleOptions();
+    getDictOptions();
   }
 });
 </script>
@@ -163,48 +183,83 @@ watch(visible, () => {
           :label-col="{ span: 5 }"
           :wrapper-col="{ span: 15 }"
         >
-          <AFormItem :label="$t('page.manage.user.username')" name="username">
-            <AInput v-model:value="model.username" :placeholder="$t('page.manage.user.form.username')"/>
-          </AFormItem>
-          <AFormItem :label="$t('page.manage.user.password')" name="password">
-            <AInputPassword v-model:value="model.password" :placeholder="$t('page.manage.user.form.password')"/>
-          </AFormItem>
-          <AFormItem :label="$t('page.manage.user.sex')" name="sex">
-            <ARadioGroup v-model:value="model.sex">
-              <ARadio v-for="item in userGenderOptions" :key="item.value" :value="item.value">
-                {{ $t(item.label) }}
-              </ARadio>
-            </ARadioGroup>
-          </AFormItem>
-          <AFormItem :label="$t('page.manage.user.nickname')" name="nickname">
-            <AInput v-model:value="model.nickname" :placeholder="$t('page.manage.user.form.nickname')"/>
-          </AFormItem>
-          <AFormItem :label="$t('page.manage.user.phone')" name="phone">
-            <AInput v-model:value="model.phone" :placeholder="$t('page.manage.user.form.phone')"/>
-          </AFormItem>
-          <AFormItem :label="$t('page.manage.user.email')" name="email">
-            <AInput v-model:value="model.email" :placeholder="$t('page.manage.user.form.email')"/>
-          </AFormItem>
-          <AFormItem :label="$t('page.manage.user.status')" name="status">
-            <ARadioGroup v-model:value="model.status">
-              <ARadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value">
-                {{ $t(item.label) }}
-              </ARadio>
-            </ARadioGroup>
-          </AFormItem>
-          <AFormItem :label="$t('page.manage.user.userRole.roleName')" name="userRole">
-            <a-select
-              ref="select"
-              v-model:value="model.userRole.roleId"
-              style="width: 120px"
-              :options="roleOptions"
-            ></a-select>
-            <!--            <ASelect-->
-            <!--              v-model:value="model.userRole.roleId"-->
-            <!--              :options="roleOptions"-->
-            <!--              :placeholder="$t('page.manage.user.form.userRole')"-->
-            <!--            />-->
-          </AFormItem>
+          <ARow justify="center" :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <ACol :lg="24" :xs="24">
+              <AFormItem :label="$t('page.manage.user.username')" name="username">
+                <AInput v-model:value="model.username" :placeholder="$t('page.manage.user.form.username')"/>
+              </AFormItem>
+            </ACol>
+            <ACol :lg="24" :xs="24" v-if="props.operateType === 'add'">
+              <AFormItem :label="$t('page.manage.user.password')" name="password">
+                <AInputPassword v-model:value="model.password" :placeholder="$t('page.manage.user.form.password')"/>
+              </AFormItem>
+            </ACol>
+            <ACol :lg="10" :xs="24">
+              <AFormItem :label="$t('page.manage.user.sex')" name="sex">
+                <ARadioGroup v-model:value="model.sex">
+                  <ARadio v-for="item in userGenderOptions" :key="item.value" :value="item.value">
+                    {{ $t(item.label) }}
+                  </ARadio>
+                </ARadioGroup>
+              </AFormItem>
+            </ACol>
+            <ACol :lg="14" :xs="24">
+              <AFormItem :label="$t('page.manage.user.userType')" name="sex">
+                <ARadioGroup v-model:value="model.userType">
+                  <ARadio v-for="item in userTypeOptions" :key="item.value" :value="item.value">
+                    {{ $t(item.label) }}
+                  </ARadio>
+                </ARadioGroup>
+              </AFormItem>
+            </ACol>
+            <ACol :lg="24" :xs="24">
+              <AFormItem :label="$t('page.manage.user.nickname')" name="nickname">
+                <AInput v-model:value="model.nickname" :placeholder="$t('page.manage.user.form.nickname')"/>
+              </AFormItem>
+            </ACol>
+            <ACol :lg="24" :xs="24">
+              <AFormItem :label="$t('page.manage.user.phone')" name="phone">
+                <AInput v-model:value="model.phone" :placeholder="$t('page.manage.user.form.phone')"/>
+              </AFormItem>
+            </ACol>
+            <ACol :lg="24" :xs="24">
+              <AFormItem :label="$t('page.manage.user.email')" name="email">
+                <AInput v-model:value="model.email" :placeholder="$t('page.manage.user.form.email')"/>
+              </AFormItem>
+            </ACol>
+            <ACol :lg="24" :xs="24">
+              <AFormItem :label="$t('page.manage.user.status')" name="status">
+                <ARadioGroup v-model:value="model.status">
+                  <ARadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value">
+                    {{ $t(item.label) }}
+                  </ARadio>
+                </ARadioGroup>
+              </AFormItem>
+            </ACol>
+            <ACol :lg="24" :xs="24">
+              <AFormItem v-if="model.userType==='2'" :label="$t('page.manage.user.businessType')"
+                         name="business">
+                <a-select
+                  ref="select"
+                  mode="multiple"
+                  v-model:value="model.userBusiness"
+                  style="width: 200px"
+                  :options="dictOptions"
+                ></a-select>
+              </AFormItem>
+            </ACol>
+            <ACol :lg="24" :xs="24">
+              <AFormItem v-if="model.userType==='1'" :label="$t('page.manage.user.userRole.roleName')"
+                         name="userRole">
+                <a-select
+                  ref="select"
+                  v-model:value="model.userRole.roleId"
+                  style="width: 150px"
+                  :options="roleOptions"
+                ></a-select>
+              </AFormItem>
+            </ACol>
+          </ARow>
         </AForm>
       </SimpleScrollbar>
     </div>

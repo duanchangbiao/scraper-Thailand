@@ -21,6 +21,13 @@ export function fetchGetAllRoles() {
   });
 }
 
+export function fetchDictOptions() {
+  return request<Api.SystemManage.DictType[]>({
+    url: '/systemManage/getBusinessDict',
+    method: 'get'
+  })
+}
+
 /** get user list */
 export function fetchGetUserList(params?: Api.SystemManage.UserSearchParams) {
   return request<Api.SystemManage.UserList>({
@@ -140,6 +147,14 @@ export function updateRoleMenuInfo(data: { roleId: number, menuIdList: number[] 
 export function deleteMenuInfo(params: { id: number }) {
   return request<Api.SystemManage.Menu>({
     url: '/systemManage/deleteMenu',
+    method: 'get',
+    params
+  })
+}
+
+export function deleteUserInfo(params: { id: number }) {
+  return request<Api.SystemManage.User>({
+    url: '/systemManage/deleteUser',
     method: 'get',
     params
   })

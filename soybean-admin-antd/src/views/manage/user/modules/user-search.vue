@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { $t } from '@/locales';
-import { useAntdForm, useFormRules } from '@/hooks/common/form';
-import {enableStatusOptions, userActiveOptions, userGenderOptions} from '@/constants/business';
-import { translateOptions } from '@/utils/common';
+import {computed} from 'vue';
+import {$t} from '@/locales';
+import {useAntdForm, useFormRules} from '@/hooks/common/form';
+import {enableStatusOptions, userActiveOptions} from '@/constants/business';
+import {translateOptions} from '@/utils/common';
 
 defineOptions({
   name: 'UserSearch'
@@ -11,19 +11,20 @@ defineOptions({
 
 interface Emits {
   (e: 'reset'): void;
+
   (e: 'search'): void;
 }
 
 const emit = defineEmits<Emits>();
 
-const { formRef, validate, resetFields } = useAntdForm();
+const {formRef, validate, resetFields} = useAntdForm();
 
-const model = defineModel<Api.SystemManage.UserSearchParams>('model', { required: true });
+const model = defineModel<Api.SystemManage.UserSearchParams>('model', {required: true});
 
 type RuleKey = Extract<keyof Api.SystemManage.UserSearchParams, 'userEmail' | 'userPhone'>;
 
 const rules = computed<Record<RuleKey, App.Global.FormRule>>(() => {
-  const { patternRules } = useFormRules(); // inside computed to make locale reactive
+  const {patternRules} = useFormRules(); // inside computed to make locale reactive
 
   return {
     userEmail: patternRules.email,
@@ -56,7 +57,7 @@ async function search() {
       <ARow :gutter="[16, 16]" wrap>
         <ACol :span="24" :md="12" :lg="6">
           <AFormItem :label="$t('page.manage.user.username')" name="username" class="m-0">
-            <AInput v-model:value="model.username" :placeholder="$t('page.manage.user.form.username')" />
+            <AInput v-model:value="model.username" :placeholder="$t('page.manage.user.form.username')"/>
           </AFormItem>
         </ACol>
         <ACol :span="24" :md="12" :lg="6">
@@ -71,7 +72,7 @@ async function search() {
         </ACol>
         <ACol :span="24" :md="12" :lg="6">
           <AFormItem :label="$t('page.manage.user.email')" name="email" class="m-0">
-            <AInput v-model:value="model.email" :placeholder="$t('page.manage.user.form.email')" />
+            <AInput v-model:value="model.email" :placeholder="$t('page.manage.user.form.email')"/>
           </AFormItem>
         </ACol>
         <ACol :span="24" :md="12" :lg="6">
@@ -89,13 +90,13 @@ async function search() {
             <div class="w-full flex-y-center justify-end gap-12px">
               <AButton @click="reset">
                 <template #icon>
-                  <icon-ic-round-refresh class="align-sub text-icon" />
+                  <icon-ic-round-refresh class="align-sub text-icon"/>
                 </template>
                 <span class="ml-8px">{{ $t('common.reset') }}</span>
               </AButton>
               <AButton type="primary" ghost @click="search">
                 <template #icon>
-                  <icon-ic-round-search class="align-sub text-icon" />
+                  <icon-ic-round-search class="align-sub text-icon"/>
                 </template>
                 <span class="ml-8px">{{ $t('common.search') }}</span>
               </AButton>

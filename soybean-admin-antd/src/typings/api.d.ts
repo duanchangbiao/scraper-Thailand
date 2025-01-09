@@ -33,6 +33,8 @@ declare namespace Api {
      */
     type EnableStatus = '1' | '2';
 
+    type UserType = '1' | '2';
+
     type EnableActive = 1 | 0;
 
     /** common record */
@@ -113,6 +115,14 @@ declare namespace Api {
       Pick<Api.SystemManage.Role, 'roleName' | 'roleCode' | 'status'> & Common.CommonSearchParams
     >;
 
+    type DictType = Common.CommonRecord<{
+      /** role name */
+      dictName: string;
+      /** role code */
+      id: string;
+    }>;
+
+
     type RoleDeleteParams = Partial<
       Pick<Api.SystemManage.Role, 'roleId'> & Common.CommonSearchParams
     >;
@@ -139,11 +149,13 @@ declare namespace Api {
       password: string;
       nickname: string;
       email: string;
+      userType: string;
       phone: string;
       sex: UserGender;
       isActive: UserActive;
       createTime: string;
       updateTime: string;
+      userBusiness: [];
       userRole: {
         roleId: number;
         roleName: string;

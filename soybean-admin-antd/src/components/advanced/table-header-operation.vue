@@ -34,6 +34,7 @@ function batchDelete() {
 }
 
 function refresh() {
+
   emit('refresh');
 }
 </script>

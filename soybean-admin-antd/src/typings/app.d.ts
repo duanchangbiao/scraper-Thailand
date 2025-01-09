@@ -483,6 +483,10 @@ declare namespace App {
               enable: string;
               disable: string;
             };
+            userType: {
+              admin: string;
+              common: string;
+            }
           };
           role: {
             title: string;
@@ -506,12 +510,16 @@ declare namespace App {
             id: string;
             username: string;
             nickname: string;
+            userType: string
             password: string;
             email: string;
             phone: string;
             sex: string;
+            businessType: string;
             status: string;
             isActive: string;
+            createTime: string;
+            updateTime: string;
             userRole: {
               roleId: string;
               roleName: string;
@@ -521,6 +529,7 @@ declare namespace App {
               username: string;
               password: string;
               nickname: string;
+              userType: string
               email: string;
               phone: string;
               sex: string;

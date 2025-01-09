@@ -1,9 +1,9 @@
 <script setup lang="tsx">
 import {Button, Popconfirm, Tag} from 'ant-design-vue';
-import {fetchGetUserList} from '@/service/api';
+import {deleteUserInfo, fetchGetUserList} from '@/service/api';
 import {useTable, useTableOperate, useTableScroll} from '@/hooks/common/table';
 import {$t} from '@/locales';
-import {enableActiveRecord, enableStatusRecord, userGenderRecord} from '@/constants/business';
+import {enableActiveRecord, enableStatusRecord, userGenderRecord, userTypeRecord} from '@/constants/business';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 
@@ -70,6 +70,27 @@ const {
         const label = $t(userGenderRecord[record.sex]);
 
         return <Tag color={tagMap[record.sex]}>{label}</Tag>;
+      }
+    },
+    {
+      key: 'userType',
+      dataIndex: 'userType',
+      title: $t('page.manage.user.userType'),
+      align: 'center',
+      width: 100,
+      customRender: ({record}) => {
+        if (record.userType === null) {
+          return null;
+        }
+
+        const tagMap: Record<Api.Common.UserType, string> = {
+          '1': 'success',
+          '2': 'pink'
+        };
+
+        const label = $t(userTypeRecord[record.userType]);
+
+        return <Tag color={tagMap[record.userType]}>{label}</Tag>;
       }
     },
     {
@@ -178,18 +199,24 @@ const {
   handleEdit,
   checkedRowKeys,
   rowSelection,
-  onBatchDeleted,
-  onDeleted
   // closeDrawer
 } = useTableOperate(data, getData);
 
 async function handleBatchDelete() {
-  // request
-  onBatchDeleted();
+
 }
 
-function handleDelete(id: number) {
-  onDeleted();
+async function handleDelete(id: number) {
+  const {error, response} = await deleteUserInfo({id})
+  if (!error) {
+    if (response.data.success) {
+      window.$message?.success($t(response.data.msg));
+      await getData()
+    } else {
+      window.$message?.error($t(response.data.msg));
+      await getData()
+    }
+  }
 }
 
 function edit(id: number) {
