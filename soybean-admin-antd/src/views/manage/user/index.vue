@@ -7,7 +7,7 @@ import {enableActiveRecord, enableStatusRecord, userGenderRecord} from '@/consta
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 
-const { tableWrapperRef, scrollConfig } = useTableScroll();
+const {tableWrapperRef, scrollConfig} = useTableScroll();
 
 const {
   columns,
@@ -45,13 +45,13 @@ const {
       align: 'center',
       minWidth: 100
     },
-    {
-      key: 'userRole',
-      dataIndex: 'userRole',
-      title: $t('page.manage.user.userRole.roleName'),
-      align: 'center',
-      minWidth: 100
-    },
+    // {
+    //   key: 'userRole',
+    //   dataIndex: 'userRole.roleName',
+    //   title: $t('page.manage.user.userRole.roleName'),
+    //   align: 'center',
+    //   minWidth: 100
+    // },
     {
       key: 'sex',
       title: $t('page.manage.user.sex'),
@@ -62,7 +62,6 @@ const {
         if (record.sex === null) {
           return null;
         }
-
         const tagMap: Record<Api.SystemManage.UserGender, string> = {
           1: 'processing',
           2: 'error'
@@ -86,7 +85,7 @@ const {
       title: $t('page.manage.user.isActive'),
       align: 'center',
       minWidth: 100,
-      customRender: ({ record }) => {
+      customRender: ({record}) => {
         if (record.isActive === null) {
           return null;
         }
