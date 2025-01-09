@@ -68,6 +68,9 @@ class ScraperPassport:
             if action == 'AFFA':
                 AFFT_data = self.parse_AFFA()
                 print(AFFT_data)
+        after_model = self.driver.find_element(by=By.XPATH,
+                                               value="//*[@id='top']/div/nav/div[2]/ul[@class='nav menu nav-pills']/li[8]/a")
+        ActionChains(self.driver).move_to_element(after_model).click(after_model).perform()
 
     """
      解析模板Mor5
@@ -191,10 +194,11 @@ class ScraperPassport:
     def parse_NSW(self):
         self.driver.find_element(by=By.XPATH,
                                  value="//body/div[@class='container-fluid']/div[@class='col-md-6']/div/a").click()
-        time.sleep(10)
+        time.sleep(3)
         self.driver.find_element(by=By.XPATH,
                                  value="//body/div[@class='container-fluid']/ol/li[@class='active']/font/a").click()
-        locator = (By.XPATH, '//*[@id="wrapper"]/nav/div/ul[2]/li[2]/a')
+        locator = (By.XPATH,
+                   "//*[@id='wrapper']/nav/div[@class='navbar-header']/ul[@class='nav navbar-top-links navbar-right pull-right']/li[2]/a")
         WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(locator))
         time.sleep(2)
 
@@ -203,8 +207,8 @@ class ScraperPassport:
     """
 
     def logout(self):
-        logout_model = self.driver.find_element(by=By.XPATH, value='//*[@id="wrapper"]/nav/div/ul[2]/li[2]/a')
-        ActionChains(self.driver).move_to_element(logout_model).click().perform()
+        self.driver.find_element(by=By.XPATH,
+                                 value="//*[@id='wrapper']/nav/div[@class='navbar-header']/ul[@class='nav navbar-top-links navbar-right pull-right']/li[2]/a/i").click()
         time.sleep(1)
         self.driver.find_element(By.XPATH, value='//*[@id="wrapper"]/div[2]/div/div[1]/div[2]/a').click()
 
