@@ -152,7 +152,7 @@ export function deleteMenuInfo(params: { id: number }) {
   })
 }
 
-export function deleteUserInfo(params: { id: number }) {
+export function deleteUserInfo(params: { id: number, userType: string }) {
   return request<Api.SystemManage.User>({
     url: '/systemManage/deleteUser',
     method: 'get',

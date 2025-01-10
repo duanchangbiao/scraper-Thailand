@@ -50,7 +50,6 @@ def getUserList():
                             .filter(mf.get_filter(UserBusiness)).all())
         else:
             userBusiness = []
-        print(f"用户信息:{user},角色信息：{role},角色信息：{userBusiness}")
         result = {
             'id': user.id,
             "username": user.username,
@@ -122,7 +121,6 @@ def getUserDictType():
 def updateUserInfo():
     id = request.json["id"]
     username = request.get_json().get("username")
-    password = request.get_json().get("password")
     nickname = request.get_json().get("nickname")
     email = request.get_json().get("email")
     phone = request.get_json().get("phone")
@@ -134,10 +132,9 @@ def updateUserInfo():
     userBusiness = request.get_json().get("userBusiness")
     if id == '1':
         return fail_api(msg="该用户为超级管理员，无法修改!")
-    user = User(username=username, password=password, nickname=nickname, email=email, phone=phone, is_active=isActive,
+    user = User(username=username, nickname=nickname, email=email, phone=phone, is_active=isActive,
                 status=status, user_type=userType, mtime=datetime.now(), sex=sex, id=id)
     User.query.filter_by(id=id).update({"username": user.username,
-                                        "password": user.password,
                                         "nickname": user.nickname,
                                         "email": user.email,
                                         'phone': user.phone,
@@ -164,8 +161,13 @@ def updateUserInfo():
 @app_router.get("/deleteUser")
 def deleteUserInfo():
     id = request.args.get("id")
+    userType = request.args.get("userType")
     if id == 1:
         return fail_api(msg="超级管理员无法删除")
+    if userType == '1' and bool(UserRole.query.filter_by(user_id=id).count()):
+        UserRole.query.filter_by(user_id=id).delete()
+    if userType == '2' and bool(UserBusiness.query.filter_by(user_id=id).count()):
+        UserBusiness.query.filter_by(user_id=id).delete()
     User.query.filter_by(id=id).delete()
     db.session.commit()
     return success_api(msg="删除成功!")

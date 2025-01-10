@@ -180,7 +180,7 @@ const {
           <Button type="primary" ghost size="small" onClick={() => edit(record.id)}>
             {$t('common.edit')}
           </Button>
-          <Popconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(record.id)}>
+          <Popconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(record.id, record.userType)}>
             <Button danger size="small">
               {$t('common.delete')}
             </Button>
@@ -202,8 +202,8 @@ const {
   // closeDrawer
 } = useTableOperate(data, getData);
 
-async function handleDelete(id: number) {
-  const {error, response} = await deleteUserInfo({id})
+async function handleDelete(id: number, userType: Api.Common.UserType) {
+  const {error, response} = await deleteUserInfo({id, userType})
   if (!error) {
     if (response.data.success) {
       window.$message?.success($t(response.data.msg));

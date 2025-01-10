@@ -16,9 +16,9 @@ class ScraperPassport:
         self.url = "https://sso.tisi.go.th/login"
         self.action_type = action_type
         self.chrome_options = webdriver.ChromeOptions()
-        # self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--headless")
         self.chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 7890))
+        self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 1080))
         self.chrome_options.add_experimental_option("useAutomationExtension", 'False')
         self.chrome_options.add_argument(
             'user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"')
@@ -46,11 +46,11 @@ class ScraperPassport:
 
     def check_parse_model(self):
         if 'NSW' in self.action_type:
-            self.driver.find_element(by=By.XPATH,
-                                     value="//*[@id='wrapper']//div[@class='row colorbox-group-widget']/div[2]/a").click()
+            self.driver.find_element(by=By.XPATH,value="//*[@id='wrapper']//div[@class='row colorbox-group-widget']/div[2]/a").click()
             NSW_locator = (By.XPATH, "//body/div[@class='container-fluid']/div[@class='col-md-6']")
             WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(NSW_locator))
-            self.parse_NSW()
+            NSW_data = self.parse_NSW()
+            print(NSW_data)
 
         self.driver.find_element(by=By.XPATH,
                                  value="//*[@id='wrapper']//div[@class='row colorbox-group-widget']/div[1]/a").click()
@@ -122,13 +122,23 @@ class ScraperPassport:
                                                  value="//*[@id='top']/div//ul[@class='nav menu nav-pills']/li[7]")
         ActionChains(self.driver).move_to_element(model_locator).perform()
         time.sleep(1)
-        self.driver.find_element(by=By.XPATH,
-                                 value="//*[@id='top']/div//ul[@class='nav menu nav-pills']/li[7]/ul/li[1]").click()
+        self.driver.find_element(by=By.XPATH,value="//*[@id='top']/div//ul[@class='nav menu nav-pills']/li[7]/ul/li[1]").click()
 
         # 等待表格加载完成
-        table_locator = (By.XPATH, '//*[@id="moao1List"]')
+        table_locator = (By.XPATH, '//*[@id="moao9List"]')
         WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(table_locator))
         page_result = self.driver.page_source
+        tree = etree.HTML(page_result, etree.HTMLParser())
+        tr_list = tree.xpath("//*[@id='moao9List']/tbody/tr")
+        for tr in tr_list:
+            item = {}
+            if tr.xpath("./td[2]/text()"):
+                item["id"] = tr.xpath("./td[2]/text()")[0].strip()
+            if tr.xpath("./td[3]/text()"):
+                item["applicant"] = tr.xpath("./td[3]/text()")[0].strip()
+            if tr.xpath("./td[4]/text()"):
+                item["taxNumber"] = tr.xpath("./td[4]/text()")[0].strip
+
 
     def parse_AFFA(self):
         data = []
@@ -163,8 +173,7 @@ class ScraperPassport:
 
     def parse_AFT(self):
         data = []
-        model_locator = self.driver.find_element(by=By.XPATH,
-                                                 value="//*[@id='top']/div//ul[@class='nav menu nav-pills']/li[6]")
+        model_locator = self.driver.find_element(by=By.XPATH,value="//*[@id='top']/div//ul[@class='nav menu nav-pills']/li[6]")
         ActionChains(self.driver).move_to_element(model_locator).perform()
         time.sleep(1)
         self.driver.find_element(by=By.XPATH,
@@ -192,15 +201,36 @@ class ScraperPassport:
         return data
 
     def parse_NSW(self):
-        self.driver.find_element(by=By.XPATH,
-                                 value="//body/div[@class='container-fluid']/div[@class='col-md-6']/div/a").click()
-        time.sleep(3)
-        self.driver.find_element(by=By.XPATH,
-                                 value="//body/div[@class='container-fluid']/ol/li[@class='active']/font/a").click()
-        locator = (By.XPATH,
-                   "//*[@id='wrapper']/nav/div[@class='navbar-header']/ul[@class='nav navbar-top-links navbar-right pull-right']/li[2]/a")
+        data = []
+        self.driver.find_element(by=By.XPATH,value="//body/div[@class='container-fluid']/div[@class='col-md-6']/div/a").click()
+        table_locator = (By.XPATH, '//*[@id="table6"]')
+        WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(table_locator))
+        page_source = self.driver.page_source
+        tree = etree.HTML(page_source, etree.HTMLParser())
+        tr_list = tree.xpath("//*[@id='table6']/tbody/tr")
+        for tr in tr_list:
+            item = {}
+            if tr.xpath("./td[1]/font/text()"):
+                item["NSW_CODE"] = tr.xpath("./td[1]/font/text()")[0].strip()
+            if tr.xpath("./td[2]/font/text()"):
+                item["NSW_INVOICE"] = tr.xpath("./td[2]/font/text()")[0].strip()
+            if tr.xpath("./td[3]/font/text()"):
+                item["NSW_INVOICE_DATE"] = tr.xpath("./td[3]/font/text()")
+            if tr.xpath("./td[4]/font/text()"):
+                item["NSW_PRO_NUMBER"] = tr.xpath("./td[4]/font/text()")[0].strip()
+            if tr.xpath("./td[5]/font/text()"):
+                item["NSW_RPG"] = tr.xpath("./td[5]/font/text()")[0].strip()
+            if tr.xpath("./td[6]/font/text()"):
+                item["NSW_APPLY_DATE"] = tr.xpath("./td[6]/font/text()")[0].strip()
+            if tr.xpath("./td[8]/font/text()"):
+                item["NSW_APPLY_DATE"] = tr.xpath("./td[8]/font/text()")[0].strip()
+            if tr.xpath("./td[9]/font/text()"):
+                item["NSW_APPLY_STATUS"] = tr.xpath("./td[9]/font/text()")[0].strip()
+            data.append(item)
+        self.driver.find_element(by=By.XPATH,value="//body/div[@class='container-fluid']/ol/li[@class='active']/font/a").click()
+        locator = (By.XPATH,"//*[@id='wrapper']/nav/div[@class='navbar-header']/ul[@class='nav navbar-top-links navbar-right pull-right']/li[2]/a")
         WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(locator))
-        time.sleep(2)
+        return data
 
     """
     退出登录
@@ -218,7 +248,10 @@ class ScraperPassport:
 
 if __name__ == '__main__':
     # scraper = ScraperPassport("0115566026132", "daican866@qq", ['AFFA', 'Mor5', "AFT"])
-    scraper = ScraperPassport("0115566026132", "daican866@qq", ['NSW'])
-    scraper.login()
-    scraper.logout()
-    scraper.close()
+    # scraper = ScraperPassport("0105563087467", "WOOK2023..", ['NSW'])
+    # scraper.login()
+    # scraper.logout()
+    # scraper.close()
+    NSW_list=[{'NSW_CODE': '1851739', 'NSW_INVOICE': 'HKHS20241228572', 'NSW_INVOICE_DATE': ['2024-12-09'], 'NSW_PRO_NUMBER': '33', 'NSW_RPG': 'กต.2  กลุ่มตรวจการมาตรฐาน 2', 'NSW_APPLY_DATE': 'อนุมัติคำขอ วันที่ 2025-01-08 14:21:00', 'NSW_APPLY_STATUS': 'LICENSE ACCEPTED'}, {'NSW_CODE': '1845912', 'NSW_INVOICE': 'HKHS20241228572', 'NSW_INVOICE_DATE': ['2024-12-09'], 'NSW_PRO_NUMBER': '33', 'NSW_RPG': 'กต.2  กลุ่มตรวจการมาตรฐาน 5', 'NSW_APPLY_DATE': 'อนุมัติคำขอ วันที่ 2025-01-03 13:45:00', 'NSW_APPLY_STATUS': 'LICENSE ACCEPTED'}, {'NSW_CODE': '1844759', 'NSW_INVOICE': 'HKHS20241228572', 'NSW_INVOICE_DATE': ['2024-12-09'], 'NSW_PRO_NUMBER': '33', 'NSW_RPG': 'กต.2  กลุ่มตรวจการมาตรฐาน 1', 'NSW_APPLY_DATE': 'อนุมัติคำขอ วันที่ 2025-01-03 09:51:00', 'NSW_APPLY_STATUS': 'LICENSE ACCEPTED'}, {'NSW_CODE': '1827429', 'NSW_INVOICE': 'HKHS20241213525', 'NSW_INVOICE_DATE': ['2024-11-25'], 'NSW_PRO_NUMBER': '46', 'NSW_RPG': 'กต.2  กลุ่มตรวจการมาตรฐาน 2', 'NSW_APPLY_DATE': 'อนุมัติคำขอ วันที่ 2024-12-17 21:33:00', 'NSW_APPLY_STATUS': 'LICENSE ACCEPTED'}, {'NSW_CODE': '1827192', 'NSW_INVOICE': 'HKHS20241213525', 'NSW_INVOICE_DATE': ['2024-11-25'], 'NSW_PRO_NUMBER': '46', 'NSW_RPG': 'กต.2  กลุ่มตรวจการมาตรฐาน 5', 'NSW_APPLY_DATE': 'อนุมัติคำขอ วันที่ 2024-12-18 16:18:00', 'NSW_APPLY_STATUS': 'LICENSE ACCEPTED'}]
+    for item in NSW_list:
+        print(item)
