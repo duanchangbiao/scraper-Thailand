@@ -165,3 +165,49 @@ create table sys_user_business
     remark      varchar(500) comment '备注'
 ) engine = InnoDB;
 
+
+CREATE TABLE sys_mor_license (
+    id INT AUTO_INCREMENT PRIMARY KEY,                -- 自增主键
+    apply_number VARCHAR(500) COMMENT '申请编号',      -- 申请编号
+    TIS_code VARCHAR(500) COMMENT 'TIS编码',           -- TIS编码
+    standard_name VARCHAR(500) COMMENT '标准名称',     -- 标准名称
+    apply_license VARCHAR(500) COMMENT '申请许可证',  -- 申请许可证
+    apply_date DATETIME COMMENT '申请日期',            -- 申请日期
+    apply_tax VARCHAR(500) COMMENT '申请税号',        -- 申请税号
+    apply_status VARCHAR(500) COMMENT '申请状态',      -- 申请状态
+    user_id INT COMMENT '用户id',                     -- 用户 ID
+    mor_type VARCHAR(500) COMMENT 'mor类型',          -- mor类型
+    operate_name VARCHAR(500) COMMENT '操作人',       -- 操作人
+    ctime DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',  -- 创建时间，默认当前时间
+    mtime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'  -- 修改时间，默认当前时间，更新时自动更新
+);
+
+
+CREATE TABLE sys_aft_license (
+    id INT AUTO_INCREMENT PRIMARY KEY,                -- 自增主键
+    apply_number VARCHAR(500) COMMENT '申请编号',      -- 申请编号
+    TIS_code VARCHAR(500) COMMENT 'TIS编码',           -- TIS编码
+    standard_name VARCHAR(500) COMMENT '标准名称',     -- 标准名称
+    apply_license VARCHAR(500) COMMENT '申请许可证',  -- 申请许可证
+    apply_date DATETIME COMMENT '申请日期',            -- 申请日期
+    apply_status VARCHAR(500) COMMENT '申请状态',      -- 申请状态
+    user_id INT COMMENT '用户id',                     -- 用户 ID
+    aft_type VARCHAR(500) COMMENT 'aft类型',          -- aft类型
+    ctime DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',  -- 创建时间，默认当前时间
+    mtime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'  -- 修改时间，默认当前时间，更新时自动更新
+);
+
+CREATE TABLE sys_nsw_license (
+    id INT AUTO_INCREMENT PRIMARY KEY,                -- 自增主键
+    apply_number VARCHAR(500) COMMENT '申请编号',      -- 申请编号
+    invoice VARCHAR(500) COMMENT '发票号',            -- 发票号
+    invoice_date DATETIME COMMENT '发票日期',         -- 发票日期
+    product_number VARCHAR(500) COMMENT '产品数量',    -- 产品数量
+    rpg_group VARCHAR(500) COMMENT '责任小组',         -- 责任小组
+    apply_date DATETIME COMMENT '申请日期',           -- 申请日期
+    apply_status VARCHAR(500) COMMENT '申请状态',      -- 申请状态
+    pass_date DATETIME COMMENT '通过日期',            -- 通过日期
+    user_id INT COMMENT '用户id',                     -- 用户 ID
+    ctime DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',  -- 创建时间，默认当前时间
+    mtime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'  -- 修改时间，默认当前时间，更新时自动更新
+);

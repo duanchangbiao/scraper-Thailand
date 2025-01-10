@@ -201,3 +201,51 @@ class DictType(db.Model):
                 f"{self.mtime}, "
                 f"{self.remark}"
                 )
+
+
+class MorLicenses(db.Model):
+    __tablename = 'sys_mor_license'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    apply_number = db.Column(db.String(500), comment='申请编号')
+    TIS_code = db.Column(db.String(500), comment='TIS编码')
+    standard_name = db.Column(db.String(500), comment='标准名称')
+    apply_license = db.Column(db.String(500), comment='申请许可证')
+    apply_date = db.Column(db.DateTime, comment='申请日期')
+    apply_tax = db.Column(db.String(500), comment='申请税号')
+    apply_status = db.Column(db.String(500), comment='申请状态')
+    user_id = db.Column(db.Integer, comment='用户id')
+    mor_type = db.Column(db.String(500), comment='mor类型')
+    operate_name = db.Column(db.String(500), comment='操作人')
+    ctime = db.Column(db.DateTime, comment='创建时间')
+    mtime = db.Column(db.DateTime, comment='修改时间')
+
+
+class AftLicense(db.Model):
+    __tablename = 'sys_aft_license'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    apply_number = db.Column(db.String(500), comment='申请编号')
+    TIS_code = db.Column(db.String(500), comment='TIS编码')
+    standard_name = db.Column(db.String(500), comment='标准名称')
+    apply_license = db.Column(db.String(500), comment='申请许可证')
+    apply_date = db.Column(db.DateTime, comment='申请日期')
+    apply_status = db.Column(db.String(500), comment='申请状态')
+    user_id = db.Column(db.Integer, comment='用户id')
+    aft_type = db.Column(db.String(500), comment='aft类型')
+    ctime = db.Column(db.DateTime, comment='创建时间')
+    mtime = db.Column(db.DateTime, comment='修改时间')
+
+
+class NswLicense(db.Model):
+    __tablename = 'sys_nsw_license'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    apply_number = db.Column(db.String(500), comment='申请编号')
+    invoice = db.Column(db.String(500), comment='发票号')
+    invoice_date = db.Column(db.DateTime, comment='发票日期')
+    product_number = db.Column(db.String(500), comment='产品数量')
+    rpg_group = db.Column(db.String(500), comment='责任小组')
+    apply_date = db.Column(db.DateTime, comment='申请日期')
+    apply_status = db.Column(db.String(500), comment='申请状态')
+    pass_date = db.Column(db.DateTime, comment='通过日期')
+    user_id = db.Column(db.Integer, comment='用户id')
+    ctime = db.Column(db.DateTime, comment='创建时间')
+    mtime = db.Column(db.DateTime, comment='修改时间')
