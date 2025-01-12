@@ -1,13 +1,16 @@
+import json
 from datetime import datetime
 
 from flask import Blueprint, request
+from sqlalchemy import and_
 
 from app.common import curd
 from app.common.helper import ModelFilter
 from app.extensions import db
-from app.models.models import User, UserRole, Role, UserBusiness, DictType
+from app.models.models import User, UserRole, Role, UserBusiness, DictType, AftLicense, NswLicense, MorLicenses
 from app.schema.user_schema import DictTypeSchema
 from app.utils.response import table_api, success_api, fail_api
+from app.utils.scraper_passport import ScraperPassport
 
 app_router = Blueprint('user', __name__, url_prefix="/systemManage")
 
@@ -171,3 +174,144 @@ def deleteUserInfo():
     User.query.filter_by(id=id).delete()
     db.session.commit()
     return success_api(msg="删除成功!")
+
+
+@app_router.post("/updateUserScraper")
+def updateUserScraper():
+    scraper_list = []
+    id = request.get_json().get("id")
+    userType = request.get_json().get("userType")
+    if userType == '1':
+        return fail_api(msg="该用户为类型不支持更新!")
+    if not bool(UserBusiness.query.filter_by(user_id=id).count()):
+        return fail_api(msg="该用户未绑定业务,无法更新!")
+
+    mf = ModelFilter()
+    mf.exact("user_id", id)
+    dict_list = (db.session.query(UserBusiness.user_id, DictType.dict_name)
+                 .outerjoin(DictType, DictType.id == UserBusiness.business_id)
+                 .filter(mf.get_filter(UserBusiness)).all())
+    args = []
+    for item in dict_list:
+        args.append(item[1])
+    # scrapyer = ScraperPassport(username=user.username, password=user.password, action_type=args)
+    # scrapyer.login()
+    # data = scrapyer.close()
+    # print(data)
+    data = {'Mor5': [{'id': 'R5-1509-01170-2568', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
+                      'taxNumber': '0105563087467', 'mokId': '1509-2547',
+                      'standardName': 'กระทะไฟฟ้า เฉพาะด้านความปลอดภัย',
+                      'applicationDate': '26 ธ.ค. 2567', 'status': 'ใช้งานใบอนุญาตอิเล็กทรอนิกส์',
+                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
+                     {'id': 'R5-62368.1-09811-2567', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
+                      'taxNumber': '0105563087467', 'mokId': '62368 เล่ม 1-2563',
+                      'standardName': 'บริภัณฑ์เสียง วีดิทัศน์  บริภัณฑ์เทคโนโลยีสารสนเทศและการสื่อสาร เล่ม 1 ข้อกำหนดด้านความปลอดภัย',
+                      'applicationDate': '13 มิ.ย. 2567', 'status': 'ใช้งานใบอนุญาตอิเล็กทรอนิกส์',
+                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
+                     {'id': 'R5-2879-08408-2567', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
+                      'taxNumber': '0105563087467', 'mokId': '2879-2560',
+                      'standardName': 'แบตเตอรี่สำรองไฟฟ้าสำหรับการใช้งานแบบพกพา - คุณลักษณะที่ต้องการด้านความปลอดภัย',
+                      'applicationDate': '15 มี.ค. 2567', 'status': 'ใช้งานใบอนุญาตอิเล็กทรอนิกส์',
+                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
+                     {'id': 'R5-2879-03135-2566', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
+                      'taxNumber': '0105563087467', 'mokId': '2879-2560',
+                      'standardName': 'แบตเตอรี่สำรองไฟฟ้าสำหรับการใช้งานแบบพกพา - คุณลักษณะที่ต้องการด้านความปลอดภัย',
+                      'applicationDate': '22 มี.ค. 2566', 'status': 'ใช้งานใบอนุญาตอิเล็กทรอนิกส์',
+                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
+                     {'id': 'R5-2879-00516-2565', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
+                      'taxNumber': '0105563087467', 'mokId': '2879-2560',
+                      'standardName': 'แบตเตอรี่สำรองไฟฟ้าสำหรับการใช้งานแบบพกพา - คุณลักษณะที่ต้องการด้านความปลอดภัย',
+                      'applicationDate': '10 พ.ย. 2564', 'status': 'รับใบอนุญาตแล้ว',
+                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
+                     {'id': 'R5-2879-6840-2564', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
+                      'taxNumber': '0105563087467', 'mokId': '2879-2560',
+                      'standardName': 'แบตเตอรี่สำรองไฟฟ้าสำหรับการใช้งานแบบพกพา – คุณลักษณะที่ต้องการด้านความปลอดภัย',
+                      'applicationDate': '8 มิ.ย. 2564', 'status': 'รับใบอนุญาตแล้ว',
+                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'}]}
+
+    for key, value in data.items():
+        for item in value:
+            match key:
+                case "AFFA":
+                    aFFtLicense = AftLicense(user_id=id,
+                                             apply_number=item['AFFA_appId'],
+                                             apply_status=item['status'],
+                                             TIS_code=item['AFFA_TIS_CODE'],
+                                             standard_name=item['AFFA_APP_NAME'],
+                                             apply_license=item['AFFA_APP_LICENSE'],
+                                             apply_date=item['applicationDate'],
+                                             aft_type=key,
+                                             ctime=datetime.now()
+                                             )
+                    scraper_list.append(aFFtLicense)
+                case "AFT":
+                    aftLicense = AftLicense(user_id=id,
+                                            apply_number=item['ATF_appId'],
+                                            apply_status=item['status'],
+                                            TIS_code=item['ATF_TIS_CODE'],
+                                            standard_name=item['ATF_APP_NAME'],
+                                            apply_license=item['AFT_APP_LICENSE'],
+                                            apply_date=item['applicationDate'],
+                                            aft_type=key,
+                                            ctime=datetime.now()
+                                            )
+                    scraper_list.append(aftLicense)
+                case "NSW":
+                    nswLicense = NswLicense(user_id=id,
+                                            apply_number=item['NSW_CODE'],
+                                            apply_status=item['NSW_APPLY_STATUS'],
+                                            apply_date=item['NSW_APPLY_DATE'],
+                                            invoice=item['NSW_INVOICE'],
+                                            invoice_date=item['NSW_INVOICE_DATE'],
+                                            product_number=item['NSW_PRO_NUMBER'],
+                                            rpg_group=item['NSW_RPG'],
+                                            pass_date=item['NSW_APPLY_PASS_DATE'],
+                                            ctime=datetime.now()
+                                            )
+                    scraper_list.append(nswLicense)
+                case "Mor5":
+                    mor5Licenses = MorLicenses(user_id=id,
+                                               mor_type=key,
+                                               apply_number=item['id'],
+                                               apply_status=item['status'],
+                                               apply_date=item['applicationDate'],
+                                               apply_tax=item['taxNumber'],
+                                               TIS_code=item['mokId'],
+                                               standard_name=item['standardName'],
+                                               ctime=datetime.now(),
+                                               operate_name=item['companyName'],
+                                               )
+                    scraper_list.append(mor5Licenses)
+                case "Mor9":
+                    morLicenses = MorLicenses(user_id=id,
+                                              mor_type=key,
+                                              apply_number=item['MOR9_APPLY_CODE'],
+                                              apply_status=item['MOR9_STATUS'],
+                                              apply_date=item['MOR9_APPLY_DATE'],
+                                              apply_tax=item['MOR9_TAX'],
+                                              TIS_code=item['MOR9_TIS_CODE'],
+                                              standard_name=item['MOR9_STANDARD_NAME'],
+                                              apply_license=item['MOR9_LICENSE_CODE'],
+                                              ctime=datetime.now(),
+                                              )
+                    scraper_list.append(morLicenses)
+
+    for item in scraper_list:
+        mfs = ModelFilter()
+        if item.apply_status:
+            mfs.exact("apply_status", item.apply_status)
+        if item.apply_number:
+            mfs.exact("apply_number", item.apply_number)
+        if not bool(db.session.query(item.__class__).filter(mfs.get_filter(item.__class__)).count()):
+            result = db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
+                "mtime": datetime.now(),
+                "apply_status": item.apply_status,
+                "apply_date": item.apply_date,
+                "apply_tax": item.apply_tax,
+                "TIS_code": item.TIS_code,
+                "standard_name": item.standard_name,
+                "apply_license": item.apply_license,
+            })
+        db.session.commit()
+
+    return success_api(msg="更新成功!", data=data)

@@ -204,7 +204,7 @@ class DictType(db.Model):
 
 
 class MorLicenses(db.Model):
-    __tablename = 'sys_mor_license'
+    __tablename__ = 'sys_mor_license'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     apply_number = db.Column(db.String(500), comment='申请编号')
     TIS_code = db.Column(db.String(500), comment='TIS编码')
@@ -221,7 +221,7 @@ class MorLicenses(db.Model):
 
 
 class AftLicense(db.Model):
-    __tablename = 'sys_aft_license'
+    __tablename__ = 'sys_aft_license'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     apply_number = db.Column(db.String(500), comment='申请编号')
     TIS_code = db.Column(db.String(500), comment='TIS编码')
@@ -236,7 +236,7 @@ class AftLicense(db.Model):
 
 
 class NswLicense(db.Model):
-    __tablename = 'sys_nsw_license'
+    __tablename__ = 'sys_nsw_license'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     apply_number = db.Column(db.String(500), comment='申请编号')
     invoice = db.Column(db.String(500), comment='发票号')

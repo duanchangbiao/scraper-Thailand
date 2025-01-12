@@ -20,7 +20,8 @@ class ScraperPassport:
         self.chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 7890))
         self.chrome_options.add_experimental_option("useAutomationExtension", 'False')
-        self.chrome_options.add_argument('user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"')
+        self.chrome_options.add_argument(
+            'user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"')
 
         self.driver = webdriver.Chrome(options=self.chrome_options)
         self.driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
@@ -31,6 +32,8 @@ class ScraperPassport:
                     """
         })
         self.driver.maximize_window()
+
+        self.result = {}
 
     def login(self):
         self.driver.get(self.url)
@@ -50,7 +53,7 @@ class ScraperPassport:
             NSW_locator = (By.XPATH, "//body/div[@class='container-fluid']/div[@class='col-md-6']")
             WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(NSW_locator))
             NSW_data = self.parse_NSW()
-            print(NSW_data)
+            self.result['NSW'] = NSW_data
 
         self.driver.find_element(by=By.XPATH,
                                  value="//*[@id='wrapper']//div[@class='row colorbox-group-widget']/div[1]/a").click()
@@ -59,19 +62,20 @@ class ScraperPassport:
         for action in self.action_type:
             if action == "Mor5":
                 mor_data = self.parse_mor5()
-                print(mor_data)
+                self.result['Mor5'] = mor_data
             if action == 'Mor9':
                 mor9_data = self.parse_mor9()
-                print(mor9_data)
+                self.result["Mor9"] = mor9_data
             if action == 'AFT':
                 AFT_data = self.parse_AFT()
-                print(AFT_data)
+                self.result["AFT"] = AFT_data
             if action == 'AFFA':
                 AFFT_data = self.parse_AFFA()
-                print(AFFT_data)
+                self.result["AFFA"] = AFFT_data
         after_model = self.driver.find_element(by=By.XPATH,
                                                value="//*[@id='top']/div/nav/div[2]/ul[@class='nav menu nav-pills']/li[8]/a")
         ActionChains(self.driver).move_to_element(after_model).click(after_model).perform()
+        self.logout()
 
     """
      解析模板Mor5
@@ -108,8 +112,8 @@ class ScraperPassport:
             if tr.xpath("./td[8]//span[@class='show_status']"):
                 str_list = "".join(tr.xpath("./td[8]//span[@class='show_status']//text()"))
                 item["status"] = str_list.strip()
-            if tr.xpath("./td[9]"):
-                str_list = "".join(tr.xpath("./td[9]/text()"))
+            if tr.xpath("./td[9]//text()"):
+                str_list = "".join(tr.xpath("./td[9]//text()"))
                 item["companyName"] = str_list.strip().replace("\r", "").replace("\n", "").replace("    ", "")
             data.append(item)
         return data
@@ -149,10 +153,12 @@ class ScraperPassport:
                 item["MOR9_LICENSE_CODE"] = tr.xpath("./td[7]//text()")[0].strip()
             if tr.xpath("./td[8]//text()"):
                 item["MOR9_APPLY_DATE"] = tr.xpath("./td[8]//text()")[0].strip()
+            else:
+                item["MOR9_APPLY_DATE"] = None
             if tr.xpath("./td[9]/p/span/text()"):
                 item["MOR9_STATUS"] = tr.xpath("./td[9]/p/span/text()")[0].strip()
             if tr.xpath("./td[10]//text()"):
-                item["MOR9_OPERATE_NAME"] = "".join(tr.xpath("./td[10]//text()")).strip().replace(": ","")
+                item["MOR9_OPERATE_NAME"] = "".join(tr.xpath("./td[10]//text()")).strip().replace(": ", "")
             data.append(item)
         return data
 
@@ -179,10 +185,12 @@ class ScraperPassport:
                 item["AFFA_APP_NAME"] = tr.xpath("./td[4]//text()")[0].strip()
             if tr.xpath("./td[5]//text()"):
                 item["AFFA_APP_LICENSE"] = tr.xpath("./td[5]//text()")[0].strip()
-            if tr.xpath("./td[6]/font/font/text()"):
-                item["applicationDate"] = tr.xpath("./td[6]/font/font/text()")[0].strip()
-            if tr.xpath("./td[7]/font/font/text()"):
-                str_list = "".join(tr.xpath("./td[7]/font//text()"))
+            if tr.xpath("./td[6]/text()"):
+                item["applicationDate"] = "".join(tr.xpath("./td[6]//text()")).strip()
+            else:
+                item["applicationDate"] = ""
+            if tr.xpath("./td[7]/text()"):
+                str_list = "".join(tr.xpath("./td[7]//text()"))
                 item["status"] = str_list.strip()
             data.append(item)
         return data
@@ -204,16 +212,16 @@ class ScraperPassport:
             item = {}
             if tr.xpath("./td[2]/text()"):
                 item["ATF_appId"] = tr.xpath("./td[2]/text()")[0].strip()
-            if tr.xpath("./td[3]/text()"):
-                item["ATF_TIS_CODE"] = tr.xpath("./td[3]/text()")[0].strip()
+            if tr.xpath("./td[3]//text()"):
+                item["ATF_TIS_CODE"] = "".join(tr.xpath("./td[3]//text()")).strip()
             if tr.xpath("./td[4]/text()"):
                 item["ATF_APP_NAME"] = tr.xpath("./td[4]/text()")[0].strip()
             if tr.xpath("./td[5]/text()"):
-                item["AFFA_APP_LICENSE"] = tr.xpath("./td[5]/text()")[0].strip()
+                item["AFT_APP_LICENSE"] = tr.xpath("./td[5]/text()")[0].strip()
             if tr.xpath("./td[6]/text()"):
                 item["applicationDate"] = tr.xpath("./td[6]/text()")[0].strip()
-            if tr.xpath("./td[7]/font/font/text()"):
-                item["sataus"] = tr.xpath("./td[7]/text()").strip()
+            if tr.xpath("./td[7]/text()"):
+                item["status"] = "".join(tr.xpath("./td[7]/text()")).strip()
             data.append(item)
         return data
 
@@ -233,7 +241,7 @@ class ScraperPassport:
             if tr.xpath("./td[2]/font/text()"):
                 item["NSW_INVOICE"] = tr.xpath("./td[2]/font/text()")[0].strip()
             if tr.xpath("./td[3]/font/text()"):
-                item["NSW_INVOICE_DATE"] = tr.xpath("./td[3]/font/text()")
+                item["NSW_INVOICE_DATE"] = tr.xpath("./td[3]/font/text()")[0].strip()
             if tr.xpath("./td[4]/font/text()"):
                 item["NSW_PRO_NUMBER"] = tr.xpath("./td[4]/font/text()")[0].strip()
             if tr.xpath("./td[5]/font/text()"):
@@ -264,6 +272,8 @@ class ScraperPassport:
 
     def close(self):
         self.driver.quit()
+        print("关闭浏览器")
+        return self.result
 
 
 if __name__ == '__main__':
