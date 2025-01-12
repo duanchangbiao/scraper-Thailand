@@ -17,3 +17,11 @@ export function updateCompanyInfo(data?: Api.Company.CompanyUpdateParams) {
     data
   });
 }
+
+export function fetchGetMorList(params?: Api.Business.MorSearchParams) {
+  request<Api.Business.BusinessMorInfo>({
+    url: '/license/mor_list',
+    method: 'get',
+    params
+  })
+}

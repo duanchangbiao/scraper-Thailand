@@ -107,8 +107,10 @@ class ScraperPassport:
                 item["mokId"] = tr.xpath("./td[5]/text()")[0].strip()
             if tr.xpath("./td[6]/text()"):
                 item["standardName"] = tr.xpath("./td[6]/text()")[0].strip()
-            if tr.xpath("./td[7]/text()"):
-                item["applicationDate"] = tr.xpath("./td[7]/text()")[0].strip()
+            if tr.xpath("./td[7]//text()"):
+                item["applicationDate"] = "".join(tr.xpath("./td[7]//text()")).strip()
+            else:
+                item["applicationDate"] = ""
             if tr.xpath("./td[8]//span[@class='show_status']"):
                 str_list = "".join(tr.xpath("./td[8]//span[@class='show_status']//text()"))
                 item["status"] = str_list.strip()

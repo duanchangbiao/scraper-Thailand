@@ -185,7 +185,7 @@ def updateUserScraper():
         return fail_api(msg="该用户为类型不支持更新!")
     if not bool(UserBusiness.query.filter_by(user_id=id).count()):
         return fail_api(msg="该用户未绑定业务,无法更新!")
-
+    user = User.query.filter_by(id=id).first()
     mf = ModelFilter()
     mf.exact("user_id", id)
     dict_list = (db.session.query(UserBusiness.user_id, DictType.dict_name)
@@ -194,41 +194,10 @@ def updateUserScraper():
     args = []
     for item in dict_list:
         args.append(item[1])
-    # scrapyer = ScraperPassport(username=user.username, password=user.password, action_type=args)
-    # scrapyer.login()
-    # data = scrapyer.close()
-    # print(data)
-    data = {'Mor5': [{'id': 'R5-1509-01170-2568', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
-                      'taxNumber': '0105563087467', 'mokId': '1509-2547',
-                      'standardName': 'กระทะไฟฟ้า เฉพาะด้านความปลอดภัย',
-                      'applicationDate': '26 ธ.ค. 2567', 'status': 'ใช้งานใบอนุญาตอิเล็กทรอนิกส์',
-                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
-                     {'id': 'R5-62368.1-09811-2567', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
-                      'taxNumber': '0105563087467', 'mokId': '62368 เล่ม 1-2563',
-                      'standardName': 'บริภัณฑ์เสียง วีดิทัศน์  บริภัณฑ์เทคโนโลยีสารสนเทศและการสื่อสาร เล่ม 1 ข้อกำหนดด้านความปลอดภัย',
-                      'applicationDate': '13 มิ.ย. 2567', 'status': 'ใช้งานใบอนุญาตอิเล็กทรอนิกส์',
-                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
-                     {'id': 'R5-2879-08408-2567', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
-                      'taxNumber': '0105563087467', 'mokId': '2879-2560',
-                      'standardName': 'แบตเตอรี่สำรองไฟฟ้าสำหรับการใช้งานแบบพกพา - คุณลักษณะที่ต้องการด้านความปลอดภัย',
-                      'applicationDate': '15 มี.ค. 2567', 'status': 'ใช้งานใบอนุญาตอิเล็กทรอนิกส์',
-                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
-                     {'id': 'R5-2879-03135-2566', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
-                      'taxNumber': '0105563087467', 'mokId': '2879-2560',
-                      'standardName': 'แบตเตอรี่สำรองไฟฟ้าสำหรับการใช้งานแบบพกพา - คุณลักษณะที่ต้องการด้านความปลอดภัย',
-                      'applicationDate': '22 มี.ค. 2566', 'status': 'ใช้งานใบอนุญาตอิเล็กทรอนิกส์',
-                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
-                     {'id': 'R5-2879-00516-2565', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
-                      'taxNumber': '0105563087467', 'mokId': '2879-2560',
-                      'standardName': 'แบตเตอรี่สำรองไฟฟ้าสำหรับการใช้งานแบบพกพา - คุณลักษณะที่ต้องการด้านความปลอดภัย',
-                      'applicationDate': '10 พ.ย. 2564', 'status': 'รับใบอนุญาตแล้ว',
-                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'},
-                     {'id': 'R5-2879-6840-2564', 'applicant': 'บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด',
-                      'taxNumber': '0105563087467', 'mokId': '2879-2560',
-                      'standardName': 'แบตเตอรี่สำรองไฟฟ้าสำหรับการใช้งานแบบพกพา – คุณลักษณะที่ต้องการด้านความปลอดภัย',
-                      'applicationDate': '8 มิ.ย. 2564', 'status': 'รับใบอนุญาตแล้ว',
-                      'companyName': ': บริษัท วู๊ค โกลบอล เทคโนโลยี (ประเทศไทย) จำกัด'}]}
-
+    scrapyer = ScraperPassport(username=user.username, password=user.password, action_type=args)
+    scrapyer.login()
+    data = scrapyer.close()
+    print(data)
     for key, value in data.items():
         for item in value:
             match key:
@@ -303,15 +272,14 @@ def updateUserScraper():
         if item.apply_number:
             mfs.exact("apply_number", item.apply_number)
         if not bool(db.session.query(item.__class__).filter(mfs.get_filter(item.__class__)).count()):
-            result = db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
+            # 添加数据库,发送更新消息
+            db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
                 "mtime": datetime.now(),
                 "apply_status": item.apply_status,
                 "apply_date": item.apply_date,
-                "apply_tax": item.apply_tax,
-                "TIS_code": item.TIS_code,
-                "standard_name": item.standard_name,
-                "apply_license": item.apply_license,
             })
+        if not bool(db.session.query(item.__class__).filter_by(apply_number=item.apply_number).count()):
+            db.session.add(item)
         db.session.commit()
 
     return success_api(msg="更新成功!", data=data)

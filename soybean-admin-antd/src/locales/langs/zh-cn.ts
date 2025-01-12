@@ -180,7 +180,9 @@ const local: App.I18n.Schema = {
     exception_403: '403',
     exception_404: '404',
     exception_500: '500',
-    'company-info': '公司地址查询'
+    'company-info': '公司地址查询',
+    'business': '数据分析',
+    business_mor: '数据分析模块-MOR'
   },
   page: {
     login: {
@@ -421,6 +423,32 @@ const local: App.I18n.Schema = {
         taxIdentificationNumber: '请输入纳税人标识'
       },
       detailsInfo: '详情信息'
+    },
+    business_mor: {
+      id: '编号',
+      title: 'MOR 模块数据中心',
+      companyName: '操作人',
+      applyNumber: '申请编号',
+      tisCode: 'TIS CODE',
+      standardName: '标准信息',
+      applyLicense: '申请许可证',
+      applyDate: '申请日期',
+      applyTaxNumber: '税号',
+      applyStatus: '申请状态',
+      username: '账号信息',
+      morType: '类型',
+      ctime: '创建时间',
+      mtime: '更新时间',
+      form: {
+        companyName: '请输入操作人信息',
+        applyNumber: '请输入申请编号',
+        tisCode: '请输入TIS Code 信息',
+        standardName: '请输入标准信息',
+        applyLicense: '请输入申请许可证',
+        applyDate: '请输入申请日期',
+        applyTaxNumber: '请输入税号',
+        applyStatus: '请输入申请状态'
+      },
     }
   },
   form: {

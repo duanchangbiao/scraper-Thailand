@@ -32,6 +32,8 @@ declare module "@elegant-router/types" {
     "403": "/403";
     "404": "/404";
     "500": "/500";
+    "business": "/business";
+    "business_mor": "/business/mor";
     "company-info": "/company-info";
     "home": "/home";
     "iframe-page": "/iframe-page/:url";
@@ -88,6 +90,7 @@ declare module "@elegant-router/types" {
     | "403"
     | "404"
     | "500"
+    | "business"
     | "company-info"
     | "home"
     | "iframe-page"
@@ -117,6 +120,7 @@ declare module "@elegant-router/types" {
     | "500"
     | "iframe-page"
     | "login"
+    | "business_mor"
     | "company-info"
     | "home"
     | "manage_menu"

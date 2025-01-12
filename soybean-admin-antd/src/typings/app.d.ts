@@ -639,6 +639,32 @@ declare namespace App {
           };
           detailsInfo: string;
         };
+        business_mor: {
+          title:string
+          id: string;
+          companyName: string;
+          applyNumber: string;
+          tisCode: string;
+          standardName: string;
+          applyLicense: string;
+          applyDate: string;
+          applyTaxNumber: string;
+          applyStatus: string
+          username: string;
+          morType: string;
+          ctime: string;
+          mtime: string;
+          form: {
+            companyName: string;
+            applyNumber: string;
+            tisCode: string;
+            standardName: string;
+            applyLicense: string;
+            applyDate: string;
+            applyTaxNumber: string;
+            applyStatus: string
+          };
+        }
       };
       form: {
         required: string;

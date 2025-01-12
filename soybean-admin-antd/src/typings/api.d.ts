@@ -286,4 +286,27 @@ declare namespace Api {
     >;
     type CompanyUpdateParams = Partial<Pick<Api.Company.CompanyInfo, 'licenseId'> & Common.CommonSearchParams>;
   }
+
+  namespace Business {
+    type BusinessMorInfo = Common.CommonRecord<{
+      id: number;
+      companyName: string;
+      applyNumber: string;
+      tisCode: string;
+      standardName: string;
+      applyLicense: string;
+      applyDate: string;
+      applyTaxNumber: string;
+      applyStatus: string
+      username: string;
+      morType: string;
+      ctime: string;
+      mtime: string;
+    }>;
+
+    type MorSearchParams= Partial<
+      Pick<Api.Business.BusinessMorInfo, 'companyName' | 'applyNumber' | 'tisCode' | 'standardName' | 'applyLicense' | 'applyDate' | 'applyTaxNumber' | 'applyStatus' | 'morType'> &
+      Common.CommonSearchParams
+    >;
+  }
 }
