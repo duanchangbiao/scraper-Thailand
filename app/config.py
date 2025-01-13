@@ -33,8 +33,8 @@ class BaseConfig:
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
     MAIL_PORT = 465
-    MAIL_USERNAME = '123@qq.com'
-    MAIL_PASSWORD = 'XXXXX'  # 生成的授权码
+    MAIL_USERNAME = 'maegalage@qq.com'
+    MAIL_PASSWORD = 'xmbgwjaswzfyeaaf'  # 生成的授权码
     MAIL_DEFAULT_SENDER = MAIL_USERNAME
 
     # 插件配置，填写插件的文件名名称，默认不启用插件。

@@ -33,6 +33,10 @@ declare namespace Api {
      */
     type EnableStatus = '1' | '2';
 
+    type EnableMorStatus = 'Mor5' | 'Mor9';
+
+    type EnableATFStatus = 'ATF' | 'AFFA'
+
     type UserType = '1' | '2';
 
     type EnableActive = 1 | 0;
@@ -299,13 +303,47 @@ declare namespace Api {
       applyTaxNumber: string;
       applyStatus: string
       username: string;
-      morType: string;
+      applyType: string;
       ctime: string;
       mtime: string;
     }>;
 
-    type MorSearchParams= Partial<
-      Pick<Api.Business.BusinessMorInfo, 'companyName' | 'applyNumber' | 'tisCode' | 'standardName' | 'applyLicense' | 'applyDate' | 'applyTaxNumber' | 'applyStatus' | 'morType'> &
+    type BusinessNewInfo = Common.CommonRecord<{
+      id: string;
+      operateName: string;
+      applyNumber: string;
+      invoice: string;
+      invoiceDate: string;
+      productName: string;
+      rpg_group: string;
+      applyStatus: string;
+      applyDate: string;
+      username: string;
+      passTime: string;
+      ctime: string;
+      mtime: string;
+    }>;
+
+    type BusinessAftInfo = Common.CommonRecord<{
+      id: number;
+      applyNumber: string;
+      tisCode: string;
+      standardName: string;
+      applyLicense: string;
+      applyDate: string;
+      applyStatus: string
+      username: string;
+      applyType: string;
+      ctime: string;
+      mtime: string;
+    }>;
+
+    type MorSearchParams = Partial<
+      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyType'> &
+      Common.CommonSearchParams
+    >;
+    type NswSearchParams = Partial<
+      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyNumber'> &
       Common.CommonSearchParams
     >;
   }

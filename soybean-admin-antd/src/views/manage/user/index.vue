@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import {Button, Popconfirm, Tag} from 'ant-design-vue';
-import {deleteUserInfo, fetchGetUserList} from '@/service/api';
+import {deleteUserInfo, fetchGetUserList, updateUserScraperInfo} from '@/service/api';
 import {useTable, useTableOperate, useTableScroll} from '@/hooks/common/table';
 import {$t} from '@/locales';
 import {enableActiveRecord, enableStatusRecord, userGenderRecord, userTypeRecord} from '@/constants/business';
@@ -174,11 +174,14 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      width: 180,
       customRender: ({record}) => (
         <div class="flex-center gap-8px">
           <Button type="primary" ghost size="small" onClick={() => edit(record.id)}>
             {$t('common.edit')}
+          </Button>
+          <Button type="primary" ghost size="small" onClick={() => handleUpdate(record.id, record.userType)}>
+            {$t('common.update')}
           </Button>
           <Popconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(record.id, record.userType)}>
             <Button danger size="small">
@@ -204,6 +207,19 @@ const {
 
 async function handleDelete(id: number, userType: Api.Common.UserType) {
   const {error, response} = await deleteUserInfo({id, userType})
+  if (!error) {
+    if (response.data.success) {
+      window.$message?.success($t(response.data.msg));
+      await getData()
+    } else {
+      window.$message?.error($t(response.data.msg));
+      await getData()
+    }
+  }
+}
+
+async function handleUpdate(id: number, userType: number) {
+  const {error, response} = await updateUserScraperInfo({id, userType})
   if (!error) {
     if (response.data.success) {
       window.$message?.success($t(response.data.msg));

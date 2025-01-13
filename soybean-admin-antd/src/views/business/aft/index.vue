@@ -1,14 +1,11 @@
 <script setup lang="tsx">
 import {Button} from 'ant-design-vue';
-import {$t} from '@/locales';
-import {useTable, useTableOperate, useTableScroll} from '@/hooks/common/table';
-import {fetchGetMorList, updateMorInfo} from "@/service/api/company-info";
-import MorSearch from "@/views/business/mor/modules/mor-search.vue";
+import {$t} from "@/locales";
+import {useTable, useTableOperate, useTableScroll} from "@/hooks/common/table";
+import {fetchAftList, updateMorInfo} from "@/service/api/company-info";
+import AftSearch from "@/views/business/aft/modules/aft-search.vue";
 
 const {tableWrapperRef, scrollConfig} = useTableScroll();
-// const allPages = ref<string[]>([]);
-// const {bool: visible, setTrue: openModal} = useBoolean();
-// 获取列表信息
 const {columns, loading, data, getData, mobilePagination, columnChecks, searchParams, getDataByPage} = useTable({
   columns: () => [
     {
@@ -20,71 +17,50 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
     },
     {
       key: 'applyNumber',
-      title: $t('page.business_mor.applyNumber'),
+      title: $t('page.business_aft.applyNumber'),
       dataIndex: 'applyNumber',
       align: 'center',
       width: 100
     },
     {
       key: 'username',
-      title: $t('page.business_mor.username'),
+      title: $t('page.business_aft.username'),
       dataIndex: 'username',
       align: 'center',
       width: 150
     },
-    // {
-    //   key: 'tisCode',
-    //   title: $t('page.business_mor.tisCode'),
-    //   dataIndex: 'tisCode',
-    //   align: 'center',
-    //   width: 64
-    // },
+    {
+      key: 'tisCode',
+      title: $t('page.business_aft.tisCode'),
+      dataIndex: 'tisCode',
+      align: 'center',
+      width: 64
+    },
     // {
     //   key: 'standardName',
-    //   title: $t('page.business_mor.standardName'),
+    //   title: $t('page.business_aft.standardName'),
     //   dataIndex: 'standardName',
     //   align: 'center',
     //   width: 200
     // },
-    // {
-    //   key: 'applyLicense',
-    //   title: $t('page.business_mor.applyLicense'),
-    //   dataIndex: 'applyLicense',
-    //   align: 'center',
-    //   width: 64
-    // },
-    {
-      key: 'applyDate',
-      title: $t('page.business_mor.applyDate'),
-      dataIndex: 'applyDate',
-      align: 'center',
-      width: 100
-    },
-    {
-      key: 'applyTaxNumber',
-      title: $t('page.business_mor.applyTaxNumber'),
-      dataIndex: 'applyTaxNumber',
-      align: 'center',
-      width: 100
-    },
-    {
-      key: 'applyStatus',
-      title: $t('page.business_mor.applyStatus'),
-      dataIndex: 'applyStatus',
-      align: 'center',
-      width: 150
-    },
     {
       key: 'applyType',
-      title: $t('page.business_mor.applyType'),
+      title: $t('page.business_aft.applyType'),
       dataIndex: 'applyType',
       align: 'center',
       width: 64
     },
     {
-      key: 'companyName',
-      title: $t('page.business_mor.companyName'),
-      dataIndex: 'companyName',
+      key: 'applyDate',
+      title: $t('page.business_aft.applyDate'),
+      dataIndex: 'applyDate',
+      align: 'center',
+      width: 100
+    },
+    {
+      key: 'applyStatus',
+      title: $t('page.business_aft.applyStatus'),
+      dataIndex: 'applyStatus',
       align: 'center',
       width: 200
     },
@@ -95,6 +71,13 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 150
     },
+    // {
+    //   key: 'mtime',
+    //   title: $t('page.business_mor.mtime'),
+    //   dataIndex: 'mtime',
+    //   align: 'center',
+    //   width: 150
+    // },
     {
       key: 'operate',
       title: $t('common.operate'),
@@ -105,27 +88,25 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
           <Button type="primary" ghost size="small">
             {$t('common.details')}
           </Button>
-          <Button danger size="small"  onClick={() => handleSubmit(record.username, record.applyType)}>
+          <Button danger size="small" onClick={() => handleSubmit(record.username, record.applyType)}>
             {$t('common.update')}
           </Button>
         </div>
       )
     }
   ],
-  apiFn: fetchGetMorList,
+  apiFn: fetchAftList,
   apiParams: {
     current: 1,
     size: 10,
     applyStatus: undefined,
     username: undefined,
-    applyType: undefined
+    applyNumber: undefined
   }
 });
 const {checkedRowKeys, rowSelection} = useTableOperate(data, getData);
 
-
 async function handleSubmit(username: string, applyType: string) {
-
   const {error, response} = await updateMorInfo({username, applyType});
   if (!error) {
     if (response.data.success) {
@@ -137,9 +118,9 @@ async function handleSubmit(username: string, applyType: string) {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <MorSearch v-model:model="searchParams" @reset="getData" @search="getDataByPage"/>
+    <AftSearch v-model:model="searchParams" @reset="getData" @search="getDataByPage"/>
     <ACard
-      :title="$t('page.business_mor.title')"
+      :title="$t('page.business_aft.title')"
       :bordered="false"
       :body-style="{ flex: 1, overflow: 'hidden' }"
       class="flex-col-stretch sm:flex-1-hidden card-wrapper"
@@ -168,5 +149,6 @@ async function handleSubmit(username: string, applyType: string) {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
 
+</style>

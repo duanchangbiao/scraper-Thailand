@@ -18,7 +18,7 @@ class ScraperPassport:
         self.chrome_options = webdriver.ChromeOptions()
         self.chrome_options.add_argument("--headless")
         self.chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 7890))
+        self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 1080))
         self.chrome_options.add_experimental_option("useAutomationExtension", 'False')
         self.chrome_options.add_argument(
             'user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"')
@@ -39,7 +39,6 @@ class ScraperPassport:
         self.driver.get(self.url)
         self.driver.find_element("id", "username").send_keys(self.username)
         self.driver.find_element("id", "password").send_keys(self.password)
-        time.sleep(2)
         self.driver.find_element(by=By.XPATH, value="//button[@type='submit']").click()
         locator = (By.XPATH, "//*[@id='wrapper']//div[@class='row colorbox-group-widget']/div[1]")
         WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(locator))

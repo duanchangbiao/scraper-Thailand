@@ -640,7 +640,7 @@ declare namespace App {
           detailsInfo: string;
         };
         business_mor: {
-          title:string
+          title: string
           id: string;
           companyName: string;
           applyNumber: string;
@@ -651,9 +651,13 @@ declare namespace App {
           applyTaxNumber: string;
           applyStatus: string
           username: string;
-          morType: string;
+          applyType: string;
           ctime: string;
           mtime: string;
+          status: {
+            mor5: string;
+            mor9: string;
+          },
           form: {
             companyName: string;
             applyNumber: string;
@@ -662,7 +666,60 @@ declare namespace App {
             applyLicense: string;
             applyDate: string;
             applyTaxNumber: string;
-            applyStatus: string
+            applyStatus: string;
+            applyType: string;
+            username: string;
+          };
+        },
+        business_nsw: {
+          title: string
+          id: string;
+          operateName: string;
+          applyNumber: string;
+          invoice: string;
+          invoiceDate: string;
+          productNumber: string;
+          rpg_group: string;
+          applyStatus: string;
+          applyDate: string;
+          username: string;
+          passDate: string;
+          ctime: string;
+          mtime: string;
+          form: {
+            operateName: string;
+            applyNumber: string;
+            invoice: string;
+            productName: string;
+            invoiceDate: string;
+            applyDate: string;
+            rpg_group: string;
+            applyStatus: string;
+            username: string;
+          };
+        }
+        business_aft: {
+          title: string
+          id: string;
+          applyNumber: string;
+          tisCode: string;
+          standardName: string;
+          applyLicense: string;
+          applyStatus: string;
+          applyDate: string;
+          username: string;
+          passTime: string;
+          applyType: string;
+          ctime: string;
+          mtime: string;
+          status: {
+            affa: string;
+            aft: string;
+          },
+          form: {
+            applyStatus: string;
+            applyType: string;
+            username: string;
           };
         }
       };

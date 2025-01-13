@@ -159,3 +159,12 @@ export function deleteUserInfo(params: { id: number, userType: string }) {
     params
   })
 }
+
+export function updateUserScraperInfo(params: { id: number, userType: number }) {
+  return request<Api.SystemManage.User>({
+    timeout: 1000 * 60 * 5,
+    url: '/systemManage/updateUserScraper',
+    method: 'get',
+    params
+  })
+}

@@ -11,6 +11,14 @@ export const userTypeRecord: Record<Api.Common.UserType, App.I18n.I18nKey> = {
   '2': 'page.manage.common.userType.common'
 };
 
+export const enableMorStatusRecord: Record<Api.Common.EnableMorStatus, App.I18n.I18nKey> = {
+  'Mor5': 'page.business_mor.status.mor5',
+  'Mor9': 'page.business_mor.status.mor9'
+};
+export const enableATFStatusRecord: Record<Api.Common.EnableATFStatus, App.I18n.I18nKey> = {
+  'AFT': 'page.business_aft.status.aft',
+  'AFFA': 'page.business_aft.status.affa'
+}
 export const userTypeOptions = transformRecordToOption(userTypeRecord);
 export const enableActiveRecord: Record<Api.Common.EnableActive, App.I18n.I18nKey> = {
   1: 'page.manage.common.active.enable',
@@ -18,6 +26,8 @@ export const enableActiveRecord: Record<Api.Common.EnableActive, App.I18n.I18nKe
 };
 
 export const enableStatusOptions = transformRecordToOption(enableStatusRecord);
+export const enableMorStatusOptions = transformRecordToOption(enableMorStatusRecord);
+export const enableATFStatusOptions = transformRecordToOption(enableATFStatusRecord);
 
 export const userGenderRecord: Record<Api.SystemManage.UserGender, App.I18n.I18nKey> = {
   '1': 'page.manage.user.gender.male',

@@ -1,16 +1,15 @@
-from flask import Blueprint, request
+from flask import request, Blueprint
 
 from app.common.helper import ModelFilter
 from app.extensions import db
-from app.models.models import MorLicenses, User
-from app.utils.response import table_api, success_api
-from app.view.user import commonUpdateScraper
+from app.models.models import User, AftLicense
+from app.utils.response import table_api
 
-app_router = Blueprint('mor', __name__, url_prefix='/mor')
+app_router = Blueprint("aft", __name__, url_prefix="/aft")
 
 
-@app_router.get('/list')
-def getMorList():
+@app_router.get("/list")
+def getAftList():
     data = []
     size = request.args.get("size", type=int)
     current = request.args.get("current", type=int)
@@ -25,37 +24,26 @@ def getMorList():
     if applyStatus:
         mf.exact("apply_status", applyStatus)
     if applyType:
-        mf.exact("mor_type", applyType)
-    morLicense_user = (db.session().query(MorLicenses, User)
-                       .outerjoin(User, User.id == MorLicenses.user_id)
-                       .filter(mf.get_filter(MorLicenses))
-                       .order_by(MorLicenses.ctime.desc(), MorLicenses.mtime.desc(), MorLicenses.mor_type.desc())
+        mf.exact("aft_type", applyType)
+    aftLicense_user = (db.session().query(AftLicense, User)
+                       .outerjoin(User, User.id == AftLicense.user_id)
+                       .filter(mf.get_filter(AftLicense))
+                       .order_by(AftLicense.ctime.desc(), AftLicense.mtime.desc(), AftLicense.aft_type.desc())
                        .paginates(page=current, pageSize=size))
 
-    for morLicense, user in morLicense_user:
+    for morLicense, user in aftLicense_user:
         resposne = {
             "id": morLicense.id,
             "username": user.username,
             "applyStatus": morLicense.apply_status,
-            "applyType": morLicense.mor_type,
+            "applyType": morLicense.aft_type,
             "applyNumber": morLicense.apply_number,
             "applyDate": morLicense.apply_date,
             "applyLicense": morLicense.apply_license,
-            "applyTax": morLicense.apply_tax,
-            "companyName": morLicense.operate_name,
             "standardName": morLicense.standard_name,
             "tisCode": morLicense.TIS_code,
             "ctime": morLicense.ctime.strftime("%Y-%m-%d %H:%M:%S") if morLicense.ctime is not None else None,
             "mtime": morLicense.mtime.strftime("%Y-%m-%d %H:%M:%S") if morLicense.mtime is not None else None,
         }
         data.append(resposne)
-    return table_api(data=data, total=morLicense_user.total, current=current, size=size, msg='查询成功')
-
-
-@app_router.post('/update')
-def updateMor():
-    username = request.get_json().get("username")
-    morType = request.get_json().get("applyType")
-    user = User.query.filter_by(username=username).first()
-    commonUpdateScraper(user, [morType])
-    return success_api(msg='更新成功!')
+    return table_api(data=data, total=aftLicense_user.total, current=current, size=size, msg='查询成功')

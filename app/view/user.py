@@ -176,11 +176,10 @@ def deleteUserInfo():
     return success_api(msg="删除成功!")
 
 
-@app_router.post("/updateUserScraper")
+@app_router.get("/updateUserScraper")
 def updateUserScraper():
-    scraper_list = []
-    id = request.get_json().get("id")
-    userType = request.get_json().get("userType")
+    id = request.args.get("id")
+    userType = request.args.get("userType")
     if userType == '1':
         return fail_api(msg="该用户为类型不支持更新!")
     if not bool(UserBusiness.query.filter_by(user_id=id).count()):
@@ -194,15 +193,21 @@ def updateUserScraper():
     args = []
     for item in dict_list:
         args.append(item[1])
+    commonUpdateScraper(user, args)
+
+    return success_api(msg="更新成功!")
+
+
+def commonUpdateScraper(user: User, args: list):
+    scraper_list = []
     scrapyer = ScraperPassport(username=user.username, password=user.password, action_type=args)
     scrapyer.login()
     data = scrapyer.close()
-    print(data)
     for key, value in data.items():
         for item in value:
             match key:
                 case "AFFA":
-                    aFFtLicense = AftLicense(user_id=id,
+                    aFFtLicense = AftLicense(user_id=user.id,
                                              apply_number=item['AFFA_appId'],
                                              apply_status=item['status'],
                                              TIS_code=item['AFFA_TIS_CODE'],
@@ -214,7 +219,7 @@ def updateUserScraper():
                                              )
                     scraper_list.append(aFFtLicense)
                 case "AFT":
-                    aftLicense = AftLicense(user_id=id,
+                    aftLicense = AftLicense(user_id=user.id,
                                             apply_number=item['ATF_appId'],
                                             apply_status=item['status'],
                                             TIS_code=item['ATF_TIS_CODE'],
@@ -226,7 +231,7 @@ def updateUserScraper():
                                             )
                     scraper_list.append(aftLicense)
                 case "NSW":
-                    nswLicense = NswLicense(user_id=id,
+                    nswLicense = NswLicense(user_id=user.id,
                                             apply_number=item['NSW_CODE'],
                                             apply_status=item['NSW_APPLY_STATUS'],
                                             apply_date=item['NSW_APPLY_DATE'],
@@ -239,7 +244,7 @@ def updateUserScraper():
                                             )
                     scraper_list.append(nswLicense)
                 case "Mor5":
-                    mor5Licenses = MorLicenses(user_id=id,
+                    mor5Licenses = MorLicenses(user_id=user.id,
                                                mor_type=key,
                                                apply_number=item['id'],
                                                apply_status=item['status'],
@@ -252,7 +257,7 @@ def updateUserScraper():
                                                )
                     scraper_list.append(mor5Licenses)
                 case "Mor9":
-                    morLicenses = MorLicenses(user_id=id,
+                    morLicenses = MorLicenses(user_id=user.id,
                                               mor_type=key,
                                               apply_number=item['MOR9_APPLY_CODE'],
                                               apply_status=item['MOR9_STATUS'],
@@ -278,8 +283,7 @@ def updateUserScraper():
                 "apply_status": item.apply_status,
                 "apply_date": item.apply_date,
             })
+            # 发送消息
         if not bool(db.session.query(item.__class__).filter_by(apply_number=item.apply_number).count()):
             db.session.add(item)
         db.session.commit()
-
-    return success_api(msg="更新成功!", data=data)

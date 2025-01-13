@@ -19,8 +19,33 @@ export function updateCompanyInfo(data?: Api.Company.CompanyUpdateParams) {
 }
 
 export function fetchGetMorList(params?: Api.Business.MorSearchParams) {
-  request<Api.Business.BusinessMorInfo>({
-    url: '/license/mor_list',
+  return request<Api.Business.BusinessMorInfo>({
+    url: '/mor/list',
+    method: 'get',
+    params
+  })
+}
+
+export function updateMorInfo(data?: Api.Business.MorSearchParams) {
+  return request<Api.Business.BusinessMorInfo>({
+    timeout: 1000 * 60 * 3,
+    url: '/mor/update',
+    method: 'post',
+    data
+  })
+}
+
+export function fetchGetNSWList(params?: Api.Business.NswSearchParams) {
+  return request<Api.Business.BusinessNewInfo>({
+    url: '/nsw/list',
+    method: 'get',
+    params
+  })
+}
+
+export function fetchAftList(params?: Api.Business.MorSearchParams) {
+  return request<Api.Business.BusinessAftInfo>({
+    url: '/aft/list',
     method: 'get',
     params
   })

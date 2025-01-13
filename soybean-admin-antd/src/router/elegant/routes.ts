@@ -1,4 +1,4 @@
-import type { GeneratedRoute } from '@elegant-router/types';
+import type {GeneratedRoute} from '@elegant-router/types';
 
 export const generatedRoutes: GeneratedRoute[] = [
   {
@@ -35,6 +35,17 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'home',
+    path: '/home',
+    component: 'layout.base$view.home',
+    meta: {
+      title: 'home',
+      i18nKey: 'route.home',
+      icon: 'mdi:monitor-dashboard',
+      order: 1
+    }
+  },
+  {
     name: 'business',
     path: '/business',
     component: 'layout.base',
@@ -44,12 +55,30 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'business_aft',
+        path: '/business/aft',
+        component: 'view.business_aft',
+        meta: {
+          title: 'business_aft',
+          i18nKey: 'route.business_aft'
+        }
+      },
+      {
         name: 'business_mor',
         path: '/business/mor',
         component: 'view.business_mor',
         meta: {
           title: 'business_mor',
           i18nKey: 'route.business_mor'
+        }
+      },
+      {
+        name: 'business_nsw',
+        path: '/business/nsw',
+        component: 'view.business_nsw',
+        meta: {
+          title: 'business_nsw',
+          i18nKey: 'route.business_nsw'
         }
       }
     ]
@@ -62,17 +91,6 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'company-info',
       i18nKey: 'route.company-info',
       icon: 'prime:align-center'
-    }
-  },
-  {
-    name: 'home',
-    path: '/home',
-    component: 'layout.base$view.home',
-    meta: {
-      title: 'home',
-      i18nKey: 'route.home',
-      icon: 'mdi:monitor-dashboard',
-      order: 1
     }
   },
   {
