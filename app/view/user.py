@@ -3,6 +3,7 @@ from datetime import datetime
 
 from flask import Blueprint, request
 from sqlalchemy import and_
+from werkzeug.security import generate_password_hash
 
 from app.common import curd
 from app.common.helper import ModelFilter
@@ -93,6 +94,8 @@ def saveUser():
     userType = request.get_json().get("userType")
     sex = request.get_json().get("sex")
     userBusiness = request.get_json().get("userBusiness")
+    if userType == "1":
+        password = generate_password_hash(password)
     user = User(username=username, password=password, nickname=nickname, email=email, phone=phone, is_active=isActive,
                 status=status, user_type=userType, ctime=datetime.now(), sex=sex)
     if bool(User.query.filter_by(username=username).count()):
@@ -110,7 +113,7 @@ def saveUser():
             db.session.add(userBusiness)
             db.session.commit()
 
-    return success_api()
+    return success_api(msg='新增成功')
 
 
 @app_router.get("/getBusinessDict")

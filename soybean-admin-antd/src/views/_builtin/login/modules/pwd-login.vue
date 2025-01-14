@@ -20,7 +20,7 @@ interface FormModel {
 }
 
 const model: FormModel = reactive({
-  userName: 'Soybean',
+  userName: 'admin',
   password: '123456'
 });
 
@@ -62,15 +62,15 @@ async function handleSubmit() {
       <AButton type="primary" block size="large" shape="round" :loading="authStore.loginLoading" @click="handleSubmit">
         {{ $t('common.confirm') }}
       </AButton>
-      <div class="flex-y-center justify-between">
-        <AButton class="h-34px flex-1" block @click="toggleLoginModule('code-login')">
-          {{ $t(loginModuleRecord['code-login']) }}
-        </AButton>
-        <div class="w-12px"></div>
-        <AButton class="h-34px flex-1" block @click="toggleLoginModule('register')">
-          {{ $t(loginModuleRecord.register) }}
-        </AButton>
-      </div>
+<!--      <div class="flex-y-center justify-between">-->
+<!--        <AButton class="h-34px flex-1" block @click="toggleLoginModule('code-login')">-->
+<!--          {{ $t(loginModuleRecord['code-login']) }}-->
+<!--        </AButton>-->
+<!--        <div class="w-12px"></div>-->
+<!--        <AButton class="h-34px flex-1" block @click="toggleLoginModule('register')">-->
+<!--          {{ $t(loginModuleRecord.register) }}-->
+<!--        </AButton>-->
+<!--      </div>-->
     </ASpace>
   </AForm>
 </template>

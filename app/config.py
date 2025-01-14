@@ -1,9 +1,7 @@
 import logging
 from datetime import timedelta
 
-
 from urllib.parse import quote_plus as urlquote
-
 
 
 class BaseConfig:
@@ -25,7 +23,7 @@ class BaseConfig:
     SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USERNAME}:{urlquote(MYSQL_PASSWORD)}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}?charset=utf8mb4"
 
     # 默认日志等级
-    LOG_LEVEL = logging.info
+    LOG_LEVEL = logging.debug
     """
     flask-mail配置
     """
@@ -36,6 +34,9 @@ class BaseConfig:
     MAIL_USERNAME = 'maegalage@qq.com'
     MAIL_PASSWORD = 'xmbgwjaswzfyeaaf'  # 生成的授权码
     MAIL_DEFAULT_SENDER = MAIL_USERNAME
+    # 启用 SQL 日志记录
+    logging.basicConfig()
+    logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
     # 插件配置，填写插件的文件名名称，默认不启用插件。
     PLUGIN_ENABLE_FOLDERS = []
@@ -45,7 +46,10 @@ class BaseConfig:
 
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
 
-    SESSION_TYPE = "filesystem" # 默认使用文件系统来保存会话
+    SESSION_TYPE = "filesystem"  # 默认使用文件系统来保存会话
     SESSION_PERMANENT = False  # 会话是否持久化
     SESSION_USE_SIGNER = True  # 是否对发送到浏览器上 session 的 cookie 值进行加密
-
+    # 权限校验密钥
+    JWT_SECRET_KEY = "welcome-to-apple-tree"
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES = 72
+    JWT_REFRESH_TOKEN_EXPIRE_MINUTES = 72

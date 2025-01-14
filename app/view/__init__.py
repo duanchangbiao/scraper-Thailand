@@ -2,7 +2,7 @@ from flask import Flask
 
 from app.view.user import app_router as user
 from app.view.license import app_router as licenses
-from app.view.login import app_router as auth
+from app.view.auth.login import app_router as auth
 from app.view.role import app_router as role
 from app.view.menu import app_router as menu
 from app.view.business.mor_view import app_router as mor
