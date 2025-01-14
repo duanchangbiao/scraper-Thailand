@@ -35,7 +35,7 @@ declare namespace Api {
 
     type EnableMorStatus = 'Mor5' | 'Mor9';
 
-    type EnableATFStatus = 'ATF' | 'AFFA'
+    type EnableATFStatus = 'AFT' | 'AFFA'
 
     type UserType = '1' | '2';
 

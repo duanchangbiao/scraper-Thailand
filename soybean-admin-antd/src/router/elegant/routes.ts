@@ -1,4 +1,4 @@
-import type {GeneratedRoute} from '@elegant-router/types';
+import type { GeneratedRoute } from '@elegant-router/types';
 
 export const generatedRoutes: GeneratedRoute[] = [
   {
@@ -8,7 +8,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: '403',
       i18nKey: 'route.403',
-      constant: true,
+      constant: false,
       hideInMenu: true
     }
   },
@@ -19,7 +19,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: '404',
       i18nKey: 'route.404',
-      constant: true,
+      constant: false,
       hideInMenu: true
     }
   },
@@ -30,19 +30,8 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: '500',
       i18nKey: 'route.500',
-      constant: true,
+      constant: false,
       hideInMenu: true
-    }
-  },
-  {
-    name: 'home',
-    path: '/home',
-    component: 'layout.base$view.home',
-    meta: {
-      title: 'home',
-      i18nKey: 'route.home',
-      icon: 'mdi:monitor-dashboard',
-      order: 1
     }
   },
   {
@@ -89,8 +78,16 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base$view.company-info',
     meta: {
       title: 'company-info',
-      i18nKey: 'route.company-info',
-      icon: 'prime:align-center'
+      i18nKey: 'route.company-info'
+    }
+  },
+  {
+    name: 'home',
+    path: '/home',
+    component: 'layout.base$view.home',
+    meta: {
+      title: 'home',
+      i18nKey: 'route.home'
     }
   },
   {
@@ -101,7 +98,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'iframe-page',
       i18nKey: 'route.iframe-page',
-      constant: true,
+      constant: false,
       hideInMenu: true,
       keepAlive: true
     }
@@ -114,7 +111,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'login',
       i18nKey: 'route.login',
-      constant: true,
+      constant: false,
       hideInMenu: true
     }
   },
@@ -124,10 +121,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'manage',
-      i18nKey: 'route.manage',
-      icon: 'carbon:cloud-service-management',
-      order: 9,
-      roles: ['R_ADMIN']
+      i18nKey: 'route.manage'
     },
     children: [
       {
@@ -136,11 +130,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_menu',
         meta: {
           title: 'manage_menu',
-          i18nKey: 'route.manage_menu',
-          icon: 'material-symbols:route',
-          order: 3,
-          roles: ['R_ADMIN'],
-          keepAlive: true
+          i18nKey: 'route.manage_menu'
         }
       },
       {
@@ -149,10 +139,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_role',
         meta: {
           title: 'manage_role',
-          i18nKey: 'route.manage_role',
-          icon: 'carbon:user-role',
-          order: 2,
-          roles: ['R_SUPER']
+          i18nKey: 'route.manage_role'
         }
       },
       {
@@ -161,23 +148,16 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_user',
         meta: {
           title: 'manage_user',
-          i18nKey: 'route.manage_user',
-          icon: 'ic:round-manage-accounts',
-          order: 1,
-          roles: ['R_ADMIN']
+          i18nKey: 'route.manage_user'
         }
       },
       {
         name: 'manage_user-detail',
         path: '/manage/user-detail/:id',
         component: 'view.manage_user-detail',
-        props: true,
         meta: {
           title: 'manage_user-detail',
-          i18nKey: 'route.manage_user-detail',
-          hideInMenu: true,
-          roles: ['R_ADMIN'],
-          activeMenu: 'manage_user'
+          i18nKey: 'route.manage_user-detail'
         }
       }
     ]
@@ -188,8 +168,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base$view.user-center',
     meta: {
       title: 'user-center',
-      i18nKey: 'route.user-center',
-      hideInMenu: true
+      i18nKey: 'route.user-center'
     }
   }
 ];
