@@ -2,6 +2,7 @@ import time
 from datetime import timedelta, datetime, timezone
 from flask import Blueprint, request
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, get_jwt
+from sqlalchemy import and_
 from werkzeug.security import check_password_hash
 
 from app import BaseConfig
@@ -121,13 +122,15 @@ def getRouter():
     role = Role.query.filter_by(role_code=roleCode).first()
     menu_role = (db.session().query(RoleMenu, Menu)
                  .outerjoin(Menu, RoleMenu.menu_id == Menu.id)
-                 .filter(RoleMenu.role_id == role.role_id).order_by(Menu.order.asc()).all())
+                 .filter(and_(RoleMenu.role_id == role.role_id)).order_by(
+        Menu.order.asc()).all())
     menus = []
     for menu in menu_role:
         menus.append(menu[1])
 
     data = {"routes": build_route_tree(menus, simple=True, roleCode=roleCode)}
     return success_api(data=data, msg="查询成功")
+
 
 @app_router.get("/isRouteExist")
 def isExistRouter():

@@ -8,7 +8,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: '403',
       i18nKey: 'route.403',
-      constant: false,
+      constant: true,
       hideInMenu: true
     }
   },
@@ -19,7 +19,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: '404',
       i18nKey: 'route.404',
-      constant: false,
+      constant: true,
       hideInMenu: true
     }
   },
@@ -30,7 +30,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: '500',
       i18nKey: 'route.500',
-      constant: false,
+      constant: true,
       hideInMenu: true
     }
   },
@@ -111,7 +111,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'login',
       i18nKey: 'route.login',
-      constant: false,
+      constant: true,
       hideInMenu: true
     }
   },
