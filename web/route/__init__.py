@@ -1,5 +1,6 @@
 from flask import Flask
 
+from web.view.job import app_router as job
 from web.view.user import app_router as user
 from web.view.license import app_router as licenses
 from web.view.auth.login import app_router as auth
@@ -19,3 +20,4 @@ def init_bps(app: Flask) -> None:
     app.register_blueprint(mor)
     app.register_blueprint(aft)
     app.register_blueprint(nsw)
+    app.register_blueprint(job)
