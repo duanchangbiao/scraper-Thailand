@@ -794,9 +794,9 @@ declare namespace App {
       key: OtherBaseURLKey;
     }
 
-    /** The backend service config */
+    /** The backend service configs */
     interface ServiceConfig extends ServiceConfigItem {
-      /** Other backend service config */
+      /** Other backend service configs */
       other: OtherServiceConfigItem[];
     }
 

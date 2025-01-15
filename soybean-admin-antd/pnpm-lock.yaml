@@ -89,7 +89,7 @@ importers:
         version: link:packages/uno-preset
       '@soybeanjs/eslint-config':
         specifier: 1.4.4
-        version: 1.4.4(@unocss/eslint-config@0.65.1(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2))(eslint-plugin-vue@9.32.0(eslint@9.17.0(jiti@2.4.1)))(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2)(vue-eslint-parser@9.4.3(eslint@9.17.0(jiti@2.4.1)))
+        version: 1.4.4(@unocss/eslint-configs@0.65.1(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2))(eslint-plugin-vue@9.32.0(eslint@9.17.0(jiti@2.4.1)))(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2)(vue-eslint-parser@9.4.3(eslint@9.17.0(jiti@2.4.1)))
       '@types/node':
         specifier: 22.10.2
         version: 22.10.2
@@ -229,7 +229,7 @@ importers:
     devDependencies:
       '@soybeanjs/changelog':
         specifier: 0.3.24
-        version: 0.3.24(@unocss/eslint-config@0.65.1(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2))(eslint-plugin-vue@9.32.0(eslint@9.17.0(jiti@2.4.1)))(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2)(vue-eslint-parser@9.4.3(eslint@9.17.0(jiti@2.4.1)))
+        version: 0.3.24(@unocss/eslint-configs@0.65.1(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2))(eslint-plugin-vue@9.32.0(eslint@9.17.0(jiti@2.4.1)))(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2)(vue-eslint-parser@9.4.3(eslint@9.17.0(jiti@2.4.1)))
       bumpp:
         specifier: 9.9.1
         version: 9.9.1
@@ -5054,7 +5054,7 @@ snapshots:
 
   '@soybeanjs/changelog@0.3.24(@unocss/eslint-config@0.65.1(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2))(eslint-plugin-vue@9.32.0(eslint@9.17.0(jiti@2.4.1)))(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2)(vue-eslint-parser@9.4.3(eslint@9.17.0(jiti@2.4.1)))':
     dependencies:
-      '@soybeanjs/eslint-config': 1.4.4(@unocss/eslint-config@0.65.1(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2))(eslint-plugin-vue@9.32.0(eslint@9.17.0(jiti@2.4.1)))(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2)(vue-eslint-parser@9.4.3(eslint@9.17.0(jiti@2.4.1)))
+      '@soybeanjs/eslint-config': 1.4.4(@unocss/eslint-configs@0.65.1(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2))(eslint-plugin-vue@9.32.0(eslint@9.17.0(jiti@2.4.1)))(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2)(vue-eslint-parser@9.4.3(eslint@9.17.0(jiti@2.4.1)))
       cli-progress: 3.12.0
       convert-gitmoji: 0.1.5
       dayjs: 1.11.11
@@ -5064,7 +5064,7 @@ snapshots:
     transitivePeerDependencies:
       - '@toml-tools/parser'
       - '@types/eslint'
-      - '@unocss/eslint-config'
+      - '@unocss/eslint-configs'
       - eslint
       - eslint-plugin-astro
       - eslint-plugin-react
@@ -5095,7 +5095,7 @@ snapshots:
       eslint-parser-plain: 0.1.0
       eslint-plugin-import-x: 4.5.0(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.2)
       eslint-plugin-n: 17.15.0(eslint@9.17.0(jiti@2.4.1))
-      eslint-plugin-prettier: 5.2.1(eslint-config-prettier@9.1.0(eslint@9.17.0(jiti@2.4.1)))(eslint@9.17.0(jiti@2.4.1))(prettier@3.4.2)
+      eslint-plugin-prettier: 5.2.1(eslint-configs-prettier@9.1.0(eslint@9.17.0(jiti@2.4.1)))(eslint@9.17.0(jiti@2.4.1))(prettier@3.4.2)
       eslint-plugin-unicorn: 56.0.1(eslint@9.17.0(jiti@2.4.1))
       globals: 15.13.0
       local-pkg: 0.5.1

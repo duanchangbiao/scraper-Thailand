@@ -1,6 +1,7 @@
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 
-from web.view.job import app_router as job
+
 from web.view.user import app_router as user
 from web.view.license import app_router as licenses
 from web.view.auth.login import app_router as auth
@@ -10,8 +11,9 @@ from web.view.business.mor_view import app_router as mor
 from web.view.business.aft_view import app_router as aft
 from web.view.business.nsw_view import app_router as nsw
 
-
+scheduler = BackgroundScheduler()
 def init_bps(app: Flask) -> None:
+    from web.view.job import app_router as job
     app.register_blueprint(licenses)
     app.register_blueprint(auth)
     app.register_blueprint(user)

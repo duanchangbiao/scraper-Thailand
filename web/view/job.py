@@ -1,11 +1,13 @@
-from datetime import datetime, time
+import time
+from datetime import datetime
 
 from croniter import croniter
 from flask import request, jsonify, Blueprint
 
-from web import scheduler
 from web.extensions import db
-from web.models.models import SysJobLog, SysJob
+from web.models.models import SysJobLog, SysJob, User
+from web.route import scheduler
+from web.utils.response import success_api
 
 app_router = Blueprint('job', __name__, url_prefix='/job')
 
@@ -35,9 +37,10 @@ def after_task_log(func):
 def execute_task(job):
     try:
         target_module, target_function, args = get_target_function_and_args(job['invokeTarget'].strip())
-        module = __import__('web.utils.' + target_module, fromlist=[target_function])
+        module = __import__('web.task.' + target_module, fromlist=[target_function])
         function = getattr(module, target_function)
         function(args) if len(args) > 0 else function()
+        print(target_function, args, target_module)
         return {"code": True, "msg": "执行成功"}
     except Exception as e:
         print(f"执行任务 {job['jobId']} 时出错: {e}")
@@ -47,6 +50,7 @@ def execute_task(job):
 def createScheduleJob(job):
     job_id = f"{job['jobId']}_{job['jobName']}"
     specific_job = scheduler.get_job(job_id)
+    print(specific_job)
     if specific_job:
         scheduler.remove_job(job_id)
     # misfirePolicy 计划执行错误策略（1立即执行 2执行一次 3放弃执行）
@@ -99,7 +103,7 @@ def deleteScheduleJob(job):
         scheduler.remove_job(job_id)
 
 
-@app_router.route('/monitor/job/list', methods=['GET'])
+@app_router.route('/list', methods=['GET'])
 def sysjob_list():
     filters = []
     if request.args.get('jobName'):
@@ -117,7 +121,7 @@ def sysjob_list():
     return jsonify({'total': pagination.total, 'rows': [sysJob.to_json() for sysJob in sysJobs], 'code': 200})
 
 
-@app_router.route('/monitor/job', methods=['POST'])
+@app_router.route('/add', methods=['POST'])
 def sysjob_add():
     sysjob = SysJob()
     if 'jobName' in request.json: sysjob.job_name = request.json['jobName']
@@ -134,7 +138,7 @@ def sysjob_add():
     return jsonify({'code': 200, 'msg': '操作成功'})
 
 
-@app_router.route('/monitor/job', methods=['PUT'])
+@app_router.route('/update', methods=['PUT'])
 def sysjob_update():
     sysjob = SysJob.query.get(request.json['jobId'])
     if 'jobName' in request.json: sysjob.job_name = request.json['jobName']
@@ -149,7 +153,7 @@ def sysjob_update():
     return jsonify({'code': 200, 'msg': '操作成功'})
 
 
-@app_router.route('/monitor/job/run', methods=['PUT'])
+@app_router.route('/run', methods=['PUT'])
 def sysjob_run():
     sysjob = SysJob.query.get(request.json['jobId'])
     res = execute_task(sysjob.to_json())
@@ -158,7 +162,7 @@ def sysjob_run():
     return jsonify({'code': 500, 'msg': f"执行任务 {request.json['jobId']} 时出错:{res['msg']}"})
 
 
-@app_router.route('/monitor/job/<string:ids>', methods=['DELETE'])
+@app_router.route('/delete/<string:ids>', methods=['DELETE'])
 def sysjob_delete(ids):
     idList = ids.split(',')
     for id in idList:
@@ -170,7 +174,7 @@ def sysjob_delete(ids):
     return jsonify({'code': 200, 'msg': '操作成功'})
 
 
-@app_router.route('/monitor/job/changeStatus', methods=['PUT'])
+@app_router.route('/changeStatus', methods=['PUT'])
 def sysjob_status_update():
     sysjob = SysJob.query.get(request.json['jobId'])
     if 'status' in request.json: sysjob.status = request.json['status']
@@ -179,7 +183,7 @@ def sysjob_status_update():
     return jsonify({'code': 200, 'msg': '操作成功'})
 
 
-@app_router.route('/monitor/job/<string:id>', methods=['GET'])
+@app_router.route('/getById/<string:id>', methods=['GET'])
 def sysjob_getById(id):
     sysjob = SysJob.query.get(id)
     if sysjob:
@@ -193,7 +197,7 @@ def sysjob_getById(id):
         return jsonify({'code': 500, 'msg': 'error'})
 
 
-@app_router.route('/monitor/jobLog/list', methods=['GET'])
+@app_router.route('/jobLog/list', methods=['GET'])
 def sysjobLog_list():
     filters = []
     if request.args.get('jobName'):
@@ -214,7 +218,7 @@ def sysjobLog_list():
     return jsonify({'total': pagination.total, 'rows': [sysJobLog.to_json() for sysJobLog in sysJobLogs], 'code': 200})
 
 
-@app_router.route('/monitor/jobLog/<string:ids>', methods=['DELETE'])
+@app_router.route('/jobLog/<string:ids>', methods=['DELETE'])
 def sysjoblog_delete(ids):
     idList = ids.split(',')
     for id in idList:
@@ -224,6 +228,20 @@ def sysjoblog_delete(ids):
     return jsonify({'code': 200, 'msg': '操作成功'})
 
 
-@app_router.route('/monitor/jobLog/clean', methods=['DELETE'])
+@app_router.route('/jobLog/clean', methods=['DELETE'])
 def sysjoblog_clean():
     return jsonify({'code': 500, 'msg': '不支持清空'})
+
+
+def sysjoblog_run():
+    from app import app
+    with app.app_context():
+        user = User.query.filter_by(user_type='2')
+        for u in user:
+            print(u.__str__())
+
+
+@app_router.route('/start', methods=['GET'])
+def startJob():
+    scheduler.add_job(sysjob_run, 'interval', seconds=10)
+    return success_api(msg="开启完成")

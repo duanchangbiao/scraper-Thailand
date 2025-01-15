@@ -54,7 +54,7 @@ const slots = defineSlots<Slots>();
 
 const cssVars = computed(() => createLayoutCssVars(props));
 
-// config visible
+// configs visible
 const showHeader = computed(() => Boolean(slots.header) && props.headerVisible);
 const showTab = computed(() => Boolean(slots.tab) && props.tabVisible);
 const showSider = computed(() => !props.isMobile && Boolean(slots.sider) && props.siderVisible);

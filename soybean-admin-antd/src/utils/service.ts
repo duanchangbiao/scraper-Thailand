@@ -1,7 +1,7 @@
 import json5 from 'json5';
 
 /**
- * Create service config by current env
+ * Create service configs by current env
  *
  * @param env The current env
  */

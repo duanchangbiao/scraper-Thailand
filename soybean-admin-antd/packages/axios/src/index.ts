@@ -24,7 +24,7 @@ function createCommonRequest<ResponseData = any>(
 
   const abortControllerMap = new Map<string, AbortController>();
 
-  // config axios retry
+  // configs axios retry
   const retryOptions = createRetryOptions(axiosConf);
   axiosRetry(instance, retryOptions);
 
@@ -35,14 +35,14 @@ function createCommonRequest<ResponseData = any>(
     const requestId = nanoid();
     config.headers.set(REQUEST_ID_KEY, requestId);
 
-    // config abort controller
+    // configs abort controller
     if (!config.signal) {
       const abortController = new AbortController();
       config.signal = abortController.signal;
       abortControllerMap.set(requestId, abortController);
     }
 
-    // handle config by hook
+    // handle configs by hook
     const handledConfig = opts.onRequest?.(config) || config;
 
     return handledConfig;
@@ -106,7 +106,7 @@ function createCommonRequest<ResponseData = any>(
 /**
  * create a request instance
  *
- * @param axiosConfig axios config
+ * @param axiosConfig axios configs
  * @param options request options
  */
 export function createRequest<ResponseData = any, State = Record<string, unknown>>(
@@ -140,7 +140,7 @@ export function createRequest<ResponseData = any, State = Record<string, unknown
  *
  * The response data is a flat object: { data: any, error: AxiosError }
  *
- * @param axiosConfig axios config
+ * @param axiosConfig axios configs
  * @param options request options
  */
 export function createFlatRequest<ResponseData = any, State = Record<string, unknown>>(

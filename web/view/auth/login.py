@@ -5,8 +5,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, get_jw
 from sqlalchemy import and_
 from werkzeug.security import check_password_hash
 
-from web import BaseConfig
-from web.common.helper import ModelFilter
+from web.config import BaseConfig
 from web.extensions import db
 from web.models.models import User, Menu, UserRole, Role, RoleMenu
 from web.utils.response import success_api, fail_api

@@ -1,4 +1,4 @@
-/** Header config */
+/** Header configs */
 interface AdminLayoutHeaderConfig {
   /**
    * Whether header is visible
@@ -20,7 +20,7 @@ interface AdminLayoutHeaderConfig {
   headerHeight?: number;
 }
 
-/** Tab config */
+/** Tab configs */
 interface AdminLayoutTabConfig {
   /**
    * Whether tab is visible
@@ -42,7 +42,7 @@ interface AdminLayoutTabConfig {
   tabHeight?: number;
 }
 
-/** Sider config */
+/** Sider configs */
 interface AdminLayoutSiderConfig {
   /**
    * Whether sider is visible
@@ -82,7 +82,7 @@ interface AdminLayoutSiderConfig {
   siderCollapsedWidth?: number;
 }
 
-/** Content config */
+/** Content configs */
 export interface AdminLayoutContentConfig {
   /**
    * Content class
@@ -98,7 +98,7 @@ export interface AdminLayoutContentConfig {
   fullContent?: boolean;
 }
 
-/** Footer config */
+/** Footer configs */
 export interface AdminLayoutFooterConfig {
   /**
    * Whether footer is visible
