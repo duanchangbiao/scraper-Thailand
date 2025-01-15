@@ -1,4 +1,4 @@
-/** The global namespace for the app */
+/** The global namespace for the web */
 declare namespace App {
   /** Theme namespace */
   namespace Theme {
