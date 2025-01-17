@@ -120,6 +120,7 @@ class Menu(db.Model):
     router_key = db.Column(db.String(500), comment='路由模块')
     router_name = db.Column(db.String(500), comment='路由名称')
     router_path = db.Column(db.String(500), comment='路由地址')
+    constant = db.Column(db.String(500), comment='常量路由')
     status = db.Column(db.Integer, default=1, comment='菜单状态,1:启用,2:禁用')
     component = db.Column(db.String(500), comment='路由组件')
     icon = db.Column(db.String(500), comment='icon图标')

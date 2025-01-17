@@ -3,6 +3,7 @@ from datetime import datetime
 
 from croniter import croniter
 from flask import request, jsonify, Blueprint
+from flask_jwt_extended import jwt_required
 
 from web.extensions import db
 from web.models.models import SysJobLog, SysJob, User
@@ -28,6 +29,7 @@ def after_task_log(func):
             if not result['code']:
                 sysJobLog.exception_info = result['msg']
             db.session.add(sysJobLog)
+            db.session.commit()
         return result
 
     return wrapper
@@ -104,6 +106,7 @@ def deleteScheduleJob(job):
 
 
 @app_router.route('/list', methods=['GET'])
+@jwt_required()
 def sysjob_list():
     filters = []
     if request.args.get('jobName'):
@@ -122,6 +125,7 @@ def sysjob_list():
 
 
 @app_router.route('/add', methods=['POST'])
+@jwt_required()
 def sysjob_add():
     sysjob = SysJob()
     if 'jobName' in request.json: sysjob.job_name = request.json['jobName']
@@ -139,6 +143,7 @@ def sysjob_add():
 
 
 @app_router.route('/update', methods=['PUT'])
+@jwt_required()
 def sysjob_update():
     sysjob = SysJob.query.get(request.json['jobId'])
     if 'jobName' in request.json: sysjob.job_name = request.json['jobName']
@@ -154,6 +159,7 @@ def sysjob_update():
 
 
 @app_router.route('/run', methods=['PUT'])
+@jwt_required()
 def sysjob_run():
     sysjob = SysJob.query.get(request.json['jobId'])
     res = execute_task(sysjob.to_json())
@@ -163,6 +169,7 @@ def sysjob_run():
 
 
 @app_router.route('/delete/<string:ids>', methods=['DELETE'])
+@jwt_required()
 def sysjob_delete(ids):
     idList = ids.split(',')
     for id in idList:
@@ -175,6 +182,7 @@ def sysjob_delete(ids):
 
 
 @app_router.route('/changeStatus', methods=['PUT'])
+@jwt_required()
 def sysjob_status_update():
     sysjob = SysJob.query.get(request.json['jobId'])
     if 'status' in request.json: sysjob.status = request.json['status']
@@ -184,6 +192,7 @@ def sysjob_status_update():
 
 
 @app_router.route('/getById/<string:id>', methods=['GET'])
+@jwt_required()
 def sysjob_getById(id):
     sysjob = SysJob.query.get(id)
     if sysjob:
@@ -198,6 +207,7 @@ def sysjob_getById(id):
 
 
 @app_router.route('/jobLog/list', methods=['GET'])
+@jwt_required()
 def sysjobLog_list():
     filters = []
     if request.args.get('jobName'):
@@ -219,6 +229,7 @@ def sysjobLog_list():
 
 
 @app_router.route('/jobLog/<string:ids>', methods=['DELETE'])
+@jwt_required()
 def sysjoblog_delete(ids):
     idList = ids.split(',')
     for id in idList:
@@ -229,19 +240,6 @@ def sysjoblog_delete(ids):
 
 
 @app_router.route('/jobLog/clean', methods=['DELETE'])
+@jwt_required()
 def sysjoblog_clean():
     return jsonify({'code': 500, 'msg': '不支持清空'})
-
-
-def sysjoblog_run():
-    from app import app
-    with app.app_context():
-        user = User.query.filter_by(user_type='2')
-        for u in user:
-            print(u.__str__())
-
-
-@app_router.route('/start', methods=['GET'])
-def startJob():
-    scheduler.add_job(sysjob_run, 'interval', seconds=10)
-    return success_api(msg="开启完成")

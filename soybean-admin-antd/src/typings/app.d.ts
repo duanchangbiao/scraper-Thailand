@@ -462,14 +462,13 @@ declare namespace App {
           visitCount: string;
           turnover: string;
           dealCount: string;
-          projectNews: {
+          JobNews: {
             title: string;
             moreNews: string;
-            desc1: string;
-            desc2: string;
-            desc3: string;
-            desc4: string;
-            desc5: string;
+            jobName: string;
+            complete: string;
+            completeTime: string;
+            jobMessage: string;
           };
           creativity: string;
         };

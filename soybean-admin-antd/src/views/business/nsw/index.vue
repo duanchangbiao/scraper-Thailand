@@ -4,6 +4,7 @@ import {$t} from "@/locales";
 import {useTable, useTableOperate, useTableScroll} from "@/hooks/common/table";
 import {fetchGetNSWList, updateMorInfo} from "@/service/api/company-info";
 import NswSearch from "@/views/business/nsw/modules/nsw-search.vue";
+
 const {tableWrapperRef, scrollConfig} = useTableScroll();
 const {columns, loading, data, getData, mobilePagination, columnChecks, searchParams, getDataByPage} = useTable({
   columns: () => [
@@ -61,7 +62,7 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       title: $t('page.business_nsw.invoice'),
       dataIndex: 'invoice',
       align: 'center',
-      width: 100
+      width: 150
     },
     {
       key: 'invoiceDate',
@@ -70,13 +71,13 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 150
     },
-    {
-      key: 'productNumber',
-      title: $t('page.business_nsw.productNumber'),
-      dataIndex: 'productNumber',
-      align: 'center',
-      width: 100
-    },
+    // {
+    //   key: 'productNumber',
+    //   title: $t('page.business_nsw.productNumber'),
+    //   dataIndex: 'productNumber',
+    //   align: 'center',
+    //   width: 100
+    // },
     {
       key: 'applyStatus',
       title: $t('page.business_nsw.applyStatus'),

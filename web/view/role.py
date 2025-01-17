@@ -1,6 +1,7 @@
 import datetime
 
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required
 
 from web.common import curd
 from web.common.helper import ModelFilter
@@ -13,6 +14,7 @@ app_router = Blueprint('role', __name__, url_prefix="/systemManage")
 
 
 @app_router.route('/getRoleList', methods=['GET'])
+@jwt_required()
 def getRoleList():
     current = request.args.get('current', type=int)
     pageSize = request.args.get('pagesize', type=int)
@@ -33,6 +35,7 @@ def getRoleList():
 
 
 @app_router.route('getAllRoles', methods=['POST'])
+@jwt_required()
 def getRoleAll():
     mf = ModelFilter()
     mf.exact("status", 1)
@@ -43,6 +46,7 @@ def getRoleAll():
 
 
 @app_router.route("/saveRole", methods=['POST'])
+@jwt_required()
 def saveRoleInfo():
     try:
         roleName = request.get_json().get("roleName")
@@ -59,6 +63,7 @@ def saveRoleInfo():
 
 
 @app_router.route("/updateRole", methods=["POST"])
+@jwt_required()
 def updateRoleInfo():
     roleId = request.get_json().get("id")
     roleName = request.get_json().get("roleName")
@@ -79,6 +84,7 @@ def updateRoleInfo():
 
 
 @app_router.route('/deleteRole', methods=['GET'])
+@jwt_required()
 def deleteRole():
     roleId = request.args.get("id")
     if roleId == "1":
@@ -93,6 +99,7 @@ def deleteRole():
 
 
 @app_router.post('/getCheckMenuInfo')
+@jwt_required()
 def getCheckMenuInfo():
     roleId = request.get_json().get('roleId')
     roleMenu = RoleMenu.query.filter_by(role_id=roleId).all()
@@ -103,6 +110,7 @@ def getCheckMenuInfo():
 
 
 @app_router.post('/updateRoleMenuInfo')
+@jwt_required()
 def updateRoleMenuInfo():
     menuList = request.get_json().get("menuIdList")
     roleId = request.get_json().get('roleId')

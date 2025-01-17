@@ -60,13 +60,13 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 100
     },
-    {
-      key: 'applyTaxNumber',
-      title: $t('page.business_mor.applyTaxNumber'),
-      dataIndex: 'applyTaxNumber',
-      align: 'center',
-      width: 100
-    },
+    // {
+    //   key: 'applyTaxNumber',
+    //   title: $t('page.business_mor.applyTaxNumber'),
+    //   dataIndex: 'applyTaxNumber',
+    //   align: 'center',
+    //   width: 100
+    // },
     {
       key: 'applyStatus',
       title: $t('page.business_mor.applyStatus'),

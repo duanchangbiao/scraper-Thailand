@@ -141,6 +141,7 @@ export default function useHookTable<A extends ApiFn, T, C>(config: TableConfig<
     loading,
     empty,
     data,
+    allColumns,
     columns,
     columnChecks,
     reloadColumns,

@@ -1,6 +1,7 @@
 import os
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from flask_mail import Mail
 
 
 def create_app():
@@ -18,7 +19,6 @@ def create_app():
 
     # 注册flask组件
     init_plugs(app)
-
     # 注册蓝图
     init_bps(app)
     JWTManager(app)

@@ -65,12 +65,12 @@ const bgColor = computed(() => {
               class="text-20px lt-sm:text-18px"
               @switch="themeStore.toggleThemeScheme"
             />
-            <LangSwitch
-              :lang="appStore.locale"
-              :lang-options="appStore.localeOptions"
-              :show-tooltip="false"
-              @change-lang="appStore.changeLocale"
-            />
+<!--            <LangSwitch-->
+<!--              :lang="appStore.locale"-->
+<!--              :lang-options="appStore.localeOptions"-->
+<!--              :show-tooltip="false"-->
+<!--              @change-lang="appStore.changeLocale"-->
+<!--            />-->
           </div>
         </header>
         <main class="pt-24px">

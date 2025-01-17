@@ -1,4 +1,3 @@
-from apscheduler.schedulers.background import BackgroundScheduler
 from flask import current_app
 
 from web import create_app
@@ -39,4 +38,4 @@ def execute_before_insert(mapper, connection, target):
 if __name__ == '__main__':
     load_jobs()
     scheduler.start()
-    app.run(debug=True)
+    app.run()

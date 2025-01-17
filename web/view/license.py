@@ -1,6 +1,7 @@
 import datetime
 
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required
 from pymysql import DataError
 
 from web.common import curd
@@ -15,6 +16,7 @@ app_router = Blueprint('license', __name__, url_prefix='/license')
 
 
 @app_router.get('/list')
+@jwt_required()
 def get_license():
     size = request.args.get("size", type=int)
     current = request.args.get("current", type=int)
@@ -37,6 +39,7 @@ def get_license():
 
 
 @app_router.route('/save', methods=["POST"])
+@jwt_required()
 def save_license():
     data = {
         'data': 'permit',
@@ -62,6 +65,7 @@ def save_license():
 
 
 @app_router.post('/save_report')
+@jwt_required()
 def save_license_report():
     licenseId = request.get_json().get("licenseId")
     scraper = scraper_license()

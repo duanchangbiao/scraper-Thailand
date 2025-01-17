@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_session import Session
 
+from web.extensions.init_mail import init_mail
 from web.extensions.init_sqlalchemy import init_databases, db
 from flask_migrate import Migrate
 
@@ -9,6 +10,7 @@ def init_plugs(app: Flask) -> None:
     init_databases(app)
     init_session(app)
     init_migrate(app)
+    init_mail(app)
 
 
 sess = Session()

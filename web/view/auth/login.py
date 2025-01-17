@@ -121,7 +121,7 @@ def getRouter():
     role = Role.query.filter_by(role_code=roleCode).first()
     menu_role = (db.session().query(RoleMenu, Menu)
                  .outerjoin(Menu, RoleMenu.menu_id == Menu.id)
-                 .filter(and_(RoleMenu.role_id == role.role_id)).order_by(
+                 .filter(and_(RoleMenu.role_id == role.role_id, Menu.status == "1", Menu.constant == "0")).order_by(
         Menu.order.asc()).all())
     menus = []
     for menu in menu_role:
@@ -132,6 +132,7 @@ def getRouter():
 
 
 @app_router.get("/isRouteExist")
+@jwt_required()
 def isExistRouter():
     routerName = request.args.get("routeName")
     menu = Menu.query.filter_by(router_name=routerName)

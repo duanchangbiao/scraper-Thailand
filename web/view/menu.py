@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from sqlalchemy import or_
 
 from web.common import curd
@@ -31,6 +32,7 @@ def build_category_tree(menus: list[Menu]):
 
 
 @app_router.get("/getMenuList")
+@jwt_required()
 def getMenuList():
     menuList = Menu.query.order_by(Menu.order.asc()).all()
     tree_list = build_category_tree(menuList)
@@ -60,6 +62,7 @@ def getMenuList():
 
 
 @app_router.post("/saveMenu")
+@jwt_required()
 def saveMenuInfo():
     component = request.get_json().get('component')
     icon = request.get_json().get('icon')
@@ -85,6 +88,7 @@ def saveMenuInfo():
 
 
 @app_router.get("/getAllPages")
+@jwt_required()
 def getAllPage():
     menuList = db.session.query(Menu.router_key).filter(or_(Menu.menu_type == 1, Menu.menu_type == 2)).all()
     menus = []
@@ -94,6 +98,7 @@ def getAllPage():
 
 
 @app_router.get("/getAllButtons")
+@jwt_required()
 def getAllButtons():
     menuList = db.session.query(Menu.router_key, Menu.id, Menu.menu_name, Menu.permit_name).filter_by(menu_type=3).all()
     data = curd.model_to_dicts(schema=ButtonSchema, data=menuList)
@@ -101,6 +106,7 @@ def getAllButtons():
 
 
 @app_router.get("/getMenuTree")
+@jwt_required()
 def getMenuTree():
     menuList = Menu.query.all()
     tree_list = build_category_tree(menuList)
@@ -119,6 +125,7 @@ def getMenuTree():
 
 
 @app_router.get("/deleteMenu")
+@jwt_required()
 def deleteMenuInfo():
     menuId = request.args.get('id')
     if bool(RoleMenu.query.filter_by(menu_id=menuId).count()):
@@ -129,6 +136,7 @@ def deleteMenuInfo():
 
 
 @app_router.post("/updateMenu")
+@jwt_required()
 def updateMenuInfo():
     menuId = request.get_json().get('id')
     component = request.get_json().get('component')

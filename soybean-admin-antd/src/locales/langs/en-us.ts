@@ -236,14 +236,13 @@ const local: App.I18n.Schema = {
       visitCount: 'Visit Count',
       turnover: 'Turnover',
       dealCount: 'Deal Count',
-      projectNews: {
-        title: 'Project News',
-        moreNews: 'More News',
-        desc1: 'Soybean created the open source project soybean-admin on May 28, 2021!',
-        desc2: 'Yanbowe submitted a bug to soybean-admin, the multi-tab bar will not adapt.',
-        desc3: 'Soybean is ready to do sufficient preparation for the release of soybean-admin!',
-        desc4: 'Soybean is busy writing project documentation for soybean-admin!',
-        desc5: 'Soybean just wrote some of the workbench pages casually, and it was enough to see!'
+      JobNews: {
+        title: '定时任务完成情况',
+        moreNews: '更多',
+        jobName: '任务名称',
+        complete: '任务完成情况',
+        completeTime: '任务完成时间',
+        jobMessage: '耗时'
       },
       creativity: 'Creativity'
     },
@@ -256,7 +255,11 @@ const local: App.I18n.Schema = {
         active: {
           enable: 'Enable',
           disable: 'Disable'
-        }
+        },
+        userType: {
+          admin: 'admin',
+          common: 'business'
+        },
       },
       role: {
         title: 'Role List',
@@ -278,11 +281,18 @@ const local: App.I18n.Schema = {
       user: {
         title: 'User List',
         username: 'User Name',
+        password: 'Password',
         sex: 'Gender',
+        id: 'User Id',
         nickname: 'Nick Name',
         phone: 'Phone Number',
+        userType: 'User Type',
         email: 'Email',
         status: 'User Status',
+        createTime: ' create time',
+        isActive: 'monitor',
+        businessType: 'business type',
+        updateTime: 'update time',
         userRole: {
           roleId: 'Role Id',
           roleName: 'Role Name',
@@ -293,6 +303,7 @@ const local: App.I18n.Schema = {
           password: 'Please enter password',
           sex: 'Please select gender',
           nickname: 'Please enter nick name',
+          userType: 'Please enter user type',
           phone: 'Please enter phone number',
           email: 'Please enter email',
           status: 'Please select user status',
