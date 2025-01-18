@@ -50,3 +50,36 @@ export function fetchAftList(params?: Api.Business.MorSearchParams) {
     params
   })
 }
+
+export function fetchJobList(params?: Api.Job.JobSearchParams) {
+  return request<Api.Job.jobInfo>({
+    url: '/job/list',
+    method: 'get',
+    params
+  })
+}
+
+
+export function executorRun(params?: { jobId: number }) {
+  return request<Api.Job.jobInfo>({
+    url: '/job/run',
+    method: 'get',
+    params
+  })
+}
+
+export function deleteJob(params?: {jobId:number}) {
+  return request<Api.Job.jobInfo>({
+    url: '/job/delete',
+    method: 'get',
+    params
+  })
+}
+
+export function updateJob(data?: Api.Job.JobUpdateParams) {
+  return request<Api.Job.jobInfo>({
+    url: '/job/update',
+    method: 'post',
+    data
+  })
+}

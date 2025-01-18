@@ -1,9 +1,10 @@
 <script setup lang="tsx">
-import {Button} from 'ant-design-vue';
+import {Button, Tag} from 'ant-design-vue';
 import {$t} from "@/locales";
 import {useTable, useTableOperate, useTableScroll} from "@/hooks/common/table";
 import {fetchAftList, updateMorInfo} from "@/service/api/company-info";
 import AftSearch from "@/views/business/aft/modules/aft-search.vue";
+import {enableUpdateStatusRecord} from "@/constants/business";
 
 const {tableWrapperRef, scrollConfig} = useTableScroll();
 const {columns, loading, data, getData, mobilePagination, columnChecks, searchParams, getDataByPage} = useTable({
@@ -58,6 +59,27 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       width: 100
     },
     {
+      key: 'updateType',
+      title: $t('page.business_mor.updateType'),
+      dataIndex: 'updateType',
+      align: 'center',
+      width: 150,
+      customRender: ({record}) => {
+        if (record.updateType === null) {
+          return null;
+        }
+
+        const tagMap: Record<Api.Common.EnableStatus, string> = {
+          2: 'success',
+          1: 'warning'
+        };
+
+        const label = $t(enableUpdateStatusRecord[record.updateType]);
+
+        return <Tag color={tagMap[record.updateType]}>{label}</Tag>;
+      }
+    },
+    {
       key: 'applyStatus',
       title: $t('page.business_aft.applyStatus'),
       dataIndex: 'applyStatus',
@@ -71,13 +93,7 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 150
     },
-    // {
-    //   key: 'mtime',
-    //   title: $t('page.business_mor.mtime'),
-    //   dataIndex: 'mtime',
-    //   align: 'center',
-    //   width: 150
-    // },
+
     {
       key: 'operate',
       title: $t('common.operate'),

@@ -23,6 +23,7 @@ const local: App.I18n.Schema = {
     confirmDelete: '确认删除吗？',
     batchUpdate: '批量更新',
     edit: '编辑',
+    execute: '执行',
     details: '详情',
     updateInfo: '更新',
     error: '错误',
@@ -265,6 +266,10 @@ const local: App.I18n.Schema = {
           admin: '管理员',
           common: '业务账号'
         },
+        updateType: {
+          enable: '有更新',
+          disable: '暂未更新'
+        }
       },
       role: {
         title: '角色列表',
@@ -427,6 +432,7 @@ const local: App.I18n.Schema = {
       applyLicense: '申请许可证',
       applyDate: '申请日期',
       applyTaxNumber: '税号',
+      updateType: '更新状态',
       applyStatus: '申请状态',
       username: '账号信息',
       applyType: '类型',
@@ -500,6 +506,22 @@ const local: App.I18n.Schema = {
         username: '请输入账号信息',
       },
     },
+    JobInfo: {
+      title: "任务中心",
+      jobName: "任务名称",
+      jobId: '任务id',
+      jobGroup: '任务组',
+      status: '任务状态',
+      invokeTarget: '目标函数',
+      cronExpression: 'cron表达式',
+      form: {
+        jobName: '请输入任务名称',
+        jobGroup: '请输入任务组',
+        status: '请输入任务状态',
+        invokeTarget: '请输入目标函数',
+        cronExpression: '请输入cron表达式',
+      }
+    }
   },
   form: {
     required: '不能为空',

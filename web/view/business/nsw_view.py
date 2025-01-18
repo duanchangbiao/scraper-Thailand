@@ -30,7 +30,7 @@ def getAftList():
     aftLicense_user = (db.session().query(NswLicense, User)
                        .outerjoin(User, User.id == NswLicense.user_id)
                        .filter(mf.get_filter(NswLicense))
-                       .order_by(NswLicense.ctime.desc(), NswLicense.mtime.desc())
+                       .order_by(NswLicense.update_type.desc(),NswLicense.ctime.desc(), NswLicense.mtime.desc())
                        .paginates(page=current, pageSize=size))
 
     for morLicense, user in aftLicense_user:
@@ -45,6 +45,7 @@ def getAftList():
                 "%Y-%m-%d %H:%M:%S") if morLicense.ctime is not None else None,
             "passDate": morLicense.pass_date,
             "productNumber": morLicense.product_number,
+            "updateType": morLicense.update_type,
             "rpgGroup": morLicense.rpg_group,
             "ctime": morLicense.ctime.strftime("%Y-%m-%d %H:%M:%S") if morLicense.ctime is not None else None,
             "mtime": morLicense.mtime.strftime("%Y-%m-%d %H:%M:%S") if morLicense.mtime is not None else None,

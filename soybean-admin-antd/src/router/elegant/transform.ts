@@ -191,6 +191,9 @@ const routeMap: RouteMap = {
   "manage_role": "/manage/role",
   "manage_user": "/manage/user",
   "manage_user-detail": "/manage/user-detail/:id",
+  "task": "/task",
+  "task_job": "/task/job",
+  "task_job-log": "/task/job-log",
   "user-center": "/user-center"
 };
 

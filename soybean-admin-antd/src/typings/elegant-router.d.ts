@@ -45,6 +45,9 @@ declare module "@elegant-router/types" {
     "manage_role": "/manage/role";
     "manage_user": "/manage/user";
     "manage_user-detail": "/manage/user-detail/:id";
+    "task": "/task";
+    "task_job": "/task/job";
+    "task_job-log": "/task/job-log";
     "user-center": "/user-center";
   };
 
@@ -98,6 +101,7 @@ declare module "@elegant-router/types" {
     | "iframe-page"
     | "login"
     | "manage"
+    | "task"
     | "user-center"
   >;
 
@@ -131,6 +135,8 @@ declare module "@elegant-router/types" {
     | "manage_role"
     | "manage_user-detail"
     | "manage_user"
+    | "task_job-log"
+    | "task_job"
     | "user-center"
   >;
 

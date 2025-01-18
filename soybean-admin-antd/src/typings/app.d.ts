@@ -303,6 +303,7 @@ declare namespace App {
         deleteSuccess: string;
         confirmDelete: string;
         edit: string;
+        execute: string;
         details: string;
         updateInfo: string;
         error: string;
@@ -486,6 +487,10 @@ declare namespace App {
               admin: string;
               common: string;
             }
+            updateType: {
+              enable: string;
+              disable: string;
+            }
           };
           role: {
             title: string;
@@ -648,7 +653,8 @@ declare namespace App {
           applyLicense: string;
           applyDate: string;
           applyTaxNumber: string;
-          applyStatus: string
+          applyStatus: string;
+          updateType: string;
           username: string;
           applyType: string;
           ctime: string;
@@ -669,7 +675,7 @@ declare namespace App {
             applyType: string;
             username: string;
           };
-        },
+        };
         business_nsw: {
           title: string
           id: string;
@@ -696,7 +702,7 @@ declare namespace App {
             applyStatus: string;
             username: string;
           };
-        }
+        };
         business_aft: {
           title: string
           id: string;
@@ -720,7 +726,24 @@ declare namespace App {
             applyType: string;
             username: string;
           };
+        };
+        JobInfo: {
+          title: string;
+          jobId: string;
+          jobName: string;
+          jobGroup: string;
+          status: string;
+          cronExpression: string;
+          invokeTarget: string;
+          form: {
+            jobName: string;
+            jobGroup: string;
+            status: string;
+            invokeTarget: string;
+            cronExpression: string;
+          }
         }
+
       };
       form: {
         required: string;

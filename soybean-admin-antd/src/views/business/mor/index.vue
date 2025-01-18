@@ -1,9 +1,10 @@
 <script setup lang="tsx">
-import {Button} from 'ant-design-vue';
+import {Button, Tag} from 'ant-design-vue';
 import {$t} from '@/locales';
 import {useTable, useTableOperate, useTableScroll} from '@/hooks/common/table';
 import {fetchGetMorList, updateMorInfo} from "@/service/api/company-info";
 import MorSearch from "@/views/business/mor/modules/mor-search.vue";
+import {enableUpdateStatusRecord} from "@/constants/business";
 
 const {tableWrapperRef, scrollConfig} = useTableScroll();
 // const allPages = ref<string[]>([]);
@@ -60,13 +61,27 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 100
     },
-    // {
-    //   key: 'applyTaxNumber',
-    //   title: $t('page.business_mor.applyTaxNumber'),
-    //   dataIndex: 'applyTaxNumber',
-    //   align: 'center',
-    //   width: 100
-    // },
+    {
+      key: 'updateType',
+      title: $t('page.business_mor.updateType'),
+      dataIndex: 'updateType',
+      align: 'center',
+      width: 150,
+      customRender: ({record}) => {
+        if (record.updateType === null) {
+          return null;
+        }
+
+        const tagMap: Record<Api.Common.EnableStatus, string> = {
+          2: 'success',
+          1: 'warning'
+        };
+
+        const label = $t(enableUpdateStatusRecord[record.updateType]);
+
+        return <Tag color={tagMap[record.updateType]}>{label}</Tag>;
+      }
+    },
     {
       key: 'applyStatus',
       title: $t('page.business_mor.applyStatus'),
@@ -105,7 +120,7 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
           <Button type="primary" ghost size="small">
             {$t('common.details')}
           </Button>
-          <Button danger size="small"  onClick={() => handleSubmit(record.username, record.applyType)}>
+          <Button danger size="small" onClick={() => handleSubmit(record.username, record.applyType)}>
             {$t('common.update')}
           </Button>
         </div>

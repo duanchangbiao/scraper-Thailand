@@ -33,6 +33,8 @@ declare namespace Api {
      */
     type EnableStatus = '1' | '2';
 
+    type EnableUpdateStatus = '1' | '2';
+
     type EnableMorStatus = 'Mor5' | 'Mor9';
 
     type EnableATFStatus = 'AFT' | 'AFFA'
@@ -346,5 +348,22 @@ declare namespace Api {
       Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyNumber'> &
       Common.CommonSearchParams
     >;
+  }
+  namespace Job {
+    type jobInfo = Common.CommonRecord<{
+      JobId: number;
+      jobName: string;
+      jobDesc: string;
+      jobGroup: string;
+      status: string;
+      invokeTarget: string;
+      cronExpression: string;
+    }>;
+    type JobSearchParams = Partial<
+      Pick<Api.Job.jobInfo, 'jobName' | 'jobGroup' | 'status'> &
+      Common.CommonSearchParams
+    >;
+
+    type JobUpdateParams = Partial<Pick<Api.Job.jobInfo, 'jobName' | 'jobGroup' | 'status' | 'invokeTarget' | 'cronExpression'>>;
   }
 }

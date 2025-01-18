@@ -29,7 +29,8 @@ def getMorList():
     morLicense_user = (db.session().query(MorLicenses, User)
                        .outerjoin(User, User.id == MorLicenses.user_id)
                        .filter(mf.get_filter(MorLicenses))
-                       .order_by(MorLicenses.ctime.desc(), MorLicenses.mtime.desc(), MorLicenses.mor_type.desc())
+                       .order_by(MorLicenses.update_type.desc(), MorLicenses.ctime.desc(), MorLicenses.mtime.desc(),
+                                 MorLicenses.mor_type.desc())
                        .paginates(page=current, pageSize=size))
 
     for morLicense, user in morLicense_user:
@@ -42,6 +43,7 @@ def getMorList():
             "applyDate": morLicense.apply_date,
             "applyLicense": morLicense.apply_license,
             "applyTax": morLicense.apply_tax,
+            "updateType": morLicense.update_type,
             "companyName": morLicense.operate_name,
             "standardName": morLicense.standard_name,
             "tisCode": morLicense.TIS_code,

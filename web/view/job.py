@@ -5,10 +5,12 @@ from croniter import croniter
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required
 
+from web.common import curd
 from web.extensions import db
 from web.models.models import SysJobLog, SysJob, User
 from web.route import scheduler
-from web.utils.response import success_api
+from web.schema.job_schema import SysJobSchema
+from web.utils.response import success_api, table_api
 
 app_router = Blueprint('job', __name__, url_prefix='/job')
 
@@ -116,12 +118,12 @@ def sysjob_list():
     if request.args.get('status'):
         filters.append(SysJob.status == request.args.get('status'))
     order_by = []
-    page = request.args.get('pageNum', 1, type=int)
-    rows = request.args.get('pageSize', 10, type=int)
-    pagination = SysJob.query.filter(*filters).order_by(*order_by).paginate(
-        page=page, per_page=rows, error_out=False)
-    sysJobs = pagination.items
-    return jsonify({'total': pagination.total, 'rows': [sysJob.to_json() for sysJob in sysJobs], 'code': 200})
+    page = request.args.get('current', 1, type=int)
+    size = request.args.get('size', 10, type=int)
+    sysJob = SysJob.query.filter(*filters).order_by(*order_by).paginates(page=page, pageSize=size)
+    count = sysJob.total
+    data = curd.model_to_dicts(schema=SysJobSchema, data=sysJob.items)
+    return table_api(data=data, total=count, current=page, size=size, msg="查询成功")
 
 
 @app_router.route('/add', methods=['POST'])
@@ -158,10 +160,10 @@ def sysjob_update():
     return jsonify({'code': 200, 'msg': '操作成功'})
 
 
-@app_router.route('/run', methods=['PUT'])
+@app_router.route('/run', methods=['get'])
 @jwt_required()
 def sysjob_run():
-    sysjob = SysJob.query.get(request.json['jobId'])
+    sysjob = SysJob.query.get(request.args.get('jobId'))
     res = execute_task(sysjob.to_json())
     if res['code']:
         return jsonify({'code': 200, 'msg': '执行成功'})

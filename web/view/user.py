@@ -299,6 +299,7 @@ def commonUpdateScraper(user: User, args: list):
                     "mtime": datetime.now(),
                     "apply_status": item.apply_status,
                     "apply_date": item.apply_date,
+                    "update_type": "2"
                 })
                 # 发送邮件
                 sendEmail(user, item)

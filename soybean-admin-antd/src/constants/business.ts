@@ -5,6 +5,11 @@ export const enableStatusRecord: Record<Api.Common.EnableStatus, App.I18n.I18nKe
   '2': 'page.manage.common.status.disable'
 };
 
+export const enableUpdateStatusRecord: Record<Api.Common.EnableUpdateStatus, App.I18n.I18nKey> = {
+  '2': 'page.manage.common.updateType.enable',
+  '1': 'page.manage.common.updateType.disable'
+}
+
 
 export const userTypeRecord: Record<Api.Common.UserType, App.I18n.I18nKey> = {
   '1': 'page.manage.common.userType.admin',

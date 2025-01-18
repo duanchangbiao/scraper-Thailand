@@ -3,19 +3,6 @@
   "type": "module",
   "version": "1.3.10",
   "description": "A fresh and elegant admin template, based on Vue3,Vite3,TypeScript,AntDesign and UnoCSS.",
-  "author": {
-    "name": "Soybean",
-    "email": "soybeanjs@outlook.com",
-    "url": "https://github.com/soybeanjs"
-  },
-  "license": "MIT",
-  "homepage": "https://github.com/soybeanjs/soybean-admin-antd",
-  "repository": {
-    "url": "https://github.com/soybeanjs/soybean-admin-antd.git"
-  },
-  "bugs": {
-    "url": "https://github.com/soybeanjs/soybean-admin-antd/issues"
-  },
   "keywords": [
     "Vue3 admin ",
     "vue-admin-template",
