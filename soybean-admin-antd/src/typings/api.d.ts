@@ -341,11 +341,16 @@ declare namespace Api {
     }>;
 
     type MorSearchParams = Partial<
-      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyType'> &
+      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyType'| 'applyNumber'> &
+      Common.CommonSearchParams
+    >;
+
+     type AFTSearchParams = Partial<
+      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyType'| 'applyNumber'> &
       Common.CommonSearchParams
     >;
     type NswSearchParams = Partial<
-      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyNumber'> &
+      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyNumber'|'applyType'> &
       Common.CommonSearchParams
     >;
   }

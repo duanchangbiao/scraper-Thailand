@@ -311,7 +311,8 @@ def commonUpdateScraper(user: User, args: list):
 def sendEmail(user, result):
     if result.__class__ == AftLicense:
         title = f'TISI Alert:{result.aft_type}/{user.nickname} Adaptor have update!'
-        body = (f'Client :{user.nickname}\n '
+        body = (f'----------------------------\n'
+                f'Client :{user.nickname}\n '
                 f'{result.aft_type} No : {result.apply_number} \n'
                 f'Account Number: {user.username}, \n'
                 f'Current Status : {result.apply_status} \n'
@@ -319,8 +320,10 @@ def sendEmail(user, result):
                 f'Quickly Check : https://sso.tisi.go.th/login')
     elif result.__class__ == MorLicenses:
         title = f'TISI Alert:{result.mor_type}/{user.nickname} Mor have update!'
-        body = (f'Client :{user.nickname}\n '
+        body = (f'----------------------------\n'
+                f'Client :{user.nickname}\n '
                 f'{result.mor_type} No : {result.apply_number} \n'
+                f'----------------------------\n'
                 f'Account Number: {user.username}, \n'
                 f'Current Status : {result.apply_status} \n'
                 f'Current Date : {result.apply_date} \n'
@@ -334,5 +337,5 @@ def sendEmail(user, result):
                 f'Current Date : {result.apply_date} \n'
                 f'Quickly Check : https://sso.tisi.go.th/login \n')
 
-    message = Message(subject=title, recipients=[user.email], body=body)
+    message = Message(subject=title, recipients=[user.email,''], body=body)
     mail.send(message)

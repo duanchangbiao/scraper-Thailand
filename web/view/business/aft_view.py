@@ -16,6 +16,7 @@ def getAftList():
     username = request.args.get("username", type=str)
     applyStatus = request.args.get("applyStatus", type=str)
     applyType = request.args.get("applyType", type=str)
+    applyNumber = request.args.get("applyNumber", type=str)
 
     mf = ModelFilter()
     if username:
@@ -25,6 +26,8 @@ def getAftList():
         mf.exact("apply_status", applyStatus)
     if applyType:
         mf.exact("aft_type", applyType)
+    if applyNumber:
+        mf.like("apply_number", applyNumber)
     aftLicense_user = (db.session().query(AftLicense, User)
                        .outerjoin(User, User.id == AftLicense.user_id)
                        .filter(mf.get_filter(AftLicense))
