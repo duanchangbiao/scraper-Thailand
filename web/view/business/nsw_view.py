@@ -18,6 +18,7 @@ def getAftList():
     username = request.args.get("username", type=str)
     applyStatus = request.args.get("applyStatus", type=str)
     applyType = request.args.get("applyType", type=str)
+    applyNumber = request.args.get("applyNumber", type=str)
 
     mf = ModelFilter()
     if username:
@@ -27,10 +28,12 @@ def getAftList():
         mf.exact("apply_status", applyStatus)
     if applyType:
         mf.exact("mor_type", applyType)
+    if applyNumber:
+        mf.like("apply_number", applyNumber)
     aftLicense_user = (db.session().query(NswLicense, User)
                        .outerjoin(User, User.id == NswLicense.user_id)
                        .filter(mf.get_filter(NswLicense))
-                       .order_by(NswLicense.update_type.desc(),NswLicense.ctime.desc(), NswLicense.mtime.desc())
+                       .order_by(NswLicense.update_type.desc(), NswLicense.ctime.desc(), NswLicense.mtime.desc())
                        .paginates(page=current, pageSize=size))
 
     for morLicense, user in aftLicense_user:

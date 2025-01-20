@@ -17,9 +17,9 @@ class ScraperPassport:
         self.url = "https://sso.tisi.go.th/login"
         self.action_type = action_type
         self.chrome_options = webdriver.ChromeOptions()
-        self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--headless")  # 这行代码默认开启后台采集
         self.chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 1080))
+        self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 1080))  # 设置代理
         self.chrome_options.add_experimental_option("useAutomationExtension", 'False')
         self.chrome_options.add_argument(
             'user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"')
@@ -77,7 +77,8 @@ class ScraperPassport:
                 if action == 'AFFA':
                     AFFT_data = self.parse_AFFA()
                     self.result["AFFA"] = AFFT_data
-            after_model = self.driver.find_element(by=By.XPATH,value="//*[@id='top']/div/nav/div[2]/ul[@class='nav menu nav-pills']/li[8]/a")
+            after_model = self.driver.find_element(by=By.XPATH,
+                                                   value="//*[@id='top']/div/nav/div[2]/ul[@class='nav menu nav-pills']/li[8]/a")
             ActionChains(self.driver).move_to_element(after_model).click(after_model).perform()
             self.logout()
         except Exception as e:
@@ -313,7 +314,8 @@ class ScraperPassport:
 
     def logout(self):
         try:
-            self.driver.find_element(by=By.XPATH,value="//*[@id='wrapper']/nav/div[@class='navbar-header']/ul[@class='nav navbar-top-links navbar-right pull-right']/li[2]/a/i").click()
+            self.driver.find_element(by=By.XPATH,
+                                     value="//*[@id='wrapper']/nav/div[@class='navbar-header']/ul[@class='nav navbar-top-links navbar-right pull-right']/li[2]/a/i").click()
             time.sleep(2)
             self.driver.find_element(By.XPATH, value='//*[@id="wrapper"]/div[2]/div/div[1]/div[2]/a').click()
         except Exception as e:

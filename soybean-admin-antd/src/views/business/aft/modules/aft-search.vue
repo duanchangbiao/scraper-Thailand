@@ -18,7 +18,7 @@ const emit = defineEmits<Emits>();
 
 const {formRef, validate, resetFields} = useAntdForm();
 
-const model = defineModel<Api.Business.MorSearchParams>('model', {required: true});
+const model = defineModel<Api.Business.AFTSearchParams>('model', {required: true});
 
 
 async function reset() {
@@ -36,17 +36,22 @@ async function search() {
   <ACard :title="$t('common.search')" :bordered="false" class="card-wrapper">
     <AForm ref="formRef" :model="model" :label-col="{ span: 5, md: 7 }">
       <ARow :gutter="[16, 16]" wrap>
-        <ACol :span="24" :md="12" :lg="6">
+        <ACol :span="24" :md="8" :lg="4">
+          <AFormItem :label="$t('page.business_mor.applyNumber')" name="applyNumber" class="m-0">
+            <AInput v-model:value="model.applyNumber" :placeholder="$t('page.business_mor.form.applyNumber')"/>
+          </AFormItem>
+        </ACol>
+        <ACol :span="24" :md="8" :lg="4">
           <AFormItem :label="$t('page.business_mor.username')" name="username" class="m-0">
             <AInput v-model:value="model.username" :placeholder="$t('page.business_mor.form.username')"/>
           </AFormItem>
         </ACol>
-        <ACol :span="24" :md="12" :lg="6">
+        <ACol :span="24" :md="8" :lg="4">
           <AFormItem :label="$t('page.business_mor.applyStatus')" name="applyStatus" class="m-0">
             <AInput v-model:value="model.applyStatus" :placeholder="$t('page.business_mor.form.applyStatus')"/>
           </AFormItem>
         </ACol>
-        <ACol :span="24" :md="12" :lg="6">
+        <ACol :span="24" :md="8" :lg="5">
           <AFormItem :label="$t('page.business_mor.applyType')" name="applyType" class="m-0">
             <ASelect
               v-model:value="model.applyType"
