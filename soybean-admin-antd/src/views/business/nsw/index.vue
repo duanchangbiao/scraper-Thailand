@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import {Button,Tag} from 'ant-design-vue';
+import {Button, Tag} from 'ant-design-vue';
 import {$t} from "@/locales";
 import {useTable, useTableOperate, useTableScroll} from "@/hooks/common/table";
 import {fetchGetNSWList, updateMorInfo} from "@/service/api/company-info";
@@ -121,11 +121,11 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       width: 130,
       customRender: ({record}) => (
         <div class="flex-center gap-8px">
-          <Button type="primary" ghost size="small">
-            {$t('common.details')}
-          </Button>
-          <Button danger size="small" onClick={() => handleSubmit(record.username)}>
+          <Button size="small" type="primary" ghost onClick={() => handleSubmit(record.username)}>
             {$t('common.update')}
+          </Button>
+          <Button danger size="small">
+            {$t('common.delete')}
           </Button>
         </div>
       )

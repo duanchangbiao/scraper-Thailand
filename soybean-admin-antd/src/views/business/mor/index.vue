@@ -117,11 +117,11 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       width: 130,
       customRender: ({record}) => (
         <div class="flex-center gap-8px">
-          <Button type="primary" ghost size="small">
-            {$t('common.details')}
-          </Button>
-          <Button danger size="small" onClick={() => handleSubmit(record.username, record.applyType)}>
+          <Button  size="small"  type="primary" ghost onClick={() => handleSubmit(record.username, record.applyType)}>
             {$t('common.update')}
+          </Button>
+           <Button danger size="small">
+            {$t('common.delete')}
           </Button>
         </div>
       )
