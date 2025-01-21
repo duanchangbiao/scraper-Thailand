@@ -528,6 +528,17 @@ const local: App.I18n.Schema = {
         invokeTarget: '请输入目标函数',
         cronExpression: '请输入cron表达式',
       }
+    },
+    JobLog: {
+      title: '任务日志',
+      jobName: '任务名称',
+      jobGroup: '任务组',
+      jobLogId: '任务日志id',
+      jobMessage: '任务消息',
+      status: '状态',
+      invokeTarget: '目标函数',
+      exceptionInfo: "异常信息",
+      createTime: '创建时间',
     }
   },
   form: {

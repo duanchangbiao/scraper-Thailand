@@ -372,8 +372,21 @@ declare namespace Api {
       invokeTarget: string;
       cronExpression: string;
     }>;
+    type jobLogInfo = Common.CommonRecord<{
+      jobLogId: string;
+      jobName: string;
+      jobGroup: string;
+      invokeTarget: string;
+      jobMessage: string;
+      status: string;
+      exceptionInfo: string;
+      createTime: string;
+    }>;
     type JobSearchParams = Partial<
       Pick<Api.Job.jobInfo, 'jobName' | 'jobGroup' | 'status'> &
+      Common.CommonSearchParams
+    >;
+    type JobLogSearchParams = Partial<Pick<Api.Job.jobInfo, 'jobName' | 'jobGroup' | 'status'> &
       Common.CommonSearchParams
     >;
 

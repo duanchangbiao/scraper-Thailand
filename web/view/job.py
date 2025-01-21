@@ -9,7 +9,7 @@ from web.common import curd
 from web.extensions import db
 from web.models.models import SysJobLog, SysJob, User
 from web.route import scheduler
-from web.schema.job_schema import SysJobSchema
+from web.schema.job_schema import SysJobSchema, SysJobLogSchema
 from web.utils.response import success_api, table_api
 
 app_router = Blueprint('job', __name__, url_prefix='/job')
@@ -117,10 +117,9 @@ def sysjob_list():
         filters.append(SysJob.job_group == request.args.get('jobGroup'))
     if request.args.get('status'):
         filters.append(SysJob.status == request.args.get('status'))
-    order_by = []
     page = request.args.get('current', 1, type=int)
     size = request.args.get('size', 10, type=int)
-    sysJob = SysJob.query.filter(*filters).order_by(*order_by).paginates(page=page, pageSize=size)
+    sysJob = SysJob.query.filter(*filters).order_by(SysJob.create_time).paginates(page=page, pageSize=size)
     count = sysJob.total
     data = curd.model_to_dicts(schema=SysJobSchema, data=sysJob.items)
     return table_api(data=data, total=count, current=page, size=size, msg="查询成功")
@@ -222,12 +221,11 @@ def sysjobLog_list():
         filters.append(SysJobLog.create_time > request.args['params[beginTime]'])
         filters.append(SysJobLog.create_time < request.args['params[endTime]'])
     order_by = []
-    page = request.args.get('pageNum', 1, type=int)
-    rows = request.args.get('pageSize', 10, type=int)
-    pagination = SysJobLog.query.filter(*filters).order_by(*order_by).paginate(
-        page=page, per_page=rows, error_out=False)
-    sysJobLogs = pagination.items
-    return jsonify({'total': pagination.total, 'rows': [sysJobLog.to_json() for sysJobLog in sysJobLogs], 'code': 200})
+    current = request.args.get('current', 1, type=int)
+    size = request.args.get('size', 10, type=int)
+    pagination = SysJobLog.query.filter(*filters).order_by(*order_by).paginates(
+        page=current, pageSize=size)
+    return table_api(data=curd.model_to_dicts(schema=SysJobLogSchema, data=pagination.items),total=pagination.total, current=current, size=size)
 
 
 @app_router.route('/jobLog/<string:ids>', methods=['DELETE'])

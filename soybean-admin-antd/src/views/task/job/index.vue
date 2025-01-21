@@ -168,14 +168,6 @@ const {checkedRowKeys, rowSelection} = useTableOperate(data, getData);
         :pagination="mobilePagination"
         class="h-full"
       />
-
-      <!--      <CompanyOperateModal-->
-      <!--        v-model:visible="visible"-->
-      <!--        :operate-type="operateType"-->
-      <!--        :row-data="editingData"-->
-      <!--        :all-pages="allPages"-->
-      <!--        @submitted="getDataByPage"-->
-      <!--      />-->
     </ACard>
   </div>
 </template>

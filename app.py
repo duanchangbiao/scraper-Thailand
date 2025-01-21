@@ -15,7 +15,7 @@ with app.app_context():
 def load_jobs():
     from web.view.job import add_job
     with app.app_context():
-        jobs = SysJob.query.filter_by(status='0').all()
+        jobs = SysJob.query.filter_by(status='1').all()
         for job in jobs:
             print(job.to_json())
             add_job(job.to_json())

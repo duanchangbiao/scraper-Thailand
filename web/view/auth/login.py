@@ -127,7 +127,7 @@ def getRouter():
     for menu in menu_role:
         menus.append(menu[1])
 
-    data = {"routes": build_route_tree(menus, simple=True, roleCode=roleCode)}
+    data = {"home": "home", "routes": build_route_tree(menus, simple=True, roleCode=roleCode)}
     return success_api(data=data, msg="查询成功")
 
 

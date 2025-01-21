@@ -83,6 +83,14 @@ export function fetchJobList(params?: Api.Job.JobSearchParams) {
   })
 }
 
+export function fetchJobLogList(params?: Api.Job.JobLogSearchParams) {
+  return request<Api.Job.jobLogInfo>({
+    url: '/job/jobLog/list',
+    method: 'get',
+
+  })
+}
+
 
 export function executorRun(params?: { jobId: number }) {
   return request<Api.Job.jobInfo>({

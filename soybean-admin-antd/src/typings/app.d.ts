@@ -750,6 +750,17 @@ declare namespace App {
             cronExpression: string;
           }
         }
+        JobLog: {
+          title: string;
+          jobLogId: string;
+          jobName: string;
+          jobGroup: string;
+          invokeTarget: string;
+          jobMessage: string;
+          status: string;
+          exceptionInfo: string;
+          createTime: string;
+        }
 
       };
       form: {
