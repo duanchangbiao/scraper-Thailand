@@ -55,7 +55,6 @@ const model = ref(createDefaultModel());
 
 function createDefaultModel(): {
   password: string;
-  phone: string;
   sex: string;
   nickname: string;
   isActive: number;
@@ -74,8 +73,7 @@ function createDefaultModel(): {
     password: '',
     sex: '1',
     nickname: '',
-    phone: '',
-    email: '',
+    email: 'tisi_alert@agileservices.co',
     userType: '2',
     isActive: 1,
     status: '1',
@@ -173,7 +171,7 @@ watch(visible, () => {
 
 <template>
   <AModal v-model:open="visible" :title="title" width="600px">
-    <div class="h-480px">
+    <div class="h-400px">
       <SimpleScrollbar>
         <AForm
           ref="formRef"
@@ -217,11 +215,11 @@ watch(visible, () => {
                 <AInput v-model:value="model.nickname" :placeholder="$t('page.manage.user.form.nickname')"/>
               </AFormItem>
             </ACol>
-            <ACol :lg="24" :xs="24">
-              <AFormItem :label="$t('page.manage.user.phone')" name="phone">
-                <AInput v-model:value="model.phone" :placeholder="$t('page.manage.user.form.phone')"/>
-              </AFormItem>
-            </ACol>
+<!--            <ACol :lg="24" :xs="24">-->
+<!--              <AFormItem :label="$t('page.manage.user.phone')" name="phone">-->
+<!--                <AInput v-model:value="model.phone" :placeholder="$t('page.manage.user.form.phone')"/>-->
+<!--              </AFormItem>-->
+<!--            </ACol>-->
             <ACol :lg="24" :xs="24">
               <AFormItem :label="$t('page.manage.user.email')" name="email">
                 <AInput v-model:value="model.email" :placeholder="$t('page.manage.user.form.email')"/>

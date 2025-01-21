@@ -1,8 +1,11 @@
+import os.path
 from datetime import datetime
 
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 from flask_mail import Message
+from openpyxl.reader.excel import load_workbook
+from pandas import read_excel
 from werkzeug.security import generate_password_hash
 
 from web.common import curd
@@ -163,7 +166,7 @@ def updateUserInfo():
         db.session.add(userRole)
     if userType == '2':
         for item in userBusinessDict:
-            userBusiness = UserBusiness(user_id=user.id, business_id=item["value"], ctime=datetime.now())
+            userBusiness = UserBusiness(user_id=user.id, business_id=item, ctime=datetime.now())
             db.session.add(userBusiness)
     db.session.commit()
     return success_api(msg='更新成功!')
@@ -345,3 +348,30 @@ def sendEmail(user, result):
 
     message = Message(subject=title, recipients=[user.email], body=body)
     mail.send(message)
+
+
+@app_router.post("/user/export")
+def exportExcel():
+    file = request.files["file"]
+    filename = file.filename
+    if filename.endswith(".xlsx"):
+        file.save(filename)
+        wb = load_workbook(filename)
+        sheet = wb.get_sheet_by_name("Sheet1")
+        for row in range(1, sheet.max_row + 1):
+            user = User(
+                username=sheet.cell(row, 2).value,
+                password=sheet.cell(row, 3).value,
+                nickname=sheet.cell(row, 1).value,
+                email="tisi_alert@agileservices.co",
+                status=1,
+                user_type="2",
+                ctime=datetime.now(),
+            )
+            if bool(User.query.filter_by(username=user.username).count()):
+                print("用户名已存在")
+            if user.username is not None:
+                db.session.add(user)
+            db.session.commit()
+
+    return success_api(msg="导入成功")

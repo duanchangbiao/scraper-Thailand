@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import timedelta
 
 from urllib.parse import quote_plus as urlquote
@@ -53,3 +54,5 @@ class BaseConfig:
     JWT_SECRET_KEY = "welcome-to-apple-tree"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES = 72
     JWT_REFRESH_TOKEN_EXPIRE_MINUTES = 72
+
+    filePath = os.path.join(os.getcwd() + "/uploadFile")
