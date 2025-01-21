@@ -5,10 +5,11 @@ import {useTable, useTableOperate, useTableScroll} from '@/hooks/common/table';
 import {fetchGetMorList, updateMorInfo} from "@/service/api/company-info";
 import MorSearch from "@/views/business/mor/modules/mor-search.vue";
 import {enableUpdateStatusRecord} from "@/constants/business";
+import {type Ref, ref} from "vue";
+import {useBoolean} from "~/packages/hooks";
+import MorUpdateOperateModal, {OperateType} from "@/views/business/mor/modules/mor-operate-modal.vue";
 
 const {tableWrapperRef, scrollConfig} = useTableScroll();
-// const allPages = ref<string[]>([]);
-// const {bool: visible, setTrue: openModal} = useBoolean();
 // 获取列表信息
 const {columns, loading, data, getData, mobilePagination, columnChecks, searchParams, getDataByPage} = useTable({
   columns: () => [
@@ -83,13 +84,6 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       }
     },
     {
-      key: 'applyStatus',
-      title: $t('page.business_mor.applyStatus'),
-      dataIndex: 'applyStatus',
-      align: 'center',
-      width: 150
-    },
-    {
       key: 'applyType',
       title: $t('page.business_mor.applyType'),
       dataIndex: 'applyType',
@@ -97,12 +91,26 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       width: 64
     },
     {
-      key: 'companyName',
-      title: $t('page.business_mor.companyName'),
-      dataIndex: 'companyName',
+      key: 'applyStatus',
+      title: $t('page.business_mor.applyStatus'),
+      dataIndex: 'applyStatus',
+      align: 'center',
+      width: 150
+    },
+    {
+      key: 'remark',
+      title: $t('page.business_aft.remark'),
+      dataIndex: 'remark',
       align: 'center',
       width: 200
     },
+    // {
+    //   key: 'companyName',
+    //   title: $t('page.business_mor.companyName'),
+    //   dataIndex: 'companyName',
+    //   align: 'center',
+    //   width: 200
+    // },
     {
       key: 'ctime',
       title: $t('page.business_mor.ctime'),
@@ -114,13 +122,16 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      width: 150,
       customRender: ({record}) => (
         <div class="flex-center gap-8px">
-          <Button  size="small"  type="primary" ghost onClick={() => handleSubmit(record.username, record.applyType)}>
+          <Button size="small" type="primary" ghost onClick={() => handleEdit(record)}>
+            {$t('common.edit')}
+          </Button>
+          <Button size="small" type="primary" ghost onClick={() => handleSubmit(record.username, record.applyType)}>
             {$t('common.update')}
           </Button>
-           <Button danger size="small">
+          <Button danger size="small">
             {$t('common.delete')}
           </Button>
         </div>
@@ -148,6 +159,18 @@ async function handleSubmit(username: string, applyType: string) {
     }
   }
 }
+
+
+function handleEdit(item: Api.Business.BusinessAftInfo) {
+  operateType.value = 'edit';
+  editingData.value = {...item};
+  openModal();
+}
+
+const operateType = ref<OperateType>('edit');
+const allPages = ref<string[]>([]);
+const editingData: Ref<Api.Business.BusinessAftInfo | null> = ref(null);
+const {bool: visible, setTrue: openModal} = useBoolean();
 </script>
 
 <template>
@@ -180,6 +203,13 @@ async function handleSubmit(username: string, applyType: string) {
         class="h-full"
       />
     </ACard>
+    <MorUpdateOperateModal
+      v-model:visible="visible"
+      :operate-type="operateType"
+      :row-data="editingData"
+      :all-pages="allPages"
+      @submitted="getDataByPage"
+    />
   </div>
 </template>
 

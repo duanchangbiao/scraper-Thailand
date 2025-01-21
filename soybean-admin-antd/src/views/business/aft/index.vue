@@ -5,6 +5,10 @@ import {useTable, useTableOperate, useTableScroll} from "@/hooks/common/table";
 import {fetchAftList, updateMorInfo} from "@/service/api/company-info";
 import AftSearch from "@/views/business/aft/modules/aft-search.vue";
 import {enableUpdateStatusRecord} from "@/constants/business";
+import {type Ref, ref} from "vue";
+import {OperateType} from "@/views/manage/menu/modules/menu-operate-modal.vue";
+import {useBoolean} from "~/packages/hooks";
+import AftUpdateOperateModal from "@/views/business/aft/modules/aft-update-operate-modal.vue";
 
 const {tableWrapperRef, scrollConfig} = useTableScroll();
 const {columns, loading, data, getData, mobilePagination, columnChecks, searchParams, getDataByPage} = useTable({
@@ -30,13 +34,13 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 150
     },
-    {
-      key: 'tisCode',
-      title: $t('page.business_aft.tisCode'),
-      dataIndex: 'tisCode',
-      align: 'center',
-      width: 64
-    },
+    // {
+    //   key: 'tisCode',
+    //   title: $t('page.business_aft.tisCode'),
+    //   dataIndex: 'tisCode',
+    //   align: 'center',
+    //   width: 64
+    // },
     // {
     //   key: 'standardName',
     //   title: $t('page.business_aft.standardName'),
@@ -86,6 +90,20 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 200
     },
+    // {
+    //   key: 'sort',
+    //   title: $t('page.business_aft.sort'),
+    //   dataIndex: 'sort',
+    //   align: 'center',
+    //   width: 50
+    // },
+    {
+      key: 'remark',
+      title: $t('page.business_aft.remark'),
+      dataIndex: 'remark',
+      align: 'center',
+      width: 200
+    },
     {
       key: 'ctime',
       title: $t('page.business_mor.ctime'),
@@ -98,10 +116,13 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      width: 150,
       customRender: ({record}) => (
         <div class="flex-center gap-8px">
-          <Button size="small" onClick={() => handleSubmit(record.username, record.applyType)}>
+          <Button size="small" type="primary" ghost onClick={() => handleEdit(record)}>
+            {$t('common.edit')}
+          </Button>
+          <Button size="small" type="primary" ghost onClick={() => handleSubmit(record.username, record.applyType)}>
             {$t('common.update')}
           </Button>
           <Button danger size="small">
@@ -117,8 +138,8 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
     size: 10,
     applyStatus: undefined,
     username: undefined,
-    applyNumber: undefined
-  }
+    applyNumber: undefined,
+  },
 });
 const {checkedRowKeys, rowSelection} = useTableOperate(data, getData);
 
@@ -130,6 +151,19 @@ async function handleSubmit(username: string, applyType: string) {
     }
   }
 }
+
+function handleEdit(item: Api.Business.BusinessAftInfo) {
+  operateType.value = 'edit';
+  editingData.value = {...item};
+  openModal();
+}
+
+const operateType = ref<OperateType>('edit');
+const allPages = ref<string[]>([]);
+const editingData: Ref<Api.Business.BusinessAftInfo | null> = ref(null);
+const {bool: visible, setTrue: openModal} = useBoolean();
+
+
 </script>
 
 <template>
@@ -162,6 +196,13 @@ async function handleSubmit(username: string, applyType: string) {
         class="h-full"
       />
     </ACard>
+    <AftUpdateOperateModal
+      v-model:visible="visible"
+      :operate-type="operateType"
+      :row-data="editingData"
+      :all-pages="allPages"
+      @submitted="getDataByPage"
+    />
   </div>
 </template>
 

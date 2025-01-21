@@ -204,7 +204,7 @@ watch(visible, () => {
               </AFormItem>
             </ACol>
             <ACol :lg="14" :xs="24">
-              <AFormItem :label="$t('page.manage.user.userType')" name="sex">
+              <AFormItem :label="$t('page.manage.user.userType')" name="userType">
                 <ARadioGroup v-model:value="model.userType">
                   <ARadio v-for="item in userTypeOptions" :key="item.value" :value="item.value">
                     {{ $t(item.label) }}

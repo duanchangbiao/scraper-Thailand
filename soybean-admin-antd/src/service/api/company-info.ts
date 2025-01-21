@@ -35,7 +35,31 @@ export function updateMorInfo(data?: Api.Business.MorSearchParams) {
   })
 }
 
-export function fetchGetNSWList(params?: Api.Business.NswSearchParams) {
+export function updateMorStatusInfo(data?: Api.Business.BusinessMorInfo) {
+  return request<Api.Business.BusinessMorInfo>({
+    url: '/mor/readStatus',
+    method: 'post',
+    data
+  })
+}
+
+export function updateReadInfo(data?: Api.Business.BusinessAftInfo) {
+  return request<Api.Business.BusinessAftInfo>({
+    url: '/aft/readStatus',
+    method: 'post',
+    data
+  })
+}
+
+export function updateNswInfo(data?: Api.Business.BusinessNewInfo) {
+  return request<Api.Business.BusinessNewInfo>({
+    url: '/nsw/update',
+    method: 'post',
+    data
+  })
+}
+
+export function fetchGetNSWList(params?: Api.Business.AFTSearchParams) {
   return request<Api.Business.BusinessNewInfo>({
     url: '/nsw/list',
     method: 'get',
@@ -68,7 +92,7 @@ export function executorRun(params?: { jobId: number }) {
   })
 }
 
-export function deleteJob(params?: {jobId:number}) {
+export function deleteJob(params?: { jobId: number }) {
   return request<Api.Job.jobInfo>({
     url: '/job/delete',
     method: 'get',

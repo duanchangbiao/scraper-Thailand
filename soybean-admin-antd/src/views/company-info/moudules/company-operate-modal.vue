@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import {computed, ref, watch} from "vue";
 import {$t} from "@/locales";
-import {enableStatusOptions, menuIconTypeOptions, menuTypeOptions} from "@/constants/business";
 import SimpleScrollbar from "~/packages/materials/src/libs/simple-scrollbar/index.vue";
 import {updateCompanyInfo} from "@/service/api/company-info";
-import {message} from "ant-design-vue";
 
 defineOptions({
   name: 'CompanyOperateModal'

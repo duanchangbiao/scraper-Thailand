@@ -5,6 +5,10 @@ import {useTable, useTableOperate, useTableScroll} from "@/hooks/common/table";
 import {fetchGetNSWList, updateMorInfo} from "@/service/api/company-info";
 import NswSearch from "@/views/business/nsw/modules/nsw-search.vue";
 import {enableUpdateStatusRecord} from "@/constants/business";
+import {type Ref, ref} from "vue";
+import {useBoolean} from "~/packages/hooks";
+import {OperateType} from "@/views/manage/menu/modules/menu-operate-modal.vue";
+import NswUpdateOperateModal from "@/views/business/nsw/modules/nsw-operate-modal.vue";
 
 const {tableWrapperRef, scrollConfig} = useTableScroll();
 const {columns, loading, data, getData, mobilePagination, columnChecks, searchParams, getDataByPage} = useTable({
@@ -65,13 +69,13 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 150
     },
-    {
-      key: 'invoiceDate',
-      title: $t('page.business_nsw.invoiceDate'),
-      dataIndex: 'invoiceDate',
-      align: 'center',
-      width: 150
-    },
+    // {
+    //   key: 'invoiceDate',
+    //   title: $t('page.business_nsw.invoiceDate'),
+    //   dataIndex: 'invoiceDate',
+    //   align: 'center',
+    //   width: 150
+    // },
     {
       key: 'updateType',
       title: $t('page.business_mor.updateType'),
@@ -100,10 +104,24 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 200
     },
+    // {
+    //   key: 'passDate',
+    //   title: $t('page.business_nsw.passDate'),
+    //   dataIndex: 'passDate',
+    //   align: 'center',
+    //   width: 200
+    // },
+    // {
+    //   key: 'sort',
+    //   title: $t('page.business_aft.sort'),
+    //   dataIndex: 'sort',
+    //   align: 'center',
+    //   width: 50
+    // },
     {
-      key: 'passDate',
-      title: $t('page.business_nsw.passDate'),
-      dataIndex: 'passDate',
+      key: 'remark',
+      title: $t('page.business_aft.remark'),
+      dataIndex: 'remark',
       align: 'center',
       width: 200
     },
@@ -121,6 +139,9 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       width: 130,
       customRender: ({record}) => (
         <div class="flex-center gap-8px">
+          <Button size="small" type="primary" ghost onClick={() => handleEdit(record)}>
+            {$t('common.edit')}
+          </Button>
           <Button size="small" type="primary" ghost onClick={() => handleSubmit(record.username)}>
             {$t('common.update')}
           </Button>
@@ -151,6 +172,16 @@ async function handleSubmit(username: string) {
     }
   }
 }
+
+function handleEdit(item: Api.Business.BusinessAftInfo) {
+  operateType.value = 'edit';
+  editingData.value = {...item};
+  openModal();
+}
+const operateType = ref<OperateType>('edit');
+const allPages = ref<string[]>([]);
+const editingData: Ref<Api.Business.BusinessAftInfo | null> = ref(null);
+const {bool: visible, setTrue: openModal} = useBoolean();
 </script>
 
 <template>
@@ -183,6 +214,13 @@ async function handleSubmit(username: string) {
         class="h-full"
       />
     </ACard>
+    <NswUpdateOperateModal
+      v-model:visible="visible"
+      :operate-type="operateType"
+      :row-data="editingData"
+      :all-pages="allPages"
+      @submitted="getDataByPage"
+    />
   </div>
 </template>
 

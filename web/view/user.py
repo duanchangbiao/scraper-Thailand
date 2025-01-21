@@ -303,8 +303,12 @@ def commonUpdateScraper(user: User, args: list):
                 })
                 # 发送邮件
                 sendEmail(user, item)
+
             if not bool(db.session.query(item.__class__).filter_by(apply_number=item.apply_number).count()):
                 db.session.add(item)
+            db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
+                item.__class__.ctime: datetime.now(),
+            })
             db.session.commit()
 
 
@@ -316,7 +320,7 @@ def sendEmail(user, result):
                 f'{result.aft_type} No : {result.apply_number} \n'
                 f'Account Number: {user.username}, \n'
                 f'Current Status : {result.apply_status} \n'
-                f'Current Date : {result.apply_date} \n'
+                f'Current Date : {datetime.now()} \n'
                 f'Quickly Check : https://sso.tisi.go.th/login')
     elif result.__class__ == MorLicenses:
         title = f'TISI Alert:{result.mor_type}/{user.nickname} Mor have update!'
@@ -326,16 +330,18 @@ def sendEmail(user, result):
                 f'----------------------------\n'
                 f'Account Number: {user.username}, \n'
                 f'Current Status : {result.apply_status} \n'
-                f'Current Date : {result.apply_date} \n'
+                f'Current Date : {datetime.now()} \n'
                 f'Quickly Check : https://sso.tisi.go.th/login')
     else:
         title = f'TISI Alert:NSW/{user.nickname} have update!'
-        body = (f'Client :{user.nickname}\n '
+        body = (f'----------------------------\n'
+                f'Client :{user.nickname}\n '
                 f'NSW No : {result.apply_number} \n'
+                f'----------------------------\n'
                 f'Account Number: {user.username}, \n'
                 f'Current Status : {result.apply_status} \n'
-                f'Current Date : {result.apply_date} \n'
+                f'Current Date : {datetime.now()} \n'
                 f'Quickly Check : https://sso.tisi.go.th/login \n')
 
-    message = Message(subject=title, recipients=[user.email,''], body=body)
+    message = Message(subject=title, recipients=[user.email], body=body)
     mail.send(message)

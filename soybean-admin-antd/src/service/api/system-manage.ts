@@ -162,7 +162,7 @@ export function deleteUserInfo(params: { id: number, userType: string }) {
 
 export function updateUserScraperInfo(params: { id: number, userType: number }) {
   return request<Api.SystemManage.User>({
-    timeout: 1000 * 60 * 5,
+    timeout: 1000 * 60 * 10,
     url: '/systemManage/updateUserScraper',
     method: 'get',
     params

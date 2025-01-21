@@ -220,6 +220,8 @@ class MorLicenses(db.Model):
     apply_status = db.Column(db.String(500), comment='申请状态')
     user_id = db.Column(db.Integer, comment='用户id')
     mor_type = db.Column(db.String(500), comment='mor类型')
+    sort = db.Column(db.String(500), comment='排序')
+    remark = db.Column(db.String(500), comment='备注')
     operate_name = db.Column(db.String(500), comment='操作人')
     ctime = db.Column(db.DateTime, comment='创建时间')
     mtime = db.Column(db.DateTime, comment='修改时间')
@@ -237,6 +239,8 @@ class AftLicense(db.Model):
     apply_status = db.Column(db.String(500), comment='申请状态')
     user_id = db.Column(db.Integer, comment='用户id')
     aft_type = db.Column(db.String(500), comment='aft类型')
+    sort = db.Column(db.String(50), comment='排序字段')
+    remark = db.Column(db.String(500), comment='备注')
     ctime = db.Column(db.DateTime, comment='创建时间')
     mtime = db.Column(db.DateTime, comment='修改时间')
 
@@ -254,6 +258,8 @@ class NswLicense(db.Model):
     apply_status = db.Column(db.String(500), comment='申请状态')
     pass_date = db.Column(db.DateTime, comment='通过日期')
     user_id = db.Column(db.Integer, comment='用户id')
+    sort = db.Column(db.String(50), comment='排序字段')
+    remark = db.Column(db.String(500), comment='备注')
     ctime = db.Column(db.DateTime, comment='创建时间')
     mtime = db.Column(db.DateTime, comment='修改时间')
 

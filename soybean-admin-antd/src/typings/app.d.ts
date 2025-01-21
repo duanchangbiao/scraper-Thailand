@@ -296,6 +296,7 @@ declare namespace App {
         cancel: string;
         close: string;
         check: string;
+        read: string;
         columnSetting: string;
         config: string;
         confirm: string;
@@ -715,6 +716,9 @@ declare namespace App {
           username: string;
           passTime: string;
           applyType: string;
+          updateType: string;
+          remark: string;
+          sort: string;
           ctime: string;
           mtime: string;
           status: {
@@ -725,6 +729,9 @@ declare namespace App {
             applyStatus: string;
             applyType: string;
             username: string;
+            updateType: string;
+            sort: string;
+            remark: string;
           };
         };
         JobInfo: {

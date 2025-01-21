@@ -219,13 +219,11 @@ async function handleDelete(id: number, userType: Api.Common.UserType) {
 }
 
 async function handleUpdate(id: number, userType: number) {
+  window.$message?.success($t('common.updateSuccess'));
   const {error, response} = await updateUserScraperInfo({id, userType})
   if (!error) {
     if (response.data.success) {
       window.$message?.success($t(response.data.msg));
-      await getData()
-    } else {
-      window.$message?.error($t(response.data.msg));
       await getData()
     }
   }

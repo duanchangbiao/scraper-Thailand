@@ -31,8 +31,7 @@ def getMorList():
     morLicense_user = (db.session().query(MorLicenses, User)
                        .outerjoin(User, User.id == MorLicenses.user_id)
                        .filter(mf.get_filter(MorLicenses))
-                       .order_by(MorLicenses.update_type.desc(), MorLicenses.ctime.desc(), MorLicenses.mtime.desc(),
-                                 MorLicenses.mor_type.desc())
+                       .order_by(MorLicenses.sort.desc(), MorLicenses.remark.desc(), MorLicenses.apply_status.desc())
                        .paginates(page=current, pageSize=size))
 
     for morLicense, user in morLicense_user:
@@ -49,6 +48,8 @@ def getMorList():
             "companyName": morLicense.operate_name,
             "standardName": morLicense.standard_name,
             "tisCode": morLicense.TIS_code,
+            "sort": morLicense.sort,
+            "remark": morLicense.remark,
             "ctime": morLicense.ctime.strftime("%Y-%m-%d %H:%M:%S") if morLicense.ctime is not None else None,
             "mtime": morLicense.mtime.strftime("%Y-%m-%d %H:%M:%S") if morLicense.mtime is not None else None,
         }
@@ -63,3 +64,15 @@ def updateMor():
     user = User.query.filter_by(username=username).first()
     commonUpdateScraper(user, [morType])
     return success_api(msg='更新成功!')
+
+
+@app_router.post("/readStatus")
+def updateReadStatus():
+    id = request.get_json().get("id")
+    updateType = request.get_json().get("updateType")
+    sort = request.get_json().get("sort")
+    remark = request.get_json().get("remark")
+
+    MorLicenses.query.filter_by(id=id).update({"update_type": updateType, "remark": remark, "sort": sort})
+    db.session.commit()
+    return success_api(msg='操作成功')
