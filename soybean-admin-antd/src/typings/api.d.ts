@@ -33,7 +33,7 @@ declare namespace Api {
      */
     type EnableStatus = '1' | '2';
 
-    type EnableUpdateStatus = '1' | '2';
+    type EnableUpdateStatus = '1' | '2' | '3';
 
     type EnableMorStatus = 'Mor5' | 'Mor9';
 

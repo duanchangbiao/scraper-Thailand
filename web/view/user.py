@@ -45,7 +45,7 @@ def getUserList():
     user = (db.session.query(User, Role)
             .outerjoin(UserRole, UserRole.user_id == User.id)
             .outerjoin(Role, Role.role_id == UserRole.role_id)
-            .filter(mf.get_filter(User)).order_by(User.ctime.desc(), User.mtime.desc())
+            .filter(mf.get_filter(User)).order_by(User.status.asc(),User.user_type.desc(), User.mtime.desc())
             .paginates(page=page, pageSize=size))
 
     total = user.total
@@ -70,7 +70,7 @@ def getUserList():
             "status": str(user.status),
             'userType': str(user.user_type),
             "isActive": int(user.is_active),
-            'userBusiness': [{'value': item[0], 'label': item[1]} for item in
+            'userBusiness': [{'value': item[0]} for item in
                              userBusiness] if userBusiness else [],
             "userRole": {
                 "roleName": role.role_name if role else None,
@@ -135,6 +135,7 @@ def getUserDictType():
 def updateUserInfo():
     id = request.json["id"]
     username = request.get_json().get("username")
+    password = request.get_json().get("password")
     nickname = request.get_json().get("nickname")
     email = request.get_json().get("email")
     phone = request.get_json().get("phone")
@@ -146,8 +147,11 @@ def updateUserInfo():
     userBusinessDict = request.get_json().get("userBusiness")
     if id == '1':
         return fail_api(msg="该用户为超级管理员，无法修改!")
+
     user = User(username=username, nickname=nickname, email=email, phone=phone, is_active=isActive,
                 status=status, user_type=userType, mtime=datetime.now(), sex=sex, id=id)
+    if password != '' and userType == '2':
+        user.password = password
     User.query.filter_by(id=id).update({"username": user.username,
                                         "nickname": user.nickname,
                                         "email": user.email,
@@ -206,145 +210,153 @@ def updateUserScraper():
     args = []
     for item in dict_list:
         args.append(item[1])
-    commonUpdateScraper(user, args)
+    retry, data = commonUpdateScraper(user, args)
+    if not retry:
+        return fail_api(msg=f"更新失败!{data}")
 
-    return success_api(msg="更新成功!")
+    return success_api(msg="更新成功!", data=data)
 
 
 def commonUpdateScraper(user: User, args: list):
     scraper_list = []
-    data = {}
     try:
         scrapyer = ScraperPassport(username=user.username, password=user.password, action_type=args)
         scrapyer.login()
         data = scrapyer.close()
         print(data)
+        if data:
+            for key, value in data.items():
+                for item in value:
+                    match key:
+                        case "AFFA":
+                            aFFtLicense = AftLicense(user_id=user.id,
+                                                     apply_number=item['AFFA_appId'],
+                                                     apply_status=item['status'] if item['status'] else '',
+                                                     TIS_code=item['AFFA_TIS_CODE'],
+                                                     standard_name=item['AFFA_APP_NAME'],
+                                                     apply_license=item['AFFA_APP_LICENSE'],
+                                                     apply_date=item['applicationDate'],
+                                                     aft_type=key,
+                                                     ctime=datetime.now()
+                                                     )
+                            scraper_list.append(aFFtLicense)
+                        case "AFT":
+                            aftLicense = AftLicense(user_id=user.id,
+                                                    apply_number=item['ATF_appId'],
+                                                    apply_status=item['status'] if item['status'] else '',
+                                                    TIS_code=item['ATF_TIS_CODE'],
+                                                    standard_name=item['ATF_APP_NAME'],
+                                                    apply_license=item['AFT_APP_LICENSE'],
+                                                    apply_date=item['applicationDate'],
+                                                    aft_type=key,
+                                                    ctime=datetime.now()
+                                                    )
+                            scraper_list.append(aftLicense)
+                        case "NSW":
+                            nswLicense = NswLicense(user_id=user.id,
+                                                    apply_number=item['NSW_CODE'],
+                                                    apply_status=item['NSW_APPLY_STATUS'] if item[
+                                                        'NSW_APPLY_STATUS'] else '',
+                                                    apply_date=item['NSW_APPLY_DATE'],
+                                                    invoice=item['NSW_INVOICE'],
+                                                    invoice_date=item['NSW_INVOICE_DATE'],
+                                                    product_number=item['NSW_PRO_NUMBER'],
+                                                    rpg_group=item['NSW_RPG'],
+                                                    pass_date=item['NSW_APPLY_PASS_DATE'],
+                                                    ctime=datetime.now()
+                                                    )
+                            scraper_list.append(nswLicense)
+                        case "Mor5":
+                            mor5Licenses = MorLicenses(user_id=user.id,
+                                                       mor_type=key,
+                                                       apply_number=item['id'],
+                                                       apply_status=item['status'] if item['status'] else '',
+                                                       apply_date=item['applicationDate'],
+                                                       apply_tax=item['taxNumber'],
+                                                       TIS_code=item['mokId'],
+                                                       standard_name=item['standardName'],
+                                                       ctime=datetime.now(),
+                                                       operate_name=item['companyName'],
+                                                       )
+                            scraper_list.append(mor5Licenses)
+                        case "Mor9":
+                            morLicenses = MorLicenses(user_id=user.id,
+                                                      mor_type=key,
+                                                      apply_number=item['MOR9_APPLY_CODE'],
+                                                      apply_status=item['MOR9_STATUS'] if item['MOR9_STATUS'] else '',
+                                                      apply_date=item['MOR9_APPLY_DATE'],
+                                                      apply_tax=item['MOR9_TAX'],
+                                                      TIS_code=item['MOR9_TIS_CODE'],
+                                                      standard_name=item['MOR9_STANDARD_NAME'],
+                                                      apply_license=item['MOR9_LICENSE_CODE'],
+                                                      ctime=datetime.now(),
+                                                      )
+                            scraper_list.append(morLicenses)
+            for item in scraper_list:
+                mfs = ModelFilter()
+                if item.apply_status:
+                    mfs.exact("apply_status", item.apply_status)
+                if item.apply_number:
+                    mfs.exact("apply_number", item.apply_number)
+                if not bool(db.session.query(item.__class__).filter(mfs.get_filter(item.__class__)).count()):
+                    # 添加数据库,发送更新消息
+                    db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
+                        "mtime": datetime.now(),
+                        "apply_status": item.apply_status,
+                        "apply_date": item.apply_date,
+                        "update_type": "2"
+                    })
+                    # 发送邮件
+                    sendEmail(user, item)
+
+                if not bool(db.session.query(item.__class__).filter_by(apply_number=item.apply_number).count()):
+                    item.update_type = "1"
+                    db.session.add(item)
+                db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
+                    item.__class__.ctime: datetime.now(),
+                })
+                db.session.commit()
     except Exception as e:
         print(f"打印异常信息:{e}")
-    if data:
-        for key, value in data.items():
-            for item in value:
-                match key:
-                    case "AFFA":
-                        aFFtLicense = AftLicense(user_id=user.id,
-                                                 apply_number=item['AFFA_appId'],
-                                                 apply_status=item['status'] if item['status'] else '',
-                                                 TIS_code=item['AFFA_TIS_CODE'],
-                                                 standard_name=item['AFFA_APP_NAME'],
-                                                 apply_license=item['AFFA_APP_LICENSE'],
-                                                 apply_date=item['applicationDate'],
-                                                 aft_type=key,
-                                                 ctime=datetime.now()
-                                                 )
-                        scraper_list.append(aFFtLicense)
-                    case "AFT":
-                        aftLicense = AftLicense(user_id=user.id,
-                                                apply_number=item['ATF_appId'],
-                                                apply_status=item['status'] if item['status'] else '',
-                                                TIS_code=item['ATF_TIS_CODE'],
-                                                standard_name=item['ATF_APP_NAME'],
-                                                apply_license=item['AFT_APP_LICENSE'],
-                                                apply_date=item['applicationDate'],
-                                                aft_type=key,
-                                                ctime=datetime.now()
-                                                )
-                        scraper_list.append(aftLicense)
-                    case "NSW":
-                        nswLicense = NswLicense(user_id=user.id,
-                                                apply_number=item['NSW_CODE'],
-                                                apply_status=item['NSW_APPLY_STATUS'] if item[
-                                                    'NSW_APPLY_STATUS'] else '',
-                                                apply_date=item['NSW_APPLY_DATE'],
-                                                invoice=item['NSW_INVOICE'],
-                                                invoice_date=item['NSW_INVOICE_DATE'],
-                                                product_number=item['NSW_PRO_NUMBER'],
-                                                rpg_group=item['NSW_RPG'],
-                                                pass_date=item['NSW_APPLY_PASS_DATE'],
-                                                ctime=datetime.now()
-                                                )
-                        scraper_list.append(nswLicense)
-                    case "Mor5":
-                        mor5Licenses = MorLicenses(user_id=user.id,
-                                                   mor_type=key,
-                                                   apply_number=item['id'],
-                                                   apply_status=item['status'] if item['status'] else '',
-                                                   apply_date=item['applicationDate'],
-                                                   apply_tax=item['taxNumber'],
-                                                   TIS_code=item['mokId'],
-                                                   standard_name=item['standardName'],
-                                                   ctime=datetime.now(),
-                                                   operate_name=item['companyName'],
-                                                   )
-                        scraper_list.append(mor5Licenses)
-                    case "Mor9":
-                        morLicenses = MorLicenses(user_id=user.id,
-                                                  mor_type=key,
-                                                  apply_number=item['MOR9_APPLY_CODE'],
-                                                  apply_status=item['MOR9_STATUS'] if item['MOR9_STATUS'] else '',
-                                                  apply_date=item['MOR9_APPLY_DATE'],
-                                                  apply_tax=item['MOR9_TAX'],
-                                                  TIS_code=item['MOR9_TIS_CODE'],
-                                                  standard_name=item['MOR9_STANDARD_NAME'],
-                                                  apply_license=item['MOR9_LICENSE_CODE'],
-                                                  ctime=datetime.now(),
-                                                  )
-                        scraper_list.append(morLicenses)
-
-        for item in scraper_list:
-            mfs = ModelFilter()
-            if item.apply_status:
-                mfs.exact("apply_status", item.apply_status)
-            if item.apply_number:
-                mfs.exact("apply_number", item.apply_number)
-            if not bool(db.session.query(item.__class__).filter(mfs.get_filter(item.__class__)).count()):
-                # 添加数据库,发送更新消息
-                db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
-                    "mtime": datetime.now(),
-                    "apply_status": item.apply_status,
-                    "apply_date": item.apply_date,
-                    "update_type": "2"
-                })
-                # 发送邮件
-                sendEmail(user, item)
-
-            if not bool(db.session.query(item.__class__).filter_by(apply_number=item.apply_number).count()):
-                db.session.add(item)
-            db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
-                item.__class__.ctime: datetime.now(),
-            })
-            db.session.commit()
+        return False, e.__context__
+    return True, data
 
 
 def sendEmail(user, result):
     if result.__class__ == AftLicense:
         title = f'TISI Alert:{result.aft_type}/{user.nickname} Adaptor have update!'
         body = (f'----------------------------\n'
+                f'Remark : {result.remark} \n'
                 f'Client :{user.nickname}\n '
                 f'{result.aft_type} No : {result.apply_number} \n'
-                f'Account Number: {user.username}, \n'
                 f'Current Status : {result.apply_status} \n'
                 f'Current Date : {datetime.now()} \n'
-                f'Quickly Check : https://sso.tisi.go.th/login')
+                f'Quickly Check : https://sso.tisi.go.th/login \n'
+                f'Account Number: {user.username}, \n')
     elif result.__class__ == MorLicenses:
         title = f'TISI Alert:{result.mor_type}/{user.nickname} Mor have update!'
         body = (f'----------------------------\n'
+                f'Remark : {result.remark} \n'
                 f'Client :{user.nickname}\n '
                 f'{result.mor_type} No : {result.apply_number} \n'
                 f'----------------------------\n'
-                f'Account Number: {user.username}, \n'
                 f'Current Status : {result.apply_status} \n'
                 f'Current Date : {datetime.now()} \n'
-                f'Quickly Check : https://sso.tisi.go.th/login')
+                f'Quickly Check : https://sso.tisi.go.th/login \n'
+                f'Account Number: {user.username}, \n'
+                )
     else:
         title = f'TISI Alert:NSW/{user.nickname} have update!'
         body = (f'----------------------------\n'
+                f'Remark : {result.remark} \n'
                 f'Client :{user.nickname}\n '
                 f'NSW No : {result.apply_number} \n'
                 f'----------------------------\n'
-                f'Account Number: {user.username}, \n'
                 f'Current Status : {result.apply_status} \n'
                 f'Current Date : {datetime.now()} \n'
-                f'Quickly Check : https://sso.tisi.go.th/login \n')
+                f'Quickly Check : https://sso.tisi.go.th/login \n'
+                f'Account Number: {user.username}, \n'
+                )
 
     message = Message(subject=title, recipients=[user.email], body=body)
     mail.send(message)

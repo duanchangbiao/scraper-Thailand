@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from web.common.helper import ModelFilter
 from web.extensions import db
 from web.models.models import MorLicenses, User
-from web.utils.response import table_api, success_api
+from web.utils.response import table_api, success_api, fail_api
 from web.view.user import commonUpdateScraper
 
 app_router = Blueprint('mor', __name__, url_prefix='/mor')
@@ -62,7 +62,9 @@ def updateMor():
     username = request.get_json().get("username")
     morType = request.get_json().get("applyType")
     user = User.query.filter_by(username=username).first()
-    commonUpdateScraper(user, [morType])
+    retry, data = commonUpdateScraper(user, [morType])
+    if not retry:
+        return fail_api(msg=f"更新失败!{data}")
     return success_api(msg='更新成功!')
 
 

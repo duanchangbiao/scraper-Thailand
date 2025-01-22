@@ -87,7 +87,7 @@ export function fetchJobLogList(params?: Api.Job.JobLogSearchParams) {
   return request<Api.Job.jobLogInfo>({
     url: '/job/jobLog/list',
     method: 'get',
-
+    params
   })
 }
 

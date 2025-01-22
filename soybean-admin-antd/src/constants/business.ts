@@ -7,7 +7,8 @@ export const enableStatusRecord: Record<Api.Common.EnableStatus, App.I18n.I18nKe
 
 export const enableUpdateStatusRecord: Record<Api.Common.EnableUpdateStatus, App.I18n.I18nKey> = {
   '2': 'page.manage.common.updateType.enable',
-  '1': 'page.manage.common.updateType.disable'
+  '1': 'page.manage.common.updateType.disable',
+  '3': 'page.manage.common.updateType.completed'
 }
 
 

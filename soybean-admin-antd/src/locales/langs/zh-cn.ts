@@ -269,7 +269,8 @@ const local: App.I18n.Schema = {
         },
         updateType: {
           enable: '有更新',
-          disable: '暂未更新'
+          disable: '暂未更新',
+          completed: '已处理'
         }
       },
       role: {
@@ -485,7 +486,7 @@ const local: App.I18n.Schema = {
     },
     business_aft: {
       id: '编号',
-      title: 'AFT 模块数据中心',
+      title: 'AFT/AFFA 模块数据中心',
       applyNumber: '申请编号',
       tisCode: 'TIS CODE',
       standardName: '标准信息',

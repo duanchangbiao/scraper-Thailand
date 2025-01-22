@@ -19,7 +19,7 @@ class ScraperPassport:
         self.chrome_options = webdriver.ChromeOptions()
         self.chrome_options.add_argument("--headless")  # 这行代码默认开启后台采集
         self.chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 1080))  # 设置代理
+        self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 7890))  # 设置代理
         self.chrome_options.add_experimental_option("useAutomationExtension", 'False')
         self.chrome_options.add_argument(
             'user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"')

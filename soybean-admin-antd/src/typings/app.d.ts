@@ -491,6 +491,7 @@ declare namespace App {
             updateType: {
               enable: string;
               disable: string;
+              completed: string;
             }
           };
           role: {

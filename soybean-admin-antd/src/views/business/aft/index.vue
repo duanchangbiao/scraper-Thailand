@@ -90,13 +90,13 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 200
     },
-    // {
-    //   key: 'sort',
-    //   title: $t('page.business_aft.sort'),
-    //   dataIndex: 'sort',
-    //   align: 'center',
-    //   width: 50
-    // },
+    {
+      key: 'sort',
+      title: $t('page.business_aft.sort'),
+      dataIndex: 'sort',
+      align: 'center',
+      width: 50
+    },
     {
       key: 'remark',
       title: $t('page.business_aft.remark'),
@@ -148,6 +148,8 @@ async function handleSubmit(username: string, applyType: string) {
   if (!error) {
     if (response.data.success) {
       window.$message?.success($t(response.data.msg))
+    } else {
+      window.$message?.error($t(response.data.msg))
     }
   }
 }

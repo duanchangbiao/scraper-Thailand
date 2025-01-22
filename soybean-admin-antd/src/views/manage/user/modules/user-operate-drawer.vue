@@ -70,7 +70,7 @@ function createDefaultModel(): {
 } {
   return {
     username: '',
-    password: '',
+    password: "",
     sex: '1',
     nickname: '',
     email: 'tisi_alert@agileservices.co',
@@ -90,7 +90,6 @@ type RuleKey = Extract<keyof Model, 'userType' | 'username' | 'status' | 'passwo
 const rules: Record<RuleKey, App.Global.FormRule> = {
   username: defaultRequiredRule,
   status: defaultRequiredRule,
-  password: defaultRequiredRule,
   nickname: defaultRequiredRule,
   isActive: defaultRequiredRule,
   phone: defaultRequiredRule,
@@ -187,7 +186,7 @@ watch(visible, () => {
                 <AInput v-model:value="model.username" :placeholder="$t('page.manage.user.form.username')"/>
               </AFormItem>
             </ACol>
-            <ACol :lg="24" :xs="24" v-if="props.operateType === 'add'">
+            <ACol :lg="24" :xs="24">
               <AFormItem :label="$t('page.manage.user.password')" name="password">
                 <AInputPassword v-model:value="model.password" :placeholder="$t('page.manage.user.form.password')"/>
               </AFormItem>
@@ -215,11 +214,11 @@ watch(visible, () => {
                 <AInput v-model:value="model.nickname" :placeholder="$t('page.manage.user.form.nickname')"/>
               </AFormItem>
             </ACol>
-<!--            <ACol :lg="24" :xs="24">-->
-<!--              <AFormItem :label="$t('page.manage.user.phone')" name="phone">-->
-<!--                <AInput v-model:value="model.phone" :placeholder="$t('page.manage.user.form.phone')"/>-->
-<!--              </AFormItem>-->
-<!--            </ACol>-->
+            <!--            <ACol :lg="24" :xs="24">-->
+            <!--              <AFormItem :label="$t('page.manage.user.phone')" name="phone">-->
+            <!--                <AInput v-model:value="model.phone" :placeholder="$t('page.manage.user.form.phone')"/>-->
+            <!--              </AFormItem>-->
+            <!--            </ACol>-->
             <ACol :lg="24" :xs="24">
               <AFormItem :label="$t('page.manage.user.email')" name="email">
                 <AInput v-model:value="model.email" :placeholder="$t('page.manage.user.form.email')"/>

@@ -7,10 +7,10 @@ from flask_jwt_extended import jwt_required
 
 from web.common import curd
 from web.extensions import db
-from web.models.models import SysJobLog, SysJob, User
+from web.models.models import SysJobLog, SysJob
 from web.route import scheduler
 from web.schema.job_schema import SysJobSchema, SysJobLogSchema
-from web.utils.response import success_api, table_api
+from web.utils.response import  table_api
 
 app_router = Blueprint('job', __name__, url_prefix='/job')
 
@@ -19,14 +19,14 @@ def after_task_log(func):
     def wrapper(*args, **kwargs):
         start_time = time.time()
         result = func(*args, **kwargs)
-        run_ms = (time.time() - start_time) * 1000
+        run_ms = (time.time() - start_time) / 60
         from app import app
         with app.app_context():
             sysJobLog = SysJobLog()
             sysJobLog.job_name = args[0]['jobName']
             sysJobLog.job_group = args[0]['jobGroup']
             sysJobLog.invoke_target = args[0]['invokeTarget']
-            sysJobLog.job_message = f"{args[0]['jobName']} 总共耗时：{run_ms}毫秒"
+            sysJobLog.job_message = f"{args[0]['jobName']} 总共耗时：{run_ms}分钟"
             sysJobLog.status = '0' if result['code'] else '1'
             if not result['code']:
                 sysJobLog.exception_info = result['msg']
@@ -220,12 +220,12 @@ def sysjobLog_list():
     if 'params[beginTime]' in request.args and 'params[endTime]' in request.args:
         filters.append(SysJobLog.create_time > request.args['params[beginTime]'])
         filters.append(SysJobLog.create_time < request.args['params[endTime]'])
-    order_by = []
     current = request.args.get('current', 1, type=int)
     size = request.args.get('size', 10, type=int)
-    pagination = SysJobLog.query.filter(*filters).order_by(*order_by).paginates(
-        page=current, pageSize=size)
-    return table_api(data=curd.model_to_dicts(schema=SysJobLogSchema, data=pagination.items),total=pagination.total, current=current, size=size)
+    pagination = SysJobLog.query.filter(*filters).order_by(SysJobLog.create_time.desc()).paginates(page=current,
+                                                                                                   pageSize=size)
+    return table_api(data=curd.model_to_dicts(schema=SysJobLogSchema, data=pagination.items), total=pagination.total,
+                     current=current, size=size)
 
 
 @app_router.route('/jobLog/<string:ids>', methods=['DELETE'])
