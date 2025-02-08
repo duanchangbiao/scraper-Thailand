@@ -17,6 +17,7 @@ def getAftList():
     applyStatus = request.args.get("applyStatus", type=str)
     applyType = request.args.get("applyType", type=str)
     applyNumber = request.args.get("applyNumber", type=str)
+    remark = request.args.get("remark", type=str)
 
     mf = ModelFilter()
     if username:
@@ -26,6 +27,8 @@ def getAftList():
         mf.exact("apply_status", applyStatus)
     if applyType:
         mf.exact("aft_type", applyType)
+    if remark:
+        mf.like("remark", remark)
     if applyNumber:
         mf.like("apply_number", applyNumber)
     aftLicense_user = (db.session().query(AftLicense, User)
@@ -38,6 +41,7 @@ def getAftList():
         resposne = {
             "id": morLicense.id,
             "username": user.username,
+            "nickname": user.nickname,
             "applyStatus": morLicense.apply_status,
             "applyType": morLicense.aft_type,
             "applyNumber": morLicense.apply_number,
@@ -61,7 +65,6 @@ def updateReadStatus():
     updateType = request.get_json().get("updateType")
     sort = request.get_json().get("sort")
     remark = request.get_json().get("remark")
-
     AftLicense.query.filter_by(id=id).update({"update_type": updateType, "remark": remark, "sort": sort})
     db.session.commit()
     return success_api(msg='操作成功')

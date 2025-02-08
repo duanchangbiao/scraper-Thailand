@@ -5,9 +5,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 from flask_mail import Message
 from openpyxl.reader.excel import load_workbook
-from pandas import read_excel
 from werkzeug.security import generate_password_hash
-
 from web.common import curd
 from web.common.helper import ModelFilter
 from web.extensions import db
@@ -15,6 +13,7 @@ from web.extensions.init_mail import mail
 from web.models.models import User, UserRole, Role, UserBusiness, DictType, AftLicense, NswLicense, MorLicenses
 from web.schema.user_schema import DictTypeSchema
 from web.utils.response import table_api, success_api, fail_api
+from web.utils.scraper_license import sendEmail
 from web.utils.scraper_passport import ScraperPassport
 
 app_router = Blueprint('user', __name__, url_prefix="/systemManage")
@@ -45,7 +44,7 @@ def getUserList():
     user = (db.session.query(User, Role)
             .outerjoin(UserRole, UserRole.user_id == User.id)
             .outerjoin(Role, Role.role_id == UserRole.role_id)
-            .filter(mf.get_filter(User)).order_by(User.status.asc(),User.user_type.desc(), User.mtime.desc())
+            .filter(mf.get_filter(User)).order_by(User.status.asc(), User.user_type.desc(), User.mtime.desc())
             .paginates(page=page, pageSize=size))
 
     total = user.total
@@ -212,7 +211,7 @@ def updateUserScraper():
         args.append(item[1])
     retry, data = commonUpdateScraper(user, args)
     if not retry:
-        return fail_api(msg=f"更新失败!{data}")
+        return fail_api(msg=f"更新失败!")
 
     return success_api(msg="更新成功!", data=data)
 
@@ -293,11 +292,16 @@ def commonUpdateScraper(user: User, args: list):
                                                       )
                             scraper_list.append(morLicenses)
             for item in scraper_list:
+                if not bool(db.session.query(item.__class__).filter_by(apply_number=item.apply_number).count()):
+                    item.update_type = "1"
+                    db.session.add(item)
+                    db.session.commit()
                 mfs = ModelFilter()
                 if item.apply_status:
                     mfs.exact("apply_status", item.apply_status)
                 if item.apply_number:
                     mfs.exact("apply_number", item.apply_number)
+                mfs.exact("user_id", user.id)
                 if not bool(db.session.query(item.__class__).filter(mfs.get_filter(item.__class__)).count()):
                     # 添加数据库,发送更新消息
                     db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
@@ -306,12 +310,9 @@ def commonUpdateScraper(user: User, args: list):
                         "apply_date": item.apply_date,
                         "update_type": "2"
                     })
+                    db.session.commit()
                     # 发送邮件
                     sendEmail(user, item)
-
-                if not bool(db.session.query(item.__class__).filter_by(apply_number=item.apply_number).count()):
-                    item.update_type = "1"
-                    db.session.add(item)
                 db.session.query(item.__class__).filter_by(apply_number=item.apply_number).update({
                     item.__class__.ctime: datetime.now(),
                 })
@@ -320,46 +321,6 @@ def commonUpdateScraper(user: User, args: list):
         print(f"打印异常信息:{e}")
         return False, e.__context__
     return True, data
-
-
-def sendEmail(user, result):
-    if result.__class__ == AftLicense:
-        title = f'TISI Alert:{result.aft_type}/{user.nickname} Adaptor have update!'
-        body = (f'----------------------------\n'
-                f'Remark : {result.remark} \n'
-                f'Client :{user.nickname}\n '
-                f'{result.aft_type} No : {result.apply_number} \n'
-                f'Current Status : {result.apply_status} \n'
-                f'Current Date : {datetime.now()} \n'
-                f'Quickly Check : https://sso.tisi.go.th/login \n'
-                f'Account Number: {user.username}, \n')
-    elif result.__class__ == MorLicenses:
-        title = f'TISI Alert:{result.mor_type}/{user.nickname} Mor have update!'
-        body = (f'----------------------------\n'
-                f'Remark : {result.remark} \n'
-                f'Client :{user.nickname}\n '
-                f'{result.mor_type} No : {result.apply_number} \n'
-                f'----------------------------\n'
-                f'Current Status : {result.apply_status} \n'
-                f'Current Date : {datetime.now()} \n'
-                f'Quickly Check : https://sso.tisi.go.th/login \n'
-                f'Account Number: {user.username}, \n'
-                )
-    else:
-        title = f'TISI Alert:NSW/{user.nickname} have update!'
-        body = (f'----------------------------\n'
-                f'Remark : {result.remark} \n'
-                f'Client :{user.nickname}\n '
-                f'NSW No : {result.apply_number} \n'
-                f'----------------------------\n'
-                f'Current Status : {result.apply_status} \n'
-                f'Current Date : {datetime.now()} \n'
-                f'Quickly Check : https://sso.tisi.go.th/login \n'
-                f'Account Number: {user.username}, \n'
-                )
-
-    message = Message(subject=title, recipients=[user.email], body=body)
-    mail.send(message)
 
 
 @app_router.post("/user/export")

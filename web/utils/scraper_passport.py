@@ -19,7 +19,7 @@ class ScraperPassport:
         self.chrome_options = webdriver.ChromeOptions()
         self.chrome_options.add_argument("--headless")  # 这行代码默认开启后台采集
         self.chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 7890))  # 设置代理
+        # self.chrome_options.add_argument('--proxy-server=http://{}:{}'.format("127.0.0.1", 7890))  # 设置代理
         self.chrome_options.add_experimental_option("useAutomationExtension", 'False')
         self.chrome_options.add_argument(
             'user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"')
@@ -37,6 +37,7 @@ class ScraperPassport:
         self.result = {}
 
     def login(self):
+        from app import app
         try:
             self.driver.get(self.url)
             self.driver.find_element("id", "username").send_keys(self.username)
@@ -47,6 +48,7 @@ class ScraperPassport:
             # 等待仪表盘详情页加载完成
             self.check_parse_model()
         except Exception as e:
+            app.logger.info(f"数据采集发生异常,请重新登录!异常信息:{e}")
             raise Exception(f"Exception: Timeout waiting"
                             f" for page to load,用户账号或密码错误: {self.username},异常信息:{e}")
 
@@ -89,6 +91,7 @@ class ScraperPassport:
     """
 
     def parse_mor5(self):
+        from app import app
         data = []
         try:
             model_locator = self.driver.find_element(by=By.XPATH,
@@ -107,6 +110,8 @@ class ScraperPassport:
                 item = {}
                 if tr.xpath("./td[2]/text()"):
                     item["id"] = tr.xpath("./td[2]/text()")[0].strip()
+                    if item['id'] == "":
+                        item["id"] = tr.xpath("./td[2]/text()")[1].strip()
                 if tr.xpath("./td[3]/text()"):
                     item["applicant"] = tr.xpath("./td[3]/text()")[0].strip()
                 if tr.xpath("./td[4]/text()"):
@@ -128,7 +133,9 @@ class ScraperPassport:
                     str_list = "".join(tr.xpath("./td[9]//text()"))
                     item["companyName"] = str_list.strip().replace("\r", "").replace("\n", "").replace("    ", "")
                 data.append(item)
+                app.logger.info(f"MOR5 scraper success,数据为:{item}")
         except Exception as e:
+            app.logger.info(f"MOR 5 模块监控失败!请重新启动，并检查网站是否有更新!:{e}")
             raise f"MOR 5 模块监控失败!请重新启动，并检查网站是否有更新!:{e}"
         return data
 
@@ -137,6 +144,7 @@ class ScraperPassport:
     """
 
     def parse_mor9(self):
+        from app import app
         data = []
         try:
             model_locator = self.driver.find_element(by=By.XPATH,
@@ -156,6 +164,8 @@ class ScraperPassport:
                 item = {}
                 if tr.xpath("./td[2]//text()"):
                     item["MOR9_APPLY_CODE"] = tr.xpath("./td[2]//text()")[0].strip()
+                    if item["MOR9_APPLY_CODE"] == "":
+                        item["MOR9_APPLY_CODE"] = tr.xpath("./td[2]//text()")[1].strip()
                 if tr.xpath("./td[3]//text()"):
                     item["MOR9_APPLY_NAME"] = tr.xpath("./td[3]/text()")[0].strip()
                 if tr.xpath("./td[4]//text()"):
@@ -177,11 +187,14 @@ class ScraperPassport:
                 if tr.xpath("./td[10]//text()"):
                     item["MOR9_OPERATE_NAME"] = "".join(tr.xpath("./td[10]//text()")).strip().replace(": ", "")
                 data.append(item)
+                app.logger.info(f"Mor9 scraper success:{item}")
         except Exception as e:
+            app.logger.error(f"MOR 9 模块监控失败!请重新启动，并检查网站是否有更新!:{e}")
             raise f"MOR 9 模块监控失败!请重新启动，并检查网站是否有更新!:{e}"
         return data
 
     def parse_AFFA(self):
+        from app import app
         data = []
         try:
             model_locator = self.driver.find_element(by=By.XPATH,
@@ -199,6 +212,8 @@ class ScraperPassport:
                 item = {}
                 if tr.xpath("./td[2]//text()"):
                     item["AFFA_appId"] = tr.xpath("./td[2]//text()")[0].strip()
+                    if item["AFFA_appId"] == "":
+                        item["AFFA_appId"] = tr.xpath("./td[2]//text()")[1].strip()
                 else:
                     item["AFFA_appId"] = ""
                 if tr.xpath("./td[3]//text()"):
@@ -223,11 +238,13 @@ class ScraperPassport:
                 else:
                     item["status"] = ""
                 data.append(item)
+                app.logger.info(f"AFFA data scraper success: {item}")
         except Exception as e:
             raise f"AFFA 模块监控失败!请重新启动，并检查网站是否有更新!:{e}"
         return data
 
     def parse_AFT(self):
+        from app import app
         data = []
         try:
             model_locator = self.driver.find_element(by=By.XPATH,
@@ -245,6 +262,8 @@ class ScraperPassport:
                 item = {}
                 if tr.xpath("./td[2]/text()"):
                     item["ATF_appId"] = tr.xpath("./td[2]/text()")[0].strip()
+                    if item["ATF_appId"] == "":
+                        item["ATF_appId"] = tr.xpath("./td[2]//text()")[1].strip()
                 if tr.xpath("./td[3]//text()"):
                     item["ATF_TIS_CODE"] = "".join(tr.xpath("./td[3]//text()")).strip()
                 if tr.xpath("./td[4]/text()"):
@@ -260,11 +279,13 @@ class ScraperPassport:
                 else:
                     item["status"] = ""
                 data.append(item)
+                app.logger.info(f"AFT data scraper success: {item} ")
         except Exception as e:
             raise f"AFT 模块监控失败!请重新启动，并检查网站是否有更新!:{e}"
         return data
 
     def parse_NSW(self):
+        from app import app
         data = []
         try:
             self.driver.find_element(by=By.XPATH,
@@ -299,12 +320,14 @@ class ScraperPassport:
                 else:
                     item["NSW_APPLY_STATUS"] = ""
                 data.append(item)
+                app.logger.info(f"NSW data scraper success: {item}")
             self.driver.find_element(by=By.XPATH,
                                      value="//body/div[@class='container-fluid']/ol/li[@class='active']/font/a").click()
             locator = (By.XPATH,
                        "//*[@id='wrapper']/nav/div[@class='navbar-header']/ul[@class='nav navbar-top-links navbar-right pull-right']/li[2]/a")
             WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(locator))
         except Exception as e:
+            app.logger.error(f"NSW 模块监控失败!请重新启动，并检查网站是否有更新!:{e}")
             raise f"NSW 模块监控失败!请重新启动，并检查网站是否有更新!:{e}"
         return data
 
@@ -313,16 +336,20 @@ class ScraperPassport:
     """
 
     def logout(self):
+        from app import app
         try:
             self.driver.find_element(by=By.XPATH,
                                      value="//*[@id='wrapper']/nav/div[@class='navbar-header']/ul[@class='nav navbar-top-links navbar-right pull-right']/li[2]/a/i").click()
             time.sleep(2)
             self.driver.find_element(By.XPATH, value='//*[@id="wrapper"]/div[2]/div/div[1]/div[2]/a').click()
         except Exception as e:
+            app.logger.error(f"退出登录失败!:{e}")
             raise f"退出登录失败!:{e}"
 
     def close(self):
+        from app import app
         self.driver.quit()
+        app.logger.info(f"关闭浏览器,账号:{self.username}采集完成,采集模块:{self.action_type}")
         print(f"关闭浏览器,账号:{self.username}采集完成,采集模块:{self.action_type}")
         return self.result
 

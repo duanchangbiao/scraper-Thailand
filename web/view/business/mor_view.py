@@ -18,6 +18,7 @@ def getMorList():
     applyStatus = request.args.get("applyStatus", type=str)
     applyType = request.args.get("applyType", type=str)
     applyNumber = request.args.get("applyNumber", type=str)
+    remark = request.args.get("remark", type=str)
     mf = ModelFilter()
     if username:
         user = User.query.filter_by(username=username).first()
@@ -26,6 +27,8 @@ def getMorList():
         mf.exact("apply_status", applyStatus)
     if applyType:
         mf.exact("mor_type", applyType)
+    if remark:
+        mf.like("remark", remark)
     if applyNumber:
         mf.like("apply_number", applyNumber)
     morLicense_user = (db.session().query(MorLicenses, User)
@@ -38,6 +41,7 @@ def getMorList():
         resposne = {
             "id": morLicense.id,
             "username": user.username,
+            "nickname": user.nickname,
             "applyStatus": morLicense.apply_status,
             "applyType": morLicense.mor_type,
             "applyNumber": morLicense.apply_number,

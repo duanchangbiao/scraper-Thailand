@@ -665,6 +665,8 @@ declare namespace App {
             mor5: string;
             mor9: string;
           },
+          remark: string;
+          nickname: string;
           form: {
             companyName: string;
             applyNumber: string;
@@ -676,6 +678,7 @@ declare namespace App {
             applyStatus: string;
             applyType: string;
             username: string;
+            remark: string;
           };
         };
         business_nsw: {
@@ -690,6 +693,7 @@ declare namespace App {
           applyStatus: string;
           applyDate: string;
           username: string;
+          nickname: string;
           passDate: string;
           ctime: string;
           mtime: string;
@@ -715,6 +719,7 @@ declare namespace App {
           applyStatus: string;
           applyDate: string;
           username: string;
+          nickname: string;
           passTime: string;
           applyType: string;
           updateType: string;

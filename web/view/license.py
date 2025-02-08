@@ -4,6 +4,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 from pymysql import DataError
 
+
 from web.common import curd
 from web.common.helper import ModelFilter
 from web.extensions.init_sqlalchemy import db
@@ -41,6 +42,7 @@ def get_license():
 @app_router.route('/save', methods=["POST"])
 @jwt_required()
 def save_license():
+    from app import app
     data = {
         'data': 'permit',
         'txt_tis': '/',
@@ -56,11 +58,10 @@ def save_license():
             issuance_time=license.issuance_time.strip(),
             ctime=datetime.datetime.now()
         )
-        print(license_report.__str__())
         if not bool(license_report.query.filter_by(license_id=license.license_id).count()):
             db.session.add(license_report)
             db.session.commit()
-
+        app.logger.info(f"save success:{license_report}")
     return success_api(msg="添加成功")
 
 

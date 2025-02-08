@@ -19,6 +19,7 @@ def getAftList():
     applyStatus = request.args.get("applyStatus", type=str)
     applyType = request.args.get("applyType", type=str)
     applyNumber = request.args.get("applyNumber", type=str)
+    remark = request.args.get("remark", type=str)
 
     mf = ModelFilter()
     if username:
@@ -30,6 +31,8 @@ def getAftList():
         mf.exact("mor_type", applyType)
     if applyNumber:
         mf.like("apply_number", applyNumber)
+    if remark:
+        mf.like("remark", remark)
     nswLicense_user = (db.session().query(NswLicense, User)
                        .outerjoin(User, User.id == NswLicense.user_id)
                        .filter(mf.get_filter(NswLicense))
@@ -40,6 +43,7 @@ def getAftList():
         resposne = {
             "id": nswLicense.id,
             "username": user.username,
+            "nickname": user.nickname,
             "applyStatus": nswLicense.apply_status,
             "applyNumber": nswLicense.apply_number,
             "applyDate": nswLicense.apply_date,

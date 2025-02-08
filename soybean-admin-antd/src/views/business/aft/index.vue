@@ -34,6 +34,13 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 150
     },
+    {
+      key: 'nickname',
+      title: $t('page.business_aft.nickname'),
+      dataIndex: 'nickname',
+      align: 'center',
+      width: 150
+    },
     // {
     //   key: 'tisCode',
     //   title: $t('page.business_aft.tisCode'),

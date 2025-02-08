@@ -308,6 +308,7 @@ declare namespace Api {
       applyType: string;
       ctime: string;
       mtime: string;
+      remark: string;
     }>;
 
     type BusinessNewInfo = Common.CommonRecord<{
@@ -324,6 +325,7 @@ declare namespace Api {
       passTime: string;
       ctime: string;
       mtime: string;
+      remark: string;
     }>;
 
     type BusinessAftInfo = Common.CommonRecord<{
@@ -344,7 +346,7 @@ declare namespace Api {
     }>;
 
     type MorSearchParams = Partial<
-      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyType' | 'applyNumber'> &
+      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyType' | 'applyNumber' | 'remark'> &
       Common.CommonSearchParams
     >;
 
@@ -354,11 +356,11 @@ declare namespace Api {
     >;
 
     type AFTSearchParams = Partial<
-      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyType' | 'applyNumber'> &
+      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyType' | 'applyNumber' | 'remark'> &
       Common.CommonSearchParams
     >;
     type NswSearchParams = Partial<
-      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyNumber' | 'applyType'> &
+      Pick<Api.Business.BusinessMorInfo, 'username' | 'applyStatus' | 'applyNumber' | 'applyType' | 'remark'> &
       Common.CommonSearchParams
     >;
   }

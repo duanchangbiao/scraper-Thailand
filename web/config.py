@@ -56,3 +56,4 @@ class BaseConfig:
     JWT_REFRESH_TOKEN_EXPIRE_MINUTES = 72
 
     filePath = os.path.join(os.getcwd() + "/uploadFile")
+    LOGGER_DIR = os.path.join(os.getcwd() + "/logs")

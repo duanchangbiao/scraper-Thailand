@@ -34,6 +34,13 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
       align: 'center',
       width: 150
     },
+        {
+      key: 'nickname',
+      title: $t('page.business_nsw.nickname'),
+      dataIndex: 'nickname',
+      align: 'center',
+      width: 150
+    },
     // {
     //   key: 'tisCode',
     //   title: $t('page.business_mor.tisCode'),
@@ -144,9 +151,6 @@ const {columns, loading, data, getData, mobilePagination, columnChecks, searchPa
           </Button>
           <Button size="small" type="primary" ghost onClick={() => handleSubmit(record.username)}>
             {$t('common.update')}
-          </Button>
-          <Button danger size="small">
-            {$t('common.delete')}
           </Button>
         </div>
       )

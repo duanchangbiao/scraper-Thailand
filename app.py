@@ -1,6 +1,11 @@
+import logging
+import os
+from logging.handlers import RotatingFileHandler
+
 from flask import current_app
 
 from web import create_app
+from web.config import BaseConfig
 from web.extensions import db
 
 from web.models.BaseModel import BaseModel
@@ -38,4 +43,4 @@ def execute_before_insert(mapper, connection, target):
 if __name__ == '__main__':
     load_jobs()
     scheduler.start()
-    app.run()
+    app.run(host='0.0.0.0', port=18200)

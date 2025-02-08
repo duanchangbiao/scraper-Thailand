@@ -179,6 +179,9 @@ const local: App.I18n.Schema = {
     business_mor: '数据分析模块-MOR',
     business_aft: '数据分析模块-AFT',
     business_nsw: '数据分析模块-NSW',
+    'task_job-log': '任务日志',
+    task_job: '定时任务',
+    task: '定时任务管理',
   },
   page: {
     login: {
@@ -444,6 +447,8 @@ const local: App.I18n.Schema = {
         mor5: 'Mor5',
         mor9: 'Mor9',
       },
+      remark: '备注',
+      nickname: '昵称',
       form: {
         companyName: '请输入操作人信息',
         applyNumber: '请输入申请编号',
@@ -455,6 +460,7 @@ const local: App.I18n.Schema = {
         applyStatus: '请输入申请状态',
         applyType: '请选择类型',
         username: '请输入账号信息',
+        remark: '请输入备注信息'
       },
     },
     business_nsw: {
@@ -469,6 +475,7 @@ const local: App.I18n.Schema = {
       rpg_group: '责任小组',
       applyStatus: '申请状态',
       username: '账号信息',
+      nickname: '昵称',
       passDate: '通过时间',
       ctime: '创建时间',
       mtime: '更新时间',
@@ -494,6 +501,7 @@ const local: App.I18n.Schema = {
       applyDate: '申请日期',
       applyStatus: '申请状态',
       username: '账号信息',
+      nickname: '昵称',
       applyType: '类型',
       updateType: '更新状态',
       sort: '排序数字',

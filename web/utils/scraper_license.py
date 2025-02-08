@@ -1,11 +1,12 @@
-import json
 import os
-from typing import List
+from datetime import datetime
 
 import requests
+from flask_mail import Message
 from lxml import etree
 
-from web.models.models import LicenseReport
+from web.extensions.init_mail import mail
+from web.models.models import LicenseReport, AftLicense, MorLicenses
 
 
 def init_header() -> dict:
@@ -94,10 +95,42 @@ class scraper_license:
                              )
 
 
-if __name__ == '__main__':
-    scraper = scraper_license()
-    data = {
-        'n': '3239-1805/828',
-    }
-    details = scraper.get_license_detail(data)
-    print(details)
+def sendEmail(user, result):
+    from app import app
+    if result.__class__ == AftLicense:
+        title = f'TISI Alert:{result.aft_type}/{user.nickname} Adaptor have update!'
+        body = (f'----------------------------\n'
+                f'Remark : {result.remark} \n'
+                f'Client :{user.nickname}\n '
+                f'{result.aft_type} No : {result.apply_number} \n'
+                f'Current Status : {result.apply_status} \n'
+                f'Current Date : {datetime.now()} \n'
+                f'Quickly Check : https://sso.tisi.go.th/login \n'
+                f'Account Number: {user.username}, \n')
+    elif result.__class__ == MorLicenses:
+        title = f'TISI Alert:{result.mor_type}/{user.nickname} Mor have update!'
+        body = (f'----------------------------\n'
+                f'Remark : {result.remark} \n'
+                f'Client :{user.nickname}\n '
+                f'{result.mor_type} No : {result.apply_number} \n'
+                f'----------------------------\n'
+                f'Current Status : {result.apply_status} \n'
+                f'Current Date : {datetime.now()} \n'
+                f'Quickly Check : https://sso.tisi.go.th/login \n'
+                f'Account Number: {user.username}, \n'
+                )
+    else:
+        title = f'TISI Alert:NSW/{user.nickname} have update!'
+        body = (f'----------------------------\n'
+                f'Remark : {result.remark} \n'
+                f'Client :{user.nickname}\n '
+                f'NSW No : {result.apply_number} \n'
+                f'----------------------------\n'
+                f'Current Status : {result.apply_status} \n'
+                f'Current Date : {datetime.now()} \n'
+                f'Quickly Check : https://sso.tisi.go.th/login \n'
+                f'Account Number: {user.username}, \n'
+                )
+    app.logger.info(f"邮件发送成功信息:{title},{body}")
+    message = Message(subject=title, recipients=[user.email], body=body)
+    mail.send(message)

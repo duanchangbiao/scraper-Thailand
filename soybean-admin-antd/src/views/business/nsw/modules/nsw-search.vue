@@ -36,19 +36,24 @@ async function search() {
   <ACard :title="$t('common.search')" :bordered="false" class="card-wrapper">
     <AForm ref="formRef" :model="model" :label-col="{ span: 5, md: 7 }">
       <ARow :gutter="[16, 16]" wrap>
-        <ACol :span="24" :md="8" :lg="4">
+        <ACol :span="24" :md="6" :lg="4">
           <AFormItem :label="$t('page.business_mor.applyNumber')" name="username" class="m-0">
             <AInput v-model:value="model.applyNumber" :placeholder="$t('page.business_mor.form.applyNumber')"/>
           </AFormItem>
         </ACol>
-        <ACol :span="24" :md="8" :lg="4">
+        <ACol :span="24" :md="6" :lg="4">
           <AFormItem :label="$t('page.business_mor.username')" name="username" class="m-0">
             <AInput v-model:value="model.username" :placeholder="$t('page.business_mor.form.username')"/>
           </AFormItem>
         </ACol>
-        <ACol :span="24" :md="8" :lg="4">
+        <ACol :span="24" :md="6" :lg="4">
           <AFormItem :label="$t('page.business_mor.applyStatus')" name="applyStatus" class="m-0">
             <AInput v-model:value="model.applyStatus" :placeholder="$t('page.business_mor.form.applyStatus')"/>
+          </AFormItem>
+        </ACol>
+        <ACol :span="24" :md="6" :lg="4">
+          <AFormItem :label="$t('page.business_mor.remark')" name="remark" class="m-0">
+            <AInput v-model:value="model.remark" :placeholder="$t('page.business_mor.form.remark')"/>
           </AFormItem>
         </ACol>
         <div class="flex-1">
